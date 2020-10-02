@@ -1,9 +1,7 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
-
 api:
   resource: '../src/Controller/API'
   type: annotation
   prefix: '/api'
-  #methods: POST
+
+static:
+  path: /static
