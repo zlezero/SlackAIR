@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class WebsocketController extends AbstractController
 {
     /**
-     * @Route("/app", name="websocket")
+     * @Route("/app", name="app")
      */
     public function index()
     {
