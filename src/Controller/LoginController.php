@@ -1,23 +1,22 @@
 <?php
-// src/Controller/ConnexionController.php
+// src/Controller/LoginController.php
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Form\ConnexionType;
+use App\Form\LoginType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
 
-class ConnexionController extends AbstractController
+class LoginController extends AbstractController
 {
 
-    private $passwordEncoder;
+    private $security;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(Security $security)
     {
-        $this->passwordEncoder = $passwordEncoder;
+        $this->security = $security;
     }
 
     /**
@@ -25,13 +24,17 @@ class ConnexionController extends AbstractController
      */
     public function login(Request $request, AuthenticationUtils $authenticationUtils)
     {
+
+        if ($this->security->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute('app');
+        }
         
-        $form = $this->createForm(ConnexionType::class, null);
+        $form = $this->createForm(LoginType::class, null);
 
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('connexion.html.twig', [
+        return $this->render('login.html.twig', [
             'form' => $form->createView(),
             'last_username' => $lastUsername,
             'error' => $error
@@ -43,4 +46,5 @@ class ConnexionController extends AbstractController
      * @Route("/logout", name="app_logout")
      */
     public function logout(){}
+
 }
