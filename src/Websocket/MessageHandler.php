@@ -29,6 +29,7 @@ class MessageHandler implements MessageComponentInterface
             {
                 continue;
             }
+            
             $connection->send($msg);
         }
     }
