@@ -41,8 +41,8 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
 
     public function supports(Request $request)
     {
-        return self::LOGIN_ROUTE === $request->attributes->get('_route')
-            && $request->isMethod('POST');
+        return (self::LOGIN_ROUTE === $request->attributes->get('_route')
+            && $request->isMethod('POST'));
     }
 
     public function getCredentials(Request $request)
@@ -72,7 +72,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+            throw new CustomUserMessageAuthenticationException('L\'email n\'as pas pu être trouvé.');
         }
 
         return $user;

@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 class MessageController extends AbstractController
 {
     /**
-     * @Route("/send", name="websocket")
+     * @Route("/send", name="messageSend")
      */
     public function send()
     {
