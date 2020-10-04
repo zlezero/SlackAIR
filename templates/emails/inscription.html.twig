@@ -1,0 +1,26 @@
+{# templates/emails/inscription.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}SlackAIR - inscription{% endblock %}
+
+{% block body %}
+
+<h1>Bienvenue {{ user.prenom }} {{ user.nom }} !</h1>
+
+<p>
+
+    Vous avez été inscrit sur SlackAIR !
+    Vos identifiants :
+    <ul>
+        <li>Identifiant : {{ user.email }}</li>
+        <li>Mot de passe : {{ password }}</li>
+    </ul>
+
+</p>
+
+<p>Ce mot de passe devra être changé lors de votre première connexion !</p>
+
+{% endblock %}
+
+
