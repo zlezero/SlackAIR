@@ -8,9 +8,6 @@ api:
   prefix: '/api'
   #methods: POST
 
-static:
-  path: /static
-  controller:  App\Controller\StaticController::index
 
 static:
   path: /static
