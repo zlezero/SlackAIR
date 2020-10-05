@@ -11,3 +11,7 @@ api:
 static:
   path: /static
   controller:  App\Controller\StaticController::index
+
+static:
+  path: /static
+  controller:  App\Controller\StaticController::index
