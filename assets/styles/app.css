@@ -6,6 +6,11 @@ h4{
     font-size:1.25rem;
 }
 
+.black{
+    background-color: #53504F;
+    color:lightgray;
+}
+
 .title > i{
     margin-top:15px;
 }
@@ -21,21 +26,27 @@ li:hover{
 }
 .left-menu {
     display: flex;
-    height:30em;
+    height:100%;
 }
+
 
 .left-menu > .partial {
     padding-right: 1%;
     padding-left: 1%;
     position: sticky;
     top: 105px;
+    width: 10%;
 }
 
 #chat{
     border: solid black 1px;
     display:block;
-    height:40em;
-    width:75em;
+    height:85%;
+    width:75%;
+}
+
+#chat >title{
+    height: 12.5%;
 }
 
 .msg{
@@ -48,12 +59,27 @@ li:hover{
 }
 
 #chat>  #messages   {
-    height: 35em;
+    height: 75%;
 }
 .send_menu{
     display:inline-flex;
+    width: 100%;
+    height: 12.5%;
+    border-top:solid black 1px;
+
 }
-    
+
+.send_menu>div{
+    width: 92.5%;
+}
+textarea{
+    width:95%
+}
+.send_menu>button{
+    height: 35%;
+    margin-top: 2%;
+}
+
 .user > *{
     display:inline-flex;
     text-align: center;
