@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -65,6 +67,33 @@ class User implements UserInterface
      * @ORM\Column(type="string", unique=true, nullable=true)
      */
     private $apiToken;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="Personnel")
+     */
+    private $DepartementId;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Groupe::class, mappedBy="IdProprietaire")
+     */
+    private $GroupesCrees;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Invitation::class, mappedBy="UserId")
+     */
+    private $invitations;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="UserId")
+     */
+    private $messages;
+
+    public function __construct()
+    {
+        $this->GroupesCrees = new ArrayCollection();
+        $this->invitations = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -193,6 +222,111 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getDepartementId(): ?Departement
+    {
+        return $this->DepartementId;
+    }
+
+    public function setDepartementId(?Departement $DepartementId): self
+    {
+        $this->DepartementId = $DepartementId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Groupe[]
+     */
+    public function getGroupesCrees(): Collection
+    {
+        return $this->GroupesCrees;
+    }
+
+    public function addGroupesCree(Groupe $groupesCree): self
+    {
+        if (!$this->GroupesCrees->contains($groupesCree)) {
+            $this->GroupesCrees[] = $groupesCree;
+            $groupesCree->setIdProprietaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupesCree(Groupe $groupesCree): self
+    {
+        if ($this->GroupesCrees->contains($groupesCree)) {
+            $this->GroupesCrees->removeElement($groupesCree);
+            // set the owning side to null (unless already changed)
+            if ($groupesCree->getIdProprietaire() === $this) {
+                $groupesCree->setIdProprietaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Invitation[]
+     */
+    public function getInvitations(): Collection
+    {
+        return $this->invitations;
+    }
+
+    public function addInvitation(Invitation $invitation): self
+    {
+        if (!$this->invitations->contains($invitation)) {
+            $this->invitations[] = $invitation;
+            $invitation->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvitation(Invitation $invitation): self
+    {
+        if ($this->invitations->contains($invitation)) {
+            $this->invitations->removeElement($invitation);
+            // set the owning side to null (unless already changed)
+            if ($invitation->getUserId() === $this) {
+                $invitation->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->contains($message)) {
+            $this->messages->removeElement($message);
+            // set the owning side to null (unless already changed)
+            if ($message->getUserId() === $this) {
+                $message->setUserId(null);
+            }
+        }
+
+        return $this;
     }
 
 }
