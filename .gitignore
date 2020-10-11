@@ -16,3 +16,4 @@
 ###< symfony/phpunit-bridge ###
 
 .vscode
+node_modules
