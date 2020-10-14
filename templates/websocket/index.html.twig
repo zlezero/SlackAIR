@@ -1,4 +1,11 @@
 {% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/goswebsocket/js/vendor/autobahn.min.js') }}"></script>
+    {{ encore_entry_script_tags('message') }}
+{% endblock %}
+
 {% block body %}
 <style>
     body {
@@ -19,7 +26,7 @@
         min-width: 150px;
     }
  
-    #chat {
+    #chat, #chat2 {
         height: 400px;
         width: 600px;
         border: solid lightgrey 1px;
@@ -38,55 +45,17 @@
     }
 </style>
  
- 
-<div id="chat">
- 
-</div>
+Channel 1 :
+<div id="chat"></div>
+Channel 2 :
+<div id="chat2"></div>
 <div>
-    <div class="form-group">
-        <label for="name">Name:</label> <input type="text" id="name">
-    </div>
     <div class="form-group">
         <label for="message">Message:</label> <input type="text" id="message">
     </div>
     <button type="button" id="sendBtn">Send</button>
+    <button type="button" id="changeChannel">Changer channel</button>
 </div>
 
-<script type="text/javascript">
-    const socket = new WebSocket("ws://localhost:3001");
- 
-    socket.addEventListener("open", function() {
-        console.log("CONNECTED");
-    });
- 
-    function addMessage(name, message) {
-        const messageHTML = "<div class='message'><strong>" + name + ":</strong> " + message + "</div>";
-        document.getElementById("chat").innerHTML += messageHTML
-    }
- 
-    socket.addEventListener("message", function(e) {
-        console.log(e.data);
-        try
-        {
-            const message = JSON.parse(e.data);
-            addMessage(message.name, message.message);
-        }
-        catch(e)
-        {
-            // Catch any errors
-        }
-    });
- 
-    document.getElementById("sendBtn").addEventListener("click", function() {
- 
-        const message = {
-            name: document.getElementById("name").value,
-            message: document.getElementById("message").value
-        };
-        socket.send(JSON.stringify(message));
-        addMessage(message.name, message.message);
-    });
-
-</script>
 
 {% endblock %}

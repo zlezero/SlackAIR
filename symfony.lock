@@ -90,6 +90,15 @@
     "evenement/evenement": {
         "version": "v3.0.1"
     },
+    "gos/pubsub-router-bundle": {
+        "version": "v2.2.0"
+    },
+    "gos/web-socket-bundle": {
+        "version": "v3.4.0"
+    },
+    "gos/websocket-client": {
+        "version": "v1.2.1"
+    },
     "guzzlehttp/psr7": {
         "version": "1.7.0"
     },
