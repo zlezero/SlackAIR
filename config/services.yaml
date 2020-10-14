@@ -10,6 +10,15 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    app.websocket.topic.message:
+        class: App\Websocket\Topic\MessageTopic
+        tags:
+            - { name: gos_web_socket.topic }
+    session.handler.pdo:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+        arguments:
+            - '%env(DATABASE_URL)%'
+            - { db_table: 'sessions', lock_mode: 0 }
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

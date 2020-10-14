@@ -9,6 +9,9 @@
 import '../styles/app.css';
 import '../js/app.js';
 import '../styles/app.scss';
-import $ from 'jquery';
+
+const $ = require('jquery');
+global.$ = global.jQuery = $;
+
 import 'popper.js';
 import 'bootstrap';
