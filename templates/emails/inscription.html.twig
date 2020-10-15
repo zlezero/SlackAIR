@@ -2,14 +2,13 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}SlackAIR - inscription{% endblock %}
+{% block title %}SlackAIR - Inscription{% endblock %}
 
 {% block body %}
 
 <h1>Bienvenue {{ user.prenom }} {{ user.nom }} !</h1>
 
 <p>
-
     Vous avez été inscrit sur SlackAIR !
     Vos identifiants :
     <ul>
@@ -19,7 +18,7 @@
 
 </p>
 
-<p>Ce mot de passe devra être changé lors de votre première connexion !</p>
+<p class="text-muted">Ce mot de passe devra être changé lors de votre première connexion !</p>
 
 {% endblock %}
 

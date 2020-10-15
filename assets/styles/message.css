@@ -1,3 +1,437 @@
-.message-sending {
+#content {
+  margin-right: 0;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* Sidebar Styles */
+
+#sidebar {
+  background: #37474F;
+  overflow-y: scroll;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease; 
+  background: linear-gradient(#01012c, #000080);
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background: transparent;
+    border-radius: 6px; 
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    background-color: #F5F5F5; 
+    height: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-left:0;
+    border-right:0;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+}
+
+.online {
+    color: #5cb85c !important;
+  }
+  
+.offline{
+    color: grey !important;
+}
+
+.busy{
+    color: red !important;
+}
+
+.absent{
+    color: yellow !important;
+}
+
+#sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0; 
+}
+  
+#sidebar a {
+    text-decoration: none;
+    -webkit-transition: color .3s ease;
+    transition: color .3s ease; 
+}
+  
+#sidebar .sidebar-item {
+    -webkit-transition: all .3s linear;
+    transition: all .3s linear; 
+}
+  
+#sidebar .sidebar-content {
+    max-height: calc(100% -35px);
+    height: calc(100% - 35px);
+    position: relative; 
+}
+
+#sidebar .sidebar-brand {
+  padding: 1rem 1.2rem 2rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 55px; 
+}
+  
+#sidebar .sidebar-brand > a {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 20px;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: left;
+    text-overflow: ellipsis; 
+    color: white;
+}
+
+#sidebar .sidebar-header {
+  padding: 20px;
+  overflow: hidden; 
+  border-top: .4px solid white;
+  border-bottom: .4px solid white;
+}
+  
+#sidebar .sidebar-header .user-pic {
+    width: 60px;
+    padding: 2px;
+    margin-right: 15px;
+    overflow: hidden; 
+}
     
+#sidebar .sidebar-header .user-pic img {
+    -o-object-fit: cover;
+    object-fit: cover;
+    height: 100%;
+    width: 100%; 
+}
+  
+#sidebar .sidebar-header .user-info {
+    overflow: hidden; 
+}
+
+#sidebar .sidebar-header .user-info > span {
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 18px;
+  color: white;
+}
+
+#sidebar .sidebar-header .user-info > span a i{
+    font-size: 16px;
+    color: white;
+}
+
+#sidebar .sidebar-header .user-info .user-status {
+  font-size: 14px;
+  margin-top: 4px;
+  color: white;
+}
+  
+#sidebar .sidebar-header .user-info .user-status i {
+    font-size: 10px;
+    margin-right: 4px;
+    color: #5cb85c; 
+}
+
+#sidebar .sidebar-menu {
+  padding-bottom: 10px;
+}
+
+#sidebar .sidebar-menu .header-menu span {
+    font-weight: bold;
+    font-size: 14px;
+    padding: 15px 20px 5px 20px;
+    display: inline-block; 
+    color:white;
+}
+
+#sidebar .sidebar-menu ul li a {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-decoration: none;
+    position: relative;
+    padding: 8px 30px 8px 20px;
+    width: 100%;
+}
+
+#sidebar .sidebar-menu ul li button .menu-text {
+      -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+      flex-grow: 1;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      -ms-flex-negative: 1;
+      flex-shrink: 1;
+      overflow: hidden; 
+      font-size: 18px;
+}
+
+#sidebar .sidebar-menu ul li button i {
+    font-size: 18px;
+    color: hsla(0,0%,75.3%,.8);
+}
+
+#sidebar .sidebar-menu ul li a .menu-text {
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    white-space: prewrap;
+    text-overflow: ellipsis;
+    -ms-flex-negative: 1;
+    flex-shrink: 1;
+    overflow: hidden; 
+    font-size: 18px;
+    color: hsla(0,0%,75.3%,.8);
+}
+
+#sidebar .sidebar-menu ul li a i {
+    font-size: 18px;
+    color: hsla(0,0%,75.3%,.8);
+}
+
+
+.sidebar-menu ul li div .dropdown-btn {
+  padding: 6px 4px 6px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  border: none;
+  background: none;
+  text-align: left;
+  outline: none;
+}
+
+.sidebar-menu ul li div .dropdown-btn:hover {
+  color: #f1f1f1;
+}
+
+.active {
+  color: white;
+}
+
+.sidebar-menu ul li div .collapse-container{
+    padding-left: 24px;
+}
+
+.sidebar-menu ul li div .collapse-container a {
+    color:#8a8989e0;
+    text-decoration: none;
+    background: none;
+    text-overflow: ellipsis;
+}
+
+.sidebar-menu ul li div .collapse-container a i{
+    font-size: 10px !important;
+    padding-right: 6px;
+}
+
+
+/* Content Styles */
+
+body {
+  overflow-x: hidden;
+  font-size: 16px;
+  font-family: arial, sans-serif;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+input {
+    border: solid lightgrey 1px;
+    padding: 8px;
+}
+
+label {
+    display: inline-block;
+    min-width: 150px;
+}
+
+nav{
+    background: #01012c;
+    height: 57px;
+}
+
+button {
+    padding: 6px 12px;
+}
+
+.navbar-elements > div > a{
+    color: #3737A8;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: right;
+    padding-left: 10px;
+}
+
+.navbar-elements > div > a:active{
+    background-color: #01012c;
+}
+
+.navbar-elements .dropdown-menu {
+    -webkit-transform: none !important;
+    transform: none !important;
+    border-radius: 0;
+    font-size: .9rem; 
+}
+
+.navbar-elements .messages .dropdown-item {
+    padding: .25rem 1rem;
+}
+
+.navbar-elements .messages .messages-header {
+    padding: 0 1rem;
+}
+
+.navbar-elements .messages .message-content {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.navbar-elements .messages .message-content .pic {
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+}
+
+.navbar-elements .messages .message-content .pic img {
+    -o-object-fit: cover;
+    object-fit: cover;
+    height: 100%;
+}
+
+.navbar-elements .messages .message-content .content {
+  line-height: 1.6;
+  padding-left: 5px;
+  width: 180px;
+}
+
+.navbar-elements .messages .message-content .content .message-title {
+    font-size: 13px; 
+}
+
+.navbar-elements .messages .message-content .content .message-detail {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+.navbar-elements .notifications .dropdown-item {
+    padding: .25rem 1rem; 
+}
+
+.navbar-elements .notifications .notifications-header {
+    padding: 0 1rem; 
+}
+
+.navbar-elements .notifications .notification-content {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex; 
+}
+
+.navbar-elements .notifications .notification-content .icon {
+  width: 40px;
+  height: 40px;
+}
+
+.navbar-elements .notifications .notification-content .icon i {
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    line-height: 35px;
+}
+
+.navbar-elements .notifications .notification-content .content {
+  line-height: 1.6;
+  padding-left: 5px;
+  width: 180px; 
+}
+
+.navbar-elements .notifications .notification-content .content .notification-time {
+    font-size: .7rem;
+    color: #828282; 
+}
+
+.navbar-elements .notifications .notification-content .content .notification-detail {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card{
+    overflow-y: auto;
+}
+
+.card-body{
+    overflow-y: auto;
+    text-align: left;
+    bottom: 15px;
+    left: 15px;
+    font-size: 14px;
+}
+
+.card-title{
+    color: #030c63de;
+}
+
+.card-title, .card-subtitle{
+    text-align: center;
+}
+
+.card p i {
+    font-size: 10px;
+    margin-right: 4px;
+}
+
+.message {
+    padding: 10px 5px;
+    margin-bottom: 10px;
+    border-bottom: solid lightgrey 1px;
+}
+
+
+.btn-file {
+      position: relative;
+      overflow: hidden;
+ }
+  
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;   
+  cursor: inherit;
+  display: block;
 }

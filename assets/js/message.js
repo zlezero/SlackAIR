@@ -1,16 +1,15 @@
 $(function() {
-    
-
     //Gestion des emojis
 
     $("#emojis").disMojiPicker();
+    $('#emojis').css('display', 'none');
+
     twemoji.parse(document.body);
 
     $("#emojis").picker(
         emoji => $('#message').val($('#message').val() + emoji)
     );
 
-    $('#emojis').css('display', 'none');
 
     $('#btnEmojis').on('click', (e) => {
        $('#emojis').css('display') == "none" ? $('#emojis').css('display', '') : $('#emojis').css('display', 'none');
@@ -39,7 +38,7 @@ $(function() {
 
         session.subscribe("message/channel", function (uri, payload) {
             console.log("Message reçu : ", payload);
-            addMessage(payload.pseudo, payload.message, payload.channel);
+            addMessage(payload.pseudo, payload.message, payload.channel, payload.messageTime);
         });
 
     });
@@ -54,7 +53,8 @@ $(function() {
             message: $("#message").val(),
             channel: current_channel_id
         };
-
+        console.log("Fou lerr lakko tekk");
+        console.log(data);
         session_glob.publish("message/channel", {data: JSON.stringify(data)});
         $('#message').val('');
 
@@ -75,12 +75,15 @@ $(function() {
 
     });
 
-    function addMessage(name, message, channel) {
-        const messageHTML = "<div class='col-12'><div class='chat-bubble chat-bubble--left'>" + name + " : " + message + "</div></div>";
+    function addMessage(name, message, channel, messageTime) {
+        console.log(messageTime);
+        const messageHTML = 
+        "<div class='col-12'><div class='chat-bubble'><img class='profile-image' src='https://i.pinimg.com/originals/62/99/4c/62994ce35676d330091f6039278972f2.png' alt=''><div class='text'><h6>" + name + 
+        "</h6><p class='text-muted'>" + message + "</p></div><span class='time text-muted small'>"
+        + messageTime +"</span></div></div>";
         $('#chat-messages').html($('#chat-messages').html() + messageHTML);
     }
 
-    //Autres
     var dropdown = document.getElementsByClassName("dropdown-btn");
     var i;
     for (i = 0; i < dropdown.length; i++) {

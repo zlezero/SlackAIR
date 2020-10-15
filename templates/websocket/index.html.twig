@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('message') }}
+    {{ parent() }}
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/goswebsocket/js/vendor/autobahn.min.js') }}"></script>
@@ -121,8 +126,8 @@
         </div>
     </nav>
 
-      <div class="row flex-grow-1">
-        <aside id="sidebar" class="col-md-auto border-right">
+      <div class="row flex-grow-1 h-100">
+        <aside id="sidebar" class="col-md-auto border-right h-100 position-sticky">
             <header>
                 <div class="sidebar-item sidebar-brand">
                     <a href="#"><br>SlackAIR</a>
@@ -188,7 +193,7 @@
                                 <a href="#"><i class="fas fa-lock"></i>Channel 1</a>
                                 <a href="#"><i class="fas fa-lock"></i>Channel 2</a>
                                 <a href="#"><i class="fas fa-lock"></i>Channel 3</a>
-                            </div>
+                            </div>      
                         </div>
                         <div class="col-1 pl-0 pr-0">
                             <button type="button" class="btn">
@@ -218,7 +223,7 @@
                 
             </div>
         </aside>
-        <main class="col pr-0 pl-0">
+        <main class="col pr-0 pl-0 h-100 position-sticky">
           <div id="content" class="container-fluid pr-0 pl-0 h-100">
                     <div class="row no-gutters w-100 h-100">
                         <div class="col-9 chat-container h-100">
@@ -245,12 +250,33 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="chat-messages" class="row"></div>
+                                <div id="chat-messages" class="row">
+                                    <div class="col-12">
+                                        <div class="chat-bubble">    
+                                            <img class="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/rachel.jpeg" alt="">
+                                            <div class="text">
+                                                <h6>XXXXX</h6>
+                                                <p class="text-muted">Hi, wanna see something?</p>
+                                            </div>
+                                            <span class="time text-muted small">Aujourd'hui à 13:21</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="chat-bubble">
+                                            <img class="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/optimus-prime.jpeg" alt="">
+                                            <div class="text">
+                                                <h6>Optimus</h6>
+                                                <p class="text-muted">Wanna go out?</p>
+                                            </div>
+                                            <span class="time text-muted small">Aujourd'hui à 13:29</span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="container-fluid sticky-footer pr-0 pl-0">
                                     <div class="row w-100 mr-0 ml-0">
-                                        <div id="emojis"></div>
+                                        <div id="emojis" style="display: none"></div>
                                         <div class="col-12 w-100 chat-box-col">
-                                            <div class="chat-box-tray form-group w-100" id="containerMessage">
+                                            <div class="chat-box-tray form-group w-100">
                                                 <div class="d-flex flex-grow-1 justify-content-around">
                                                     <button type="button" class="btn" id="btnEmojis"><i class="fas fa-smile-beam"></i></button>
                                                     <button type="button" class="btn btn-file"><i class="fas fa-paperclip"></i> <input type="file"></button>
@@ -287,9 +313,4 @@
             </main>
         </div>      
     </div>
-    <button type="button" id="sendBtn">Send</button>
-    <button type="button" id="changeChannel">Changer channel</button>
-</div>
-
-
 {% endblock %}

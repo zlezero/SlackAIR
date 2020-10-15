@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html style="height: 100%;">
     <head>
 
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <!-- CSS -->
         {% block stylesheets %}
@@ -12,13 +13,14 @@
         <!-- JS -->
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
+            <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
         {% endblock %}
 
         <title>{% block title %}SlackAIR{% endblock %}</title>
     
     </head>
 
-    <body style="height: 100%;" class="overflow-auto">
+    <body style="height: 100%;">
         {% block body %}{% endblock %}
     </body>
 
