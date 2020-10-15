@@ -19,6 +19,15 @@
         </div>
     {% endif %}
 
-    {{ form(form) }}
+    <div class="login-dark">
+        {{ form_start(form) }}
+            <h2 class="sr-only">Login Form</h2>
+            <div class="illustration"><img src="https://img2.pngio.com/black-girl-magic-transparent-png-clipart-free-download-ywd-black-girl-magic-png-420_480.png"></div>
+            <div class="form-group">{{ form_widget(form.email, {'attr': {'placeholder': "Email"}}) }}</div>
+            <div class="form-group">{{ form_widget(form.password, {'attr': {'placeholder': "Password"}}) }}</div>
+            <div class="form-group">{{ form_widget(form.logIn, {'attr': {'class': "btn btn-primary btn-block"}}) }}</div>
+            <a href="#" class="forgot">Forgot your email or password?</a>
+        {{ form_end(form) }}
+    </div>
     
 {% endblock %}

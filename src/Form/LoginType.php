@@ -24,7 +24,7 @@ class LoginType extends AbstractType
                 'required' => true,
                 'constraints' => [new NotBlank()]
             ])
-            ->add('save', SubmitType::class)
+            ->add('logIn', SubmitType::class)
         ;
     }
 

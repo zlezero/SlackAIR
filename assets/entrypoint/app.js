@@ -6,12 +6,15 @@
  */
 
 // any CSS you import will output into a single css file (app.css in this case)
+
 import '../styles/app.css';
 import '../js/app.js';
 import '../styles/app.scss';
 
 const $ = require('jquery');
 global.$ = global.jQuery = $;
+
+require('@fortawesome/fontawesome-free/css/all.min.css');
 
 import 'popper.js';
 import 'bootstrap';
