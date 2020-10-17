@@ -1,0 +1,6 @@
+
+    <!-- Il faut préciser l'action dans le formulaire -->
+    {{ form_start(form, {'action': path('create-groupe')}) }}
+    {{form_row(form.nom, {'attr': {'class': 'form-control'}})}}
+    {{form_row(form.typeGroupeId, {'attr': {'class': 'form-control'}})}}
+    {{ form_end(form) }}

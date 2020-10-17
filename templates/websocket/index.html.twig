@@ -9,6 +9,7 @@
     {{ parent() }}
     <script src="{{ asset('bundles/goswebsocket/js/vendor/autobahn.min.js') }}"></script>
     {{ encore_entry_script_tags('message') }}
+    {{ encore_entry_script_tags('groupes') }}
 {% endblock %}
 
 {% block body %}
@@ -172,33 +173,41 @@
                                 <i class="fas fa-caret-down"></i>
                             </button>
                             <div class="collapse collapse-container" id="collapse-group-public">
-                                <a href="#"><i class="fas fa-hashtag"></i>Channel 1</a>
+                                {% for grp in grpsPb %}
+                                    <a href="#"><i class="fas fa-hashtag"></i>{{grp.Nom}}</a>
+                                {% endfor %}
                                 <a href="#"><i class="fas fa-hashtag"></i>Channel 2</a>
                                 <a href="#"><i class="fas fa-hashtag"></i>Channel 3</a>
                             </div>      
                         </div>
                         <div class="col-1 pl-0 pr-0">
-                            <button type="button" class="btn">
+                            <a data-tooltip="Ajouter un groupe" type="button" class="tooltipped modal-trigger btn right-align" data-toggle="modal" data-typeid="2" data-target="{{path('create-groupe', {'typeGroupeId':2})}}">
                                 <i class="fas fa-plus-circle"></i>
-                            </button>
+                            </a>
                         </div>
                     </li>
                     <li class="d-flex">
                         <div class="col-auto pl-0 pr-0">
                             <button class="btn dropdown-btn" type="button" data-toggle="collapse" aria-expanded="false" data-target="#collapse-group-private" aria-controls="collapse-group-private">
                                <span class="menu-text"><i class="fas fa-comments"></i> Groupes Privés</span>
-                                <i class="fas fa-caret-down"></i>
+                                <i class="fas fa-caret-down">
+                                </i>
                             </button>
                             <div class="collapse collapse-container" id="collapse-group-private">
-                                <a href="#"><i class="fas fa-lock"></i>Channel 1</a>
-                                <a href="#"><i class="fas fa-lock"></i>Channel 2</a>
-                                <a href="#"><i class="fas fa-lock"></i>Channel 3</a>
+                                {% for grp in grpsPv %}
+                                    <a href="#"><i class="fas fa-lock"></i>{{grp.Nom}}</a>
+                                {% endfor %}
                             </div>      
                         </div>
                         <div class="col-1 pl-0 pr-0">
-                            <button type="button" class="btn">
-                                <i class="fas fa-plus-circle"></i>
-                            </button>
+                            <a data-tooltip="voir"
+                            class="tooltipped modal-trigger btn right-align"
+                            data-target="{{path('create-groupe',{'typeGroupeId':1})}}"
+                            href="#modal1">
+                                <button type="button" class="btn">
+                                    <i class="fas fa-plus-circle"></i>
+                                </button>
+                            </a>
                         </div>
                     </li>
                     <li class="d-flex">
@@ -214,9 +223,14 @@
                             </div>      
                         </div>
                         <div class="col-1 pl-0 pr-0">
-                            <button type="button" class="btn">
-                                <i class="fas fa-plus-circle"></i>
-                            </button>
+                            <a data-tooltip="voir"
+                            class="tooltipped modal-trigger btn right-align"
+                            data-target="{{path('create-groupe',{'typeGroupeId':3})}}"
+                            href="#modal1">
+                                <button type="button" class="btn">
+                                    <i class="fas fa-plus-circle"></i>
+                                </button>
+                            </a>
                         </div>
                     </li>
                 </ul>
@@ -252,7 +266,7 @@
                                 </div>
                                 <div id="chat-messages" class="row">
                                     <div class="col-12">
-                                        <div class="chat-bubble">    
+                                        <div class="chat-bubble">
                                             <img class="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/rachel.jpeg" alt="">
                                             <div class="text">
                                                 <h6>XXXXX</h6>
@@ -312,4 +326,13 @@
             </main>
         </div>      
     </div>
+    <div id="modal1" class="modal">
+    <div class="modal-content">
+        <h1>coucou</h1>
+        <button type="submit">fin</button>
+    </div>
+    <div class="modal-footer">
+
+    </div>
+</div>
 {% endblock %}

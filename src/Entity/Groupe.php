@@ -6,6 +6,8 @@ use App\Repository\GroupeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @ORM\Entity(repositoryClass=GroupeRepository::class)
@@ -51,10 +53,10 @@ class Groupe
      */
     private $messages;
 
-    public function __construct()
+    public function __construct(EntityManager $entityManager=null)
     {
-        $this->invitations = new ArrayCollection();
-        $this->messages = new ArrayCollection();
+            $this->invitations = new ArrayCollection();
+            $this->messages = new ArrayCollection();
     }
 
     public function getId(): ?int
