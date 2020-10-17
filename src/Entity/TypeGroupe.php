@@ -29,11 +29,12 @@ class TypeGroupe
      */
     private $groupes;
 
-    public function __construct()
+    public function __construct(string $Label = null)
     {
+        $this->Label=$Label;
         $this->groupes = new ArrayCollection();
+        
     }
-
     public function getId(): ?int
     {
         return $this->id;

@@ -19,9 +19,9 @@ class GroupeRepository extends ServiceEntityRepository
         parent::__construct($registry, Groupe::class);
     }
 
-    // /**
-    //  * @return Groupe[] Returns an array of Groupe objects
-    //  */
+    /**
+     * @return Groupe[] Returns an array of Groupe objects
+     */
     /*
     public function findByExampleField($value)
     {
