@@ -1,4 +1,8 @@
+import {formatDate} from './app';
+import {twemoji} from '../plugins/emoji-picker-twemoji/js/twemoji.min.js';
+
 $(function() {
+
     //Gestion des emojis
 
     $("#emojis").disMojiPicker();
@@ -53,8 +57,7 @@ $(function() {
             message: $("#message").val(),
             channel: current_channel_id
         };
-        console.log("Fou lerr lakko tekk");
-        console.log(data);
+
         session_glob.publish("message/channel", {data: JSON.stringify(data)});
         $('#message').val('');
 
@@ -76,11 +79,10 @@ $(function() {
     });
 
     function addMessage(name, message, channel, messageTime) {
-        console.log(messageTime);
         const messageHTML = 
         "<div class='col-12'><div class='chat-bubble'><img class='profile-image' src='https://i.pinimg.com/originals/62/99/4c/62994ce35676d330091f6039278972f2.png' alt=''><div class='text'><h6>" + name + 
         "</h6><p class='text-muted'>" + message + "</p></div><span class='time text-muted small'>"
-        + messageTime +"</span></div></div>";
+        + formatDate(messageTime) +"</span></div></div>";
         $('#chat-messages').html($('#chat-messages').html() + messageHTML);
     }
 
