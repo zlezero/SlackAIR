@@ -7,51 +7,285 @@
 {% endblock %}
 
 {% block body %}
-<style>
-    body {
-        font-family: arial;
-    }
- 
-    .form-group {
-        margin-bottom: 10px;
-    }
- 
-    input {
-        border: solid lightgrey 1px;
-        padding: 8px;
-    }
- 
-    label {
-        display: inline-block;
-        min-width: 150px;
-    }
- 
-    #chat, #chat2 {
-        height: 400px;
-        width: 600px;
-        border: solid lightgrey 1px;
-        overflow: auto;
-        margin-bottom: 20px;
-    }
- 
-    button {
-        padding: 6px 12px;
-    }
- 
-    .message {
-        padding: 10px 5px;
-        margin-bottom: 10px;
-        border-bottom: solid lightgrey 1px;
-    }
-</style>
- 
-Channel 1 :
-<div id="chat"></div>
-Channel 2 :
-<div id="chat2"></div>
-<div>
-    <div class="form-group">
-        <label for="message">Message:</label> <input type="text" id="message">
+    <div class="container-fluid d-flex flex-column h-100 ">
+      <nav class="row navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    <img src="https://prod-static.disney-plus.net/eu-west-1/builds/d05485849d12d93982c735dfb9e4060c7f557881_1602603279914/images/logo.svg" alt="Logo" width="52px" height="56px">
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="navbar-elements nav navbar-nav flex-row justify-content-between ml-auto">
+                    <div class="dropdown dropleft">
+                        <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-bell"></i>
+                            <sup><span class="badge badge-pill badge-danger notification">3</span></sup>
+                        </a>
+                        <div class="dropdown-menu notifications" aria-labelledby="dropdownMenuMessage">
+                            <div class="notifications-header">
+                                <i class="fa fa-bell"></i>
+                                Notifications
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">
+                                <div class="notification-content">
+                                    <div class="icon">
+                                        <i class="fas fa-check text-success border border-success"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="notification-detail">Vous avez reçu un message de Thomas</div>
+                                        <div class="notification-time">
+                                            Il y'a 6 minutes
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <div class="notification-content">
+                                    <div class="icon">
+                                        <i class="fas fa-exclamation text-info"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="notification-detail">Vous avez été ajouté au channel PHP Project</div>
+                                        <div class="notification-time">
+                                            Aujourd'hui
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-center" href="#">Voir toutes les notifications</a>
+                        </div>
+                    </div>
+                    <div class="dropdown dropleft">
+                        <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-envelope"></i>
+                            <sup><span class="badge badge-pill badge-success notification">7</span></sup>
+                        </a>
+                        <div class="dropdown-menu messages" aria-labelledby="dropdownMenuMessage">
+                            <div class="messages-header">
+                                <i class="fa fa-envelope"></i>
+                                Messages
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">
+                                <div class="message-content">
+                                    <div class="pic">
+                                        <img src="https://www.icone-png.com/png/28/28140.png" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <div class="message-title">
+                                            <strong> Joris</strong>
+                                        </div>
+                                        <div class="message-detail">Faudrait dormir Monsieur</div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <div class="message-content">
+                                    <div class="pic">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Crystal_Clear_kdm_user_female.svg/1200px-Crystal_Clear_kdm_user_female.svg.png" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <div class="message-title">
+                                            <strong> Maurane</strong>
+                                        </div>
+                                        <div class="message-detail">La philo, c'est trop dar</div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <div class="message-content">
+                                    <div class="pic">
+                                        <img src="https://www.icone-png.com/png/28/28140.png" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <div class="message-title">
+                                            <strong> Coco</strong>
+                                        </div>
+                                        <div class="message-detail">J'ai faim</div>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-center" href="#">Voir tous les messages</a>
+                        </div>
+                    </div>
+                    <div>
+                        <a href="#"><i class="fa fa-fw fa-user"></i></a>    
+                    </div>
+            </div>
+        </div>
+    </nav>
+
+      <div class="row flex-grow-1">
+        <aside id="sidebar" class="col-md-auto border-right">
+            <header>
+                <div class="sidebar-item sidebar-brand">
+                    <a href="#"><br>SlackAIR</a>
+                </div>
+                
+                <!-- sidebar-header  -->
+                <div class="sidebar-item sidebar-header d-flex flex-nowrap">
+                    <div class="user-pic">
+                        <img class="img-responsive img-rounded" src="https://i.etsystatic.com/14629925/r/il/bf50b4/1921160378/il_570xN.1921160378_lw7l.jpg" alt="User picture">
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">Zero
+                            <a href="#">
+                                <i class="fa fa-power-off"></i>
+                            </a>
+                        </span>
+                        <span class="user-status">
+                            <i class="fa fa-circle"></i>
+                            <span>En ligne</span>
+                        </span>
+                    </div>
+                </div>
+            </header>
+            <div class=" sidebar-item sidebar-menu">
+                <ul>
+                    <li class="header-menu">
+                        <span>Extra</span>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="menu-text"><i class="fas fa-address-book"></i> Contacts Favoris</span>
+                            <button type="button" class="btn"><i class="fas fa-plus-circle"></i></button>
+                        </a>    
+                    </li>
+                    <li class="header-menu">
+                        <span>General</span>
+                    </li>
+                    <li class="d-flex">
+                        <div class="col-auto pl-0 pr-0">
+                            <button class="btn dropdown-btn" type="button" data-toggle="collapse" aria-expanded="false" data-target="#collapse-group-public" aria-controls="collapse-group-public">
+                                <span class="menu-text"><i class="fas fa-users"></i>    Groupes Publics</span>
+                                <i class="fas fa-caret-down"></i>
+                            </button>
+                            <div class="collapse collapse-container" id="collapse-group-public">
+                                <a href="#"><i class="fas fa-hashtag"></i>Channel 1</a>
+                                <a href="#"><i class="fas fa-hashtag"></i>Channel 2</a>
+                                <a href="#"><i class="fas fa-hashtag"></i>Channel 3</a>
+                            </div>      
+                        </div>
+                        <div class="col-1 pl-0 pr-0">
+                            <button type="button" class="btn">
+                                <i class="fas fa-plus-circle"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="d-flex">
+                        <div class="col-auto pl-0 pr-0">
+                            <button class="btn dropdown-btn" type="button" data-toggle="collapse" aria-expanded="false" data-target="#collapse-group-private" aria-controls="collapse-group-private">
+                               <span class="menu-text"><i class="fas fa-comments"></i> Groupes Privés</span>
+                                <i class="fas fa-caret-down"></i>
+                            </button>
+                            <div class="collapse collapse-container" id="collapse-group-private">
+                                <a href="#"><i class="fas fa-lock"></i>Channel 1</a>
+                                <a href="#"><i class="fas fa-lock"></i>Channel 2</a>
+                                <a href="#"><i class="fas fa-lock"></i>Channel 3</a>
+                            </div>
+                        </div>
+                        <div class="col-1 pl-0 pr-0">
+                            <button type="button" class="btn">
+                                <i class="fas fa-plus-circle"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="d-flex">
+                        <div class="col-auto pl-0 pr-0">
+                            <button class="btn dropdown-btn" type="button" data-toggle="collapse" aria-expanded="false" data-target="#collapse-message-private" aria-controls="collapse-message-private">
+                               <span class="menu-text"><i class="fas fa-inbox"></i> Messages Privés</span>
+                                <i class="fas fa-caret-down"></i>
+                            </button>
+                            <div class="collapse collapse-container" id="collapse-message-private">
+                                <a href="#"><i class="fa fa-circle online"></i>Beyoncé</a>
+                                <a href="#"><i class="fa fa-circle busy"></i>Emmanuel Macron</a>
+                                <a href="#"><i class="fa fa-circle offline"></i>Youssou Ndour</a>
+                            </div>      
+                        </div>
+                        <div class="col-1 pl-0 pr-0">
+                            <button type="button" class="btn">
+                                <i class="fas fa-plus-circle"></i>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+                
+            </div>
+        </aside>
+        <main class="col pr-0 pl-0">
+          <div id="content" class="container-fluid pr-0 pl-0 h-100">
+                    <div class="row no-gutters w-100 h-100">
+                        <div class="col-9 chat-container h-100">
+                            <div id="chat" class="chat container-fluid h-100 w-100 pr-0 pl-0">
+                                <div class="row mr-0 ml-0">
+                                    <div class="chat-title w-100 border sticky-top">
+                                        <div class="friend-drawer no-gutters friend-drawer--grey">
+                                            <div class="text">
+                                                <h6>Le T</h6>
+                                                <p class="text-muted">RIP CTL</p>
+                                            </div>
+                                            <div class="search-box">
+                                                <div class="input-wrapper border">
+                                                    <i class="fas fa-search"></i>
+                                                    <input placeholder="Search here" type="text">
+                                                </div>
+                                            </div>
+                                            <span class="chat-title--right">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-thumbtack"></i>
+                                                <i class="fas fa-sign-out-alt"></i>
+                                                <i class="fas fa-info-circle"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="chat-messages" class="row"></div>
+                                <div class="container-fluid sticky-footer pr-0 pl-0">
+                                    <div class="row w-100 mr-0 ml-0">
+                                        <div id="emojis"></div>
+                                        <div class="col-12 w-100 chat-box-col">
+                                            <div class="chat-box-tray form-group w-100" id="containerMessage">
+                                                <div class="d-flex flex-grow-1 justify-content-around">
+                                                    <button type="button" class="btn" id="btnEmojis"><i class="fas fa-smile-beam"></i></button>
+                                                    <button type="button" class="btn btn-file"><i class="fas fa-paperclip"></i> <input type="file"></button>
+                                                </div>
+                                                <input type="text" id="message" placeholder="Envoyer un message à nom_user_channel">
+                                                <div class="d-flex flex-grow-1 justify-content-around">
+                                                    <button type="button" class="btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+                                                    <button type="button" class="btn" id="changeChannel"><i class="fas fa-exchange-alt"></i></button>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="col-3 h-100">
+                            <div class="card h-100 rounded-bottom">
+                                <div class="card-body border-top">
+                                    <h5 class="card-title">Pouet Pouet Channel</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">Membres du groupe</h6>
+                                    <hr>
+                                    <p class="card-text"><i class="fa fa-circle online"></i> Coco </p>
+                                    <p class="card-text"><i class="fa fa-circle online"></i> Zero</p>
+                                    <p class="card-text"><i class="fa fa-circle offline"></i> SeZonch</p>
+                                    <p class="card-text"><i class="fa fa-circle busy"></i> Soliman 1er</p>
+                                    <p class="card-text"><i class="fa fa-circle offline"></i> Vanelle</p>
+                                    <p class="card-text"><i class="fa fa-circle busy"></i> Le J</p>
+                                    <p class="card-text"><i class="fa fa-circle absent"></i> Armanitore</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>      
     </div>
     <button type="button" id="sendBtn">Send</button>
     <button type="button" id="changeChannel">Changer channel</button>
