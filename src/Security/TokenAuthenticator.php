@@ -32,7 +32,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request)
     {
-        return $request->headers->has('X-AUTH-TOKEN')  || $request->isMethod('POST');
+        return ($request->headers->has('X-AUTH-TOKEN') && $request->isMethod('POST')) || (($request->isXMLHttpRequest() || $request->isMethod('POST')) && $this->security->getUser() == NULL);
     }
 
     /**
@@ -77,11 +77,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $data = [
-            // you may want to customize or obfuscate the message first
-            //'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
-            'message' => 'Authentication Required'
-            // or to translate this message
-            // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
+            'message' => 'Authentication failed'
         ];
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
@@ -93,7 +89,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     public function start(Request $request, AuthenticationException $authException = null)
     {
         $data = [
-            // you might translate this message
             'message' => 'Authentication Required'
         ];
 
