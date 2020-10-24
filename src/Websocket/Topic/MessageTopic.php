@@ -99,7 +99,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
         $this->entityManager->persist($message);
         $this->entityManager->flush();
 
-        $this->broadcastMessage($topic, $message, $user, false, $groupe);
+        $this->broadcastMessage($topic, $message, $user_entity, false, $groupe);
         
     }
 

@@ -1,0 +1,182 @@
+<div>
+    <a href="#" type="button" data-toggle="modal" data-target=".user-profile-modal"><i class="fa fa-fw fa-user"></i></a> 
+    <div id="user-profile-modal" class="modal fade user-profile-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Profile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid user-profile-container">
+                        <div class="row my-2">
+                            <div class="col-lg-4 order-lg-1">
+                                <div class="user-profile-img">
+                                    <img src="https://i.etsystatic.com/14629925/r/il/bf50b4/1921160378/il_570xN.1921160378_lw7l.jpg" alt="userProfileImage"/>
+                                    <label class="file btn btn-lg text-center">
+                                        <span>Changer Photo</span>
+                                        <input type="file" name="file"/>
+                                    </label>
+                                </div>
+                                <div class="profile-settings">
+                                    <p><i class="fas fa-user-cog"></i> PARAMETRES</p>
+                                    <div class="dropright" id="statusDropright">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="far fa-smile-wink"></i>Définir votre statut</a>
+                                        <div id="statusDroprightMenu" class="dropdown-menu" aria-labelledby="statusDroprightMenu">
+                                            <h6 class="dropdown-header">Changer statut</h6>
+                                            <a data-id="1" class="dropdown-item" href="#"><i class="fa fa-circle online"></i>En ligne</a>
+                                            <a data-id="2" class="dropdown-item" href="#"><i class="fa fa-circle offline"></i>Hors ligne</a>
+                                            <a data-id="3" class="dropdown-item" href="#"><i class="fa fa-circle absent"></i>Absent</a>
+                                            <a data-id="4" class="dropdown-item" href="#"><i class="fa fa-circle busy"></i>Ne pas déranger</a>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <a href="#"><i class="far fa-edit"></i>Changer Thème</a><br/>
+                                </div>
+                            </div>
+                            <div class="col-lg-8 order-lg-2">
+                                <div class="profile-description">
+                                    <h4>
+                                        {{user.prenom}} {{user.nom}}
+                                    </h4>
+                                    <h6 id="user-profile-statut">
+                                        <i class="fa fa-circle {{user.statut_color}}"></i><span> {{user.statut}}</span>
+                                    </h6>
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">Profil</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="false">Modifier Profil</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="edit-password" data-toggle="tab" href="#change" role="tab" aria-controls="change" aria-selected="false">Modifier Mot de passe</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col">
+                                    <div class="tab-content user-profile-tab" id="myTabContent">
+                                        <div class="tab-pane fade active show in" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>Pseudo</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p id="profile-user-pseudo">{{user.pseudo}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>Age</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p id="profile-user-age">{{user.age}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>Email</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p>{{user.email}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>Profession</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p id="profile-user-profession">{{user.profession}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>Département</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p id="profile-user-department">{{user.departement.nom}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>Chef de Département</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p id="profile-user-department-chef">{{user.departement.chef.prenom}} {{user.departement.chef.nom}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="edit" role="tabpanel" aria-labelledby="edit-tab">
+                                            {{ form_start(form, {'attr': {'id': 'user-update-form'}}) }}
+                                                <div class="form-group row">
+                                                    {{ form_label(form.pseudo, null, {
+                                                        'label': 'Pseudo',
+                                                        'label_attr': {'class': 'col-lg-3'}
+                                                    }) }}
+                                                    {{ form_widget(form.pseudo, {'attr': {'class': "col-lg-7", 'value': user.pseudo }}) }}
+                                                </div>
+                                                <div class="form-group row">
+                                                    {{ form_label(form.age, null, {
+                                                        'label': 'Age',
+                                                        'label_attr': {'class': 'col-lg-3'}
+                                                    }) }}
+                                                    {{ form_widget(form.age, {'attr': {'class': "col-lg-7", 'value': user.age }}) }}
+                                                </div>
+                                                <div class="form-group row">
+                                                    {{ form_label(form.profession, null, {
+                                                        'label': 'Profession',
+                                                        'label_attr': {'class': 'col-lg-3'}
+                                                    }) }}
+                                                    {{ form_widget(form.profession, {'attr': {'class': "col-lg-7", 'value': user.profession }}) }}
+                                                </div>
+                                                <div class="form-group row">
+                                                    {{ form_label(form.DepartementId, null, {
+                                                        'label': 'Département',
+                                                        'label_attr': {'class': 'col-lg-3'}
+                                                    }) }}
+                                                    {{ form_widget(form.DepartementId, {'attr': {'class': "col-lg-7", 'value': user.departement.nom }}) }}
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label form-control-label"></label>
+                                                    <div class="col-lg-7 update-btn-group">
+                                                        {{ form_widget(form.annuler, {'label': "Annuler", 'attr': {'class': "btn btn-secondary cancel-button"}}) }}
+                                                        {{ form_widget(form.confirmer, {'label': "Confirmer", 'attr': {'class': "btn change-button"}}) }}
+                                                    </div>
+                                                </div>
+                                            {{ form_end(form) }}
+                                        </div>
+                                        <div class="tab-pane fade" id="change" role="tabpanel" aria-labelledby="edit-password">
+                                            {{ form_start(passwordForm, {'attr': {'id': 'password-update-form'}}) }}
+                                                <div class="form-group row">
+                                                    {{ form_label(passwordForm.password.first, null, {
+                                                        'label_attr': {'class': 'col-lg-3'}
+                                                    }) }}
+                                                    {{ form_widget(passwordForm.password.first, {'attr': {'class': "col-lg-7"}}) }}
+                                                </div>
+                                                <div class="form-group row">
+                                                    {{ form_label(passwordForm.password.second, null, {
+                                                        'label_attr': {'class': 'col-lg-3'}
+                                                    }) }}
+                                                    {{ form_widget(passwordForm.password.second, {'attr': {'class': "col-lg-7"}}) }}
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label form-control-label"></label>
+                                                    <div class="col-lg-7 update-btn-group">
+                                                        {{ form_widget(passwordForm.annuler, {'label': "Annuler", 'attr': {'class': "btn btn-secondary cancel-button"}}) }}
+                                                        {{ form_widget(passwordForm.confirmer, {'label': "Confirmer", 'attr': {'class': "btn change-button"}}) }}
+                                                    </div>
+                                                </div>
+                                            {{ form_end(passwordForm) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

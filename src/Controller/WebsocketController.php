@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Statut;
+
 class WebsocketController extends AbstractController
 {
 
@@ -42,13 +44,25 @@ class WebsocketController extends AbstractController
                 array_push($grpsDM,$invit->getGroupeId());
             }
         }
+            
+        if( $user->getStatut()->getName() == "Hors Ligne"){
+            $user->setStatut($this->getDoctrine()->getRepository(Statut::class)->findOneBy( array('id' => 1)));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            $em->refresh($user);
+        }
 
         return $this->render('websocket/index.html.twig', [
             'controller_name' => 'WebsocketController',
-            'user'=>$user,
             'grpsPb'=>$grpsPb,
             'grpsPv'=>$grpsPv,
             'grpsDM'=>$grpsDM,
+            'user' => [
+                "pseudo" => $this->getUser()->getPseudo(),
+                "statut" => $this->getUser()->getStatut()->getName(),
+                "statut_color" => $this->getUser()->getStatut()->getStatusColor()
+            ]
         ]);
     }
 }

@@ -100,4 +100,81 @@ $(function() {
         });
     }
 
+    // Gestion du statut
+    
+    var idleTime = 0;
+    var statutId = 1;
+    
+    var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+
+    $(this).on('mousemove',function (e) {
+
+        idleTime = 0;
+
+        if(statutId == 5) {
+            statutId = 1;
+            setStatutAjax(statutId);
+        }
+        
+    });
+
+    $(this).on('keypress', function (e) {
+
+        idleTime = 0;
+
+        if(statutId == 5) {
+            statutId = 1;
+            setStatutAjax(statutId);
+        }
+
+    });
+
+    $("#statusDropright").on('show.bs.dropdown', function(){
+        $('#statusDroprightMenu').on("click", function(v){
+            statutId = v.target.attributes["data-id"].nodeValue;
+            setStatutAjax(statutId);
+        });
+    });
+
+    function timerIncrement() {
+        console.log(idleTime);
+        console.log(statutId);
+        idleTime = idleTime + 1;
+        if (idleTime > 14 && statutId == 1) { //15 minutes
+            statutId = 5;
+            setStatutAjax(statutId);
+        }
+    }
+
+    function setStatusPrint(name, color){
+        $('#user-profile-statut').html('<i class="fa fa-circle ' +color+'"></i><span> ' + name + '</span>');
+        $('#user-status').html('<i class="fa fa-circle ' +color+'"></i><span> ' + name + '</span>');
+    }
+
+    function setStatutAjax(idStatut) {
+        $.post({
+            url: '/api/user/setStatut',
+            data: {"statutId": idStatut},
+            success: function(result){
+                setStatusPrint(result['statut']['nom'], result['statut']['color'])
+            }
+        });
+    }
+
+    /*window.addEventListener('beforeunload', (event) => {
+        // Cancel the event as stated by the standard.
+        event.preventDefault();
+        statutId = 2;
+            $.post({
+                url: '/api/user/setStatut',
+                data: {"statutId": statutId},
+                success: function(result){
+                    console.log(result["message"]);
+                }
+            })
+        // Chrome requires returnValue to be set.
+        event.returnValue = '';
+    });*/
+
+    
 });

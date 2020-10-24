@@ -50,6 +50,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\GreaterThan(0)
      */
     private $age;
 
@@ -87,6 +88,18 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="UserId")
      */
     private $messages;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $profession;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Statut::class, inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $statut;
+
 
     public function __construct()
     {
@@ -180,6 +193,18 @@ class User implements UserInterface
     public function setSexe(?string $sexe): self
     {
         $this->sexe = $sexe;
+
+        return $this;
+    }
+
+    public function getProfession(): ?string
+    {
+        return $this->profession;
+    }
+
+    public function setProfession(?string $profession): self
+    {
+        $this->profession = $profession;
 
         return $this;
     }
@@ -325,6 +350,18 @@ class User implements UserInterface
                 $message->setUserId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatut(): ?statut
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?statut $statut): self
+    {
+        $this->statut = $statut;
 
         return $this;
     }
