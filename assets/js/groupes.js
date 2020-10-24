@@ -1,6 +1,6 @@
 //https://benoitgrisot.fr/inserer-un-formulaire-dans-une-modale-avec-symfony-et-materializecss/
 
-$(function() {
+/*$(function() {
     //On écoute le "click" sur le bouton ayant la classe "modal-trigger"
     
     $('.modal-trigger').on('click', function () {
@@ -16,4 +16,4 @@ $(function() {
                 $('#modal1').modal('open');
             });
         })
-    });
+    });*/

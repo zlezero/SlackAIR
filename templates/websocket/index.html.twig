@@ -2,6 +2,7 @@
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('message') }}
+    {{ encore_entry_link_tags('profile') }}
     {{ parent() }}
 {% endblock %}
 
@@ -10,6 +11,7 @@
     <script src="{{ asset('bundles/goswebsocket/js/vendor/autobahn.min.js') }}"></script>
     {{ encore_entry_script_tags('message') }}
     {{ encore_entry_script_tags('groupes') }}
+    {{ encore_entry_script_tags('profile') }}
 {% endblock %}
 
 {% block body %}
@@ -21,108 +23,107 @@
                     <img src="https://prod-static.disney-plus.net/eu-west-1/builds/d05485849d12d93982c735dfb9e4060c7f557881_1602603279914/images/logo.svg" alt="Logo" width="52px" height="56px">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
                 </button>
             </div>
             <div class="navbar-elements nav navbar-nav flex-row justify-content-between ml-auto">
-                    <div class="dropdown dropleft">
-                        <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="dropdown dropleft">
+                    <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bell"></i>
+                        <sup><span class="badge badge-pill badge-danger notification">3</span></sup>
+                    </a>
+                    <div class="dropdown-menu notifications" aria-labelledby="dropdownMenuMessage">
+                        <div class="notifications-header">
                             <i class="fa fa-bell"></i>
-                            <sup><span class="badge badge-pill badge-danger notification">3</span></sup>
-                        </a>
-                        <div class="dropdown-menu notifications" aria-labelledby="dropdownMenuMessage">
-                            <div class="notifications-header">
-                                <i class="fa fa-bell"></i>
-                                Notifications
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">
-                                <div class="notification-content">
-                                    <div class="icon">
-                                        <i class="fas fa-check text-success border border-success"></i>
-                                    </div>
-                                    <div class="content">
-                                        <div class="notification-detail">Vous avez reçu un message de Thomas</div>
-                                        <div class="notification-time">
-                                            Il y'a 6 minutes
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <div class="notification-content">
-                                    <div class="icon">
-                                        <i class="fas fa-exclamation text-info"></i>
-                                    </div>
-                                    <div class="content">
-                                        <div class="notification-detail">Vous avez été ajouté au channel PHP Project</div>
-                                        <div class="notification-time">
-                                            Aujourd'hui
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-center" href="#">Voir toutes les notifications</a>
+                            Notifications
                         </div>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">
+                            <div class="notification-content">
+                                <div class="icon">
+                                    <i class="fas fa-check text-success border border-success"></i>
+                                </div>
+                                <div class="content">
+                                    <div class="notification-detail">Vous avez reçu un message de Thomas</div>
+                                    <div class="notification-time">
+                                        Il y'a 6 minutes
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <div class="notification-content">
+                                <div class="icon">
+                                    <i class="fas fa-exclamation text-info"></i>
+                                </div>
+                                <div class="content">
+                                    <div class="notification-detail">Vous avez été ajouté au channel PHP Project</div>
+                                    <div class="notification-time">
+                                        Aujourd'hui
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-center" href="#">Voir toutes les notifications</a>
                     </div>
-                    <div class="dropdown dropleft">
-                        <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                </div>
+                <div class="dropdown dropleft">
+                    <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-envelope"></i>
+                        <sup><span class="badge badge-pill badge-success notification">7</span></sup>
+                    </a>
+                    <div class="dropdown-menu messages" aria-labelledby="dropdownMenuMessage">
+                        <div class="messages-header">
                             <i class="fa fa-envelope"></i>
-                            <sup><span class="badge badge-pill badge-success notification">7</span></sup>
-                        </a>
-                        <div class="dropdown-menu messages" aria-labelledby="dropdownMenuMessage">
-                            <div class="messages-header">
-                                <i class="fa fa-envelope"></i>
-                                Messages
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">
-                                <div class="message-content">
-                                    <div class="pic">
-                                        <img src="https://www.icone-png.com/png/28/28140.png" alt="">
-                                    </div>
-                                    <div class="content">
-                                        <div class="message-title">
-                                            <strong> Joris</strong>
-                                        </div>
-                                        <div class="message-detail">Faudrait dormir Monsieur</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <div class="message-content">
-                                    <div class="pic">
-                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Crystal_Clear_kdm_user_female.svg/1200px-Crystal_Clear_kdm_user_female.svg.png" alt="">
-                                    </div>
-                                    <div class="content">
-                                        <div class="message-title">
-                                            <strong> Maurane</strong>
-                                        </div>
-                                        <div class="message-detail">La philo, c'est trop dar</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <div class="message-content">
-                                    <div class="pic">
-                                        <img src="https://www.icone-png.com/png/28/28140.png" alt="">
-                                    </div>
-                                    <div class="content">
-                                        <div class="message-title">
-                                            <strong> Coco</strong>
-                                        </div>
-                                        <div class="message-detail">J'ai faim</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-center" href="#">Voir tous les messages</a>
+                            Messages
                         </div>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">
+                            <div class="message-content">
+                                <div class="pic">
+                                    <img src="https://www.icone-png.com/png/28/28140.png" alt="">
+                                </div>
+                                <div class="content">
+                                    <div class="message-title">
+                                        <strong> Joris</strong>
+                                    </div>
+                                    <div class="message-detail">Faudrait dormir Monsieur</div>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <div class="message-content">
+                                <div class="pic">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Crystal_Clear_kdm_user_female.svg/1200px-Crystal_Clear_kdm_user_female.svg.png" alt="">
+                                </div>
+                                <div class="content">
+                                    <div class="message-title">
+                                        <strong> Maurane</strong>
+                                    </div>
+                                    <div class="message-detail">La philo, c'est trop dar</div>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <div class="message-content">
+                                <div class="pic">
+                                    <img src="https://www.icone-png.com/png/28/28140.png" alt="">
+                                </div>
+                                <div class="content">
+                                    <div class="message-title">
+                                        <strong> Coco</strong>
+                                    </div>
+                                    <div class="message-detail">J'ai faim</div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-center" href="#">Voir tous les messages</a>
                     </div>
-                    <div>
-                        <a href="#"><i class="fa fa-fw fa-user"></i></a>    
-                    </div>
+                </div>
+                {{ render(controller(
+                    'App\\Controller\\UserProfileController::getUserInfos'
+                )) }}
             </div>
         </div>
     </nav>
@@ -140,14 +141,14 @@
                         <img class="img-responsive img-rounded" src="https://i.etsystatic.com/14629925/r/il/bf50b4/1921160378/il_570xN.1921160378_lw7l.jpg" alt="User picture">
                     </div>
                     <div class="user-info">
-                        <span class="user-name">Zero
-                            <a href="#">
+                        <span id="sidebar-user-pseudo" class="user-name">{{user.pseudo}}
+                            <a href="{{ logout_path() }}">
                                 <i class="fa fa-power-off"></i>
                             </a>
                         </span>
-                        <span class="user-status">
-                            <i class="fa fa-circle"></i>
-                            <span>En ligne</span>
+                        <span id="user-status" class="user-status">
+                            <i class="fa fa-circle {{user.statut_color}}"></i>
+                            <span>{{user.statut}}</span>
                         </span>
                     </div>
                 </div>
@@ -266,23 +267,43 @@
                                 </div>
                                 <div id="chat-messages" class="row">
                                     <div class="col-12">
-                                        <div class="chat-bubble">
-                                            <img class="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/rachel.jpeg" alt="">
+                                        <div class="chat-bubble">    
+                                            <img class="profile-image" src="https://www.decoparty.fr/wp-content/uploads/2020/09/disney-the-princess-and-the-frog-tiana-cardboard-face-mask-for-children-product-image.jpg" alt="">
                                             <div class="text">
-                                                <h6>XXXXX</h6>
-                                                <p class="text-muted">Hi, wanna see something?</p>
+                                                <h6>Tiana</h6>
+                                                <p class="text-muted">Hi Girls</p>
                                             </div>
                                             <span class="time text-muted small">Aujourd'hui à 13:21</span>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="chat-bubble">
-                                            <img class="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/optimus-prime.jpeg" alt="">
+                                            <img class="profile-image" src="https://www.decoparty.fr/wp-content/uploads/2020/09/disney-beauty-and-the-beast-belle-cardboard-face-mask-for-children-product-image.jpg" alt="">
                                             <div class="text">
-                                                <h6>Optimus</h6>
+                                                <h6>Belle</h6>
                                                 <p class="text-muted">Wanna go out?</p>
                                             </div>
                                             <span class="time text-muted small">Aujourd'hui à 13:29</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="chat-bubble">
+                                            <img class="profile-image" src="https://www.bebegavroche.com/media/catalog/product/cache/1/image/265x/9df78eab33525d08d6e5fb8d27136e95/S/M/SM336-Masque-en-carton-Cendrillon---Disney-Cendrillon---27--cm-1.jpg" alt="">
+                                            <div class="text">
+                                                <h6>Cendrillon</h6>
+                                                <p class="text-muted">Why not !</p>
+                                            </div>
+                                            <span class="time text-muted small">Aujourd'hui à 13:30</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="chat-bubble">
+                                            <img class="profile-image" src="https://www.bebegavroche.com/media/catalog/product/cache/1/thumbnail/1200x/040ec09b1e35df139433887a97daa66f/S/M/SM327-Masque-en-carton-Jasmine---Disney-Aladdin---27--cm-1.jpg" alt="">
+                                            <div class="text">
+                                                <h6>Jasmine</h6>
+                                                <p class="text-muted">Yes, I'm so hungry right now.</p>
+                                            </div>
+                                            <span class="time text-muted small">Aujourd'hui à 13:32</span>
                                         </div>
                                     </div>
                                 </div>
@@ -326,13 +347,13 @@
             </main>
         </div>      
     </div>
+    <!-- A supprimer -->
     <div id="modal1" class="modal">
-    <div class="modal-content">
-        <h1>coucou</h1>
-        <button type="submit">fin</button>
+        <div class="modal-content">
+            <h1>coucou</h1>
+            <button type="submit">fin</button>
+        </div>
+        <div class="modal-footer"></div>
     </div>
-    <div class="modal-footer">
-
-    </div>
-</div>
+    {% include 'modals/index.html.twig' %}
 {% endblock %}

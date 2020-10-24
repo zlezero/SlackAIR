@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Form\LoginType;
+use App\Entity\User;
+use App\Entity\Statut;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,6 +28,14 @@ class LoginController extends AbstractController
     {
 
         if ($this->security->isGranted('ROLE_USER')) {
+            if( $this->getUser()->getStatut()->getName() == "Hors Ligne"){
+                $this->getUser()->setStatut($this->getDoctrine()->getRepository(Statut::class)->findOneBy( array('id' => 1)));
+                $user = $this->getUser();
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+                $em->refresh($user);
+            }
             return $this->redirectToRoute('app');
         }
         

@@ -50,6 +50,11 @@
     color: yellow !important;
 }
 
+.channel-selected {
+    color: white;
+    background-color: #ffffff1e;
+}
+
 #sidebar ul {
     list-style-type: none;
     padding: 0;
