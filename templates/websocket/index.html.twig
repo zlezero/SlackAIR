@@ -15,14 +15,12 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container-fluid d-flex flex-column h-100 ">
+    <div class="container-fluid d-flex flex-column h-100">
       <nav class="row navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">
-                    <img src="https://prod-static.disney-plus.net/eu-west-1/builds/d05485849d12d93982c735dfb9e4060c7f557881_1602603279914/images/logo.svg" alt="Logo" width="52px" height="56px">
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-brand btn" id="btn-theme" href="#">
+                        <img src="https://media.discordapp.net/attachments/760767940600791041/773944661563146260/wazal_7.png" alt="Logo" width="150px">
                 </button>
             </div>
             <div class="navbar-elements nav navbar-nav flex-row justify-content-between ml-auto">
@@ -128,13 +126,9 @@
         </div>
     </nav>
 
-      <div class="row flex-grow-1 h-100">
-        <aside id="sidebar" class="col-md-auto border-right h-100 position-sticky">
+      <div class="row flex-grow-1 h-80">
+        <aside id="sidebar" class="col-md-auto h-100 position-sticky">
             <header>
-                <div class="sidebar-item sidebar-brand">
-                    <a href="#"><br>SlackAIR</a>
-                </div>
-                
                 <!-- sidebar-header  -->
                 <div class="sidebar-item sidebar-header d-flex flex-nowrap">
                     <div class="user-pic">
@@ -158,22 +152,38 @@
                     <li class="header-menu">
                         <span>Extra</span>
                     </li>
-                    <li>
-                        <a href="#">
-                            <span class="menu-text"><i class="fas fa-address-book"></i> Contacts Favoris</span>
-                            <button type="button" class="btn"><i class="fas fa-plus-circle"></i></button>
-                        </a>    
+                    <li class="d-flex">
+                        <div class="pl-0 pr-0 grpList">
+                            <button class="btn dropdown-btn" type="button">
+                                <span class="menu-text"><i class="fas fa-address-book"></i>    Contacts favoris</span>
+                                <i class="fas fa-caret-down icon-caret"></i>
+                            </button>
+                            <div class="collapse show hide collapse-container" id="collapse-favoris">
+                                <a href="#"><i class="fa fa-circle online"></i>Beyoncé</a>
+                                <a href="#"><i class="fa fa-circle busy"></i>Emmanuel Macron</a>
+                            </div>      
+                        </div>
+                        <div class="col-1 pl-0 pr-0">
+                            <!--
+                            TODO : add-favoris
+                            -->
+                            <a data-tooltip="Ajouter un groupe" type="button" class="tooltipped modal-trigger btn right-align" >
+                                <button type="button" class="btn">
+                                    <i class="fas fa-plus-circle"></i>
+                                </button>
+                            </a>
+                        </div>
                     </li>
                     <li class="header-menu">
                         <span>General</span>
                     </li>
                     <li class="d-flex">
-                        <div class="col-auto pl-0 pr-0">
-                            <button class="btn dropdown-btn" type="button" data-toggle="collapse" aria-expanded="false" data-target="#collapse-group-public" aria-controls="collapse-group-public">
+                        <div class="pl-0 pr-0 grpList">
+                            <button class="btn dropdown-btn" type="button">
                                 <span class="menu-text"><i class="fas fa-users"></i>    Groupes Publics</span>
-                                <i class="fas fa-caret-down"></i>
+                                <i class="fas fa-caret-down icon-caret"></i>
                             </button>
-                            <div class="collapse collapse-container" id="collapse-group-public">
+                            <div class="collapse show hide collapse-container" id="collapse-group-public">
                                 {% for grp in grpsPb %}
                                     <a href="#"><i class="fas fa-hashtag"></i>{{grp.Nom}}</a>
                                 {% endfor %}
@@ -183,18 +193,19 @@
                         </div>
                         <div class="col-1 pl-0 pr-0">
                             <a data-tooltip="Ajouter un groupe" type="button" class="tooltipped modal-trigger btn right-align" data-toggle="modal" data-typeid="2" data-target="{{path('create-groupe', {'typeGroupeId':2})}}">
-                                <i class="fas fa-plus-circle"></i>
+                                <button type="button" class="btn">
+                                    <i class="fas fa-plus-circle"></i>
+                                </button>
                             </a>
                         </div>
                     </li>
                     <li class="d-flex">
-                        <div class="col-auto pl-0 pr-0">
-                            <button class="btn dropdown-btn" type="button" data-toggle="collapse" aria-expanded="false" data-target="#collapse-group-private" aria-controls="collapse-group-private">
-                               <span class="menu-text"><i class="fas fa-comments"></i> Groupes Privés</span>
-                                <i class="fas fa-caret-down">
-                                </i>
+                        <div class="pl-0 pr-0 grpList">
+                            <button class="btn dropdown-btn" type="button" >
+                                <span class="menu-text"><i class="fas fa-comments"></i> Groupes Privés</span>
+                                <i class="fas fa-caret-down icon-caret"></i>
                             </button>
-                            <div class="collapse collapse-container" id="collapse-group-private">
+                            <div class="collapse show hide collapse-container" id="collapse-group-private">
                                 {% for grp in grpsPv %}
                                     <a href="#"><i class="fas fa-lock"></i>{{grp.Nom}}</a>
                                 {% endfor %}
@@ -212,12 +223,12 @@
                         </div>
                     </li>
                     <li class="d-flex">
-                        <div class="col-auto pl-0 pr-0">
-                            <button class="btn dropdown-btn" type="button" data-toggle="collapse" aria-expanded="false" data-target="#collapse-message-private" aria-controls="collapse-message-private">
-                               <span class="menu-text"><i class="fas fa-inbox"></i> Messages Privés</span>
-                                <i class="fas fa-caret-down"></i>
+                        <div class="pl-0 pr-0 grpList">
+                            <button class="btn dropdown-btn" type="button" aria-expanded="false" >
+                                <span class="menu-text"><i class="fas fa-inbox"></i> Messages Privés</span>
+                                <i class="fas fa-caret-down icon-caret"></i>
                             </button>
-                            <div class="collapse collapse-container" id="collapse-message-private">
+                            <div class="collapse show hide collapse-container" id="collapse-message-private">
                                 <a href="#"><i class="fa fa-circle online"></i>Beyoncé</a>
                                 <a href="#"><i class="fa fa-circle busy"></i>Emmanuel Macron</a>
                                 <a href="#"><i class="fa fa-circle offline"></i>Youssou Ndour</a>
@@ -244,16 +255,16 @@
                         <div class="col-9 chat-container h-100">
                             <div id="chat" class="chat container-fluid h-100 w-100 pr-0 pl-0">
                                 <div class="row mr-0 ml-0">
-                                    <div class="chat-title w-100 border sticky-top">
+                                    <div class="chat-title w-100 border-bottom">
                                         <div class="friend-drawer no-gutters friend-drawer--grey">
                                             <div class="text">
-                                                <h6>Le T</h6>
-                                                <p class="text-muted">RIP CTL</p>
+                                                <h6>Titre</h6>
+                                                <p class="text-muted">Description</p>
                                             </div>
                                             <div class="search-box">
                                                 <div class="input-wrapper border">
                                                     <i class="fas fa-search"></i>
-                                                    <input placeholder="Search here" type="text">
+                                                    <input placeholder="Rechercher" type="text">
                                                 </div>
                                             </div>
                                             <span class="chat-title--right">
@@ -328,7 +339,7 @@
                             </div>
                         <div class="col-3 h-100">
                             <div class="card h-100 rounded-bottom">
-                                <div class="card-body border-top">
+                                <div class="card-body ">
                                     <h5 class="card-title">Pouet Pouet Channel</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">Membres du groupe</h6>
                                     <hr>

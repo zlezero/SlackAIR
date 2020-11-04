@@ -16,14 +16,14 @@ $(function() {
 
 
     $('#btnEmojis').on('click', (e) => {
-       $('#emojis').css('display') == "none" ? $('#emojis').css('display', '') : $('#emojis').css('display', 'none');
+        $('#emojis').css('display') == "none" ? $('#emojis').css('display', '') : $('#emojis').css('display', 'none');
     });
 
-    $(document).on('mouseup', function(e){
+    $(document).on('mouseup', function(e) {
 
         var container = $("#emojis");
     
-        if(!container.is(e.target) && container.has(e.target).length === 0){
+        if(!container.is(e.target) && container.has(e.target).length === 0 && !$('#btnEmojis').is(e.target) && !$('#btnEmojis i').is(e.target)) {
             container.hide();
         }
 
@@ -86,19 +86,24 @@ $(function() {
         $('#chat-messages').html($('#chat-messages').html() + messageHTML);
     }
 
-    var dropdown = document.getElementsByClassName("dropdown-btn");
-    var i;
-    for (i = 0; i < dropdown.length; i++) {
-        dropdown[i].addEventListener("click", function() {
-            this.classList.toggle("active");
-            var dropdownContent = this.nextElementSibling;
-            if (dropdownContent.style.display === "block") {
-                dropdownContent.style.display = "none";
-            } else {
-                dropdownContent.style.display = "block";
-            }
-        });
-    }
+    $('.dropdown-btn').on('click', (e) => {
+
+        let dropdownContent = $(e.currentTarget).next();
+        let icon = $('.icon-caret', e.currentTarget);
+
+        if (dropdownContent.hasClass("hide")) {
+            dropdownContent.removeClass("hide");
+            dropdownContent.addClass("reveal");
+            icon.removeClass("fa-caret-down");
+            icon.addClass("fa-caret-up");
+        } else {
+            icon.removeClass("fa-caret-up");
+            icon.addClass("fa-caret-down");
+            dropdownContent.removeClass("reveal");
+            dropdownContent.addClass("hide");
+        }
+
+    });
 
     // Gestion du statut
     
@@ -137,8 +142,6 @@ $(function() {
     });
 
     function timerIncrement() {
-        console.log(idleTime);
-        console.log(statutId);
         idleTime = idleTime + 1;
         if (idleTime > 14 && statutId == 1) { //15 minutes
             statutId = 5;
@@ -176,5 +179,14 @@ $(function() {
         event.returnValue = '';
     });*/
 
-    
+    $('#btn-theme').on('click', (e) => {
+
+        if($('body').hasClass("dark")) {
+            $('.chat-title, body').removeClass("dark");
+        } else {
+            $('.chat-title, body').addClass("dark");
+        }
+
+    });
+
 });
