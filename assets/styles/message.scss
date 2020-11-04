@@ -26,6 +26,9 @@ $blue: #74b9ff;
     }
   }
 }
+.border-bottom.dark{
+  border-bottom: 1px solid #000000 !important;
+}
 
 .profile-image {
     width: 50px;
@@ -105,7 +108,6 @@ input {
 }
 
 .chat-container{
-  border: solid lightgrey 1px;
   border-radius: 7px;
   margin: 0;
   float: left;
@@ -205,5 +207,41 @@ input {
         i {
             margin-left: 0 !important;
         }
+  }
+}
+
+.dark{
+  input{    
+    border:1px solid black;
+    color: lightgray;
+    background-color: #202225;
+  }
+  
+  .input-wrapper{    
+    background-color: #202225;
+    input{
+      border:0px;
+    }
+  }
+  .card{
+    background-color: #202225;
+    color: lightgray;
+  }
+  .card-title{
+    color: #74b9ff;
+  }
+  .chat-box-tray{
+    background-color: #202225;
+    color: #74b9ff;
+  }
+
+  #sidebar{
+    background: linear-gradient(#080d24, #1f1f24);
+  }
+  nav{
+    background:#080d24;
+  }
+  ::-webkit-scrollbar{
+    background:#1f1f24;
   }
 }

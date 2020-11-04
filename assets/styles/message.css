@@ -1,9 +1,13 @@
+.dark{
+    background-color: #202225;
+    color: lightgray;
+}
+
 #content {
   margin-right: 0;
   margin: 0 auto;
   padding: 0;
 }
-
 /* Sidebar Styles */
 
 #sidebar {
@@ -13,9 +17,13 @@
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
   transition: all 0.5s ease; 
-  background: linear-gradient(#01012c, #000080);
+  background: linear-gradient(#01012c, #004280);
+  width: 15%;
 }
 
+#sidebar >*{
+    max-width:inherit;
+}
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
     background: transparent;
@@ -75,7 +83,7 @@
 #sidebar .sidebar-content {
     max-height: calc(100% -35px);
     height: calc(100% - 35px);
-    position: relative; 
+    /*position: relative; */
 }
 
 #sidebar .sidebar-brand {
@@ -162,7 +170,7 @@
     font-size: 14px;
     padding: 15px 20px 5px 20px;
     display: inline-block; 
-    color:white;
+    color: white;
 }
 
 #sidebar .sidebar-menu ul li a {
@@ -202,10 +210,8 @@
     -ms-flex-positive: 1;
     flex-grow: 1;
     white-space: prewrap;
-    text-overflow: ellipsis;
     -ms-flex-negative: 1;
     flex-shrink: 1;
-    overflow: hidden; 
     font-size: 18px;
     color: hsla(0,0%,75.3%,.8);
 }
@@ -244,6 +250,7 @@
     text-decoration: none;
     background: none;
     text-overflow: ellipsis;
+    overflow:hidden;
 }
 
 .sidebar-menu ul li div .collapse-container a i{
@@ -251,7 +258,17 @@
     padding-right: 6px;
 }
 
+.collapse-container.show {
+    display: block;
+}
+.collapse-container.hide{
+    height: 0px;
+    visibility:hidden;
+}
 
+.collapse-container.reveal{
+    height: inherit;
+}
 /* Content Styles */
 
 body {
@@ -278,7 +295,6 @@ nav{
     background: #01012c;
     height: 57px;
 }
-
 button {
     padding: 6px 12px;
 }
@@ -388,7 +404,13 @@ button {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
+#btn-theme{
+    color:white;
+    padding-left: 0px;
+}
+.navbar{
+    padding-left: 0px;
+}
 .card{
     overflow-y: auto;
 }
@@ -439,4 +461,36 @@ button {
   outline: none;   
   cursor: inherit;
   display: block;
+}
+
+#chat-messages{
+    margin-top:5%;
+    margin-bottom:5%;
+    z-index: -1;
+}
+
+.chat-bubble{
+    z-index: -1;
+}
+    
+.chat-title{
+    position:absolute;
+}
+
+.chat-title.dark{
+    background-color: #202225;
+    color: lightgray;
+}
+
+.chat-title.dark *{
+    background-color: #202225;
+    color: lightgray;
+}
+.h-80{
+    height: 80%;
+}
+
+.grpList{
+    width:67.5%;
+    white-space: nowrap;
 }
