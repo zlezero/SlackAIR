@@ -100,6 +100,11 @@ class User implements UserInterface
      */
     private $statut;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default": true})
+     */
+    private $firstConnection;
+
 
     public function __construct()
     {
@@ -362,6 +367,18 @@ class User implements UserInterface
     public function setStatut(?statut $statut): self
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    public function getFirstConnection(): ?bool
+    {
+        return $this->firstConnection;
+    }
+
+    public function setFirstConnection(bool $firstConnection): self
+    {
+        $this->firstConnection = $firstConnection;
 
         return $this;
     }

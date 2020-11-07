@@ -28,6 +28,10 @@ class WebsocketController extends AbstractController
     public function index()
     {
         $user = $this->getUser();
+
+        if($user->getFirstConnection()){
+            return $this->redirectToRoute('userChangePassword');
+        }
         
         $grpsPb=array();
 
