@@ -2,6 +2,7 @@
 namespace App\Command;
 
 use App\Entity\User;
+use App\Entity\Statut;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -76,6 +77,8 @@ class ImportUserCommand extends Command
             $user->setPseudo(explode("@", $ligne[0])[0]);
             $user->setPassword($this->passwordEncoder->encodePassword($user, $plainPassword));
             $user->setRoles(["ROLE_USER"]);
+            $user->setFirstConnection(true);
+            $user->setStatut($this->entityManager->getRepository(Statut::class)->findOneBy( array('id' => 2)));
 
             if (count($this->validator->validate($user)) > 0) {
                 $output->writeln("L'utilisateur " . $ligne[1] . " " . $ligne[2] . " existe déjà");
