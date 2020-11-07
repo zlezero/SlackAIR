@@ -21,7 +21,7 @@ class LogoutListener{
     }
 
     public function __invoke(LogoutEvent $event){
-        if($this->tokenStorage->getToken()->getUser()){
+        if($this->tokenStorage->getToken()->getUser() != null){
             $emailUser = $this->tokenStorage->getToken()->getUser()->getUsername();
             $user = $this->em->getRepository(User::class)->findOneBy( array('email' => $emailUser));
             $user->setStatut($this->em->getRepository(Statut::class)->findOneBy( array('id' => 2)));

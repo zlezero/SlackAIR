@@ -1,0 +1,41 @@
+{# templates/login.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('password') }}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('password') }}
+{% endblock %}
+
+{% block body %}
+    <div class="password-div">
+        {{ form_start(passwordForm, {'attr': {'id': 'password-update-form'}}) }}
+            {{ form_errors(passwordForm) }}
+            <p> Bienvenue à SlackAir, {{user.pseudo}} ! </p>
+            <p> Ceci est votre première connexion. Veuillez changer votre mot de passe ! </p>
+            <div class="form-group row">
+                {{ form_label(passwordForm.password.first, null, {
+                    'label_attr': {'class': 'col-lg-3'}
+                }) }}
+                {{ form_widget(passwordForm.password.first, {'attr': {'class': "col-lg-7"}}) }}
+            </div>
+            <div class="form-group row">
+                {{ form_label(passwordForm.password.second, null, {
+                    'label_attr': {'class': 'col-lg-3'}
+                }) }}
+                {{ form_widget(passwordForm.password.second, {'attr': {'class': "col-lg-7"}}) }}
+            </div>
+            <div class="form-group row">
+                <label class="col-lg-3 col-form-label form-control-label"></label>
+                <div class="col-lg-7 update-btn-group">
+                    {{ form_widget(passwordForm.annuler, {'label': "Annuler", 'attr': {'class': "btn btn-secondary cancel-button"}}) }}
+                    {{ form_widget(passwordForm.confirmer, {'label': "Confirmer", 'attr': {'class': "btn change-button"}}) }}
+                </div>
+            </div>
+        {{ form_end(passwordForm) }}
+    </div>
+{% endblock %}
