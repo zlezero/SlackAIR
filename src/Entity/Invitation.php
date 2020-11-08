@@ -39,6 +39,11 @@ class Invitation
      */
     private $GroupeId;
 
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     */
+    private $NonLus;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -97,4 +102,15 @@ class Invitation
         return $this->GroupeId->getTypeGroupeId()->getId();
     }
     
+    public function getNonLus(): ?int
+    {
+        return $this->NonLus;
+    }
+
+    public function setNonLus(int $NonLus): self
+    {
+        $this->NonLus = $NonLus;
+
+        return $this;
+    }
 }

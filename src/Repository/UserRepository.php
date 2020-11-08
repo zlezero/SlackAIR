@@ -48,4 +48,17 @@ class UserRepository extends ServiceEntityRepository
     }
     */
 
+    public function getAllUsersExceptMe(int $idUser) {
+
+        $entityManager = $this->getEntityManager();
+        
+        return $entityManager->createQuery('SELECT u
+                                 FROM App\Entity\User u
+                                 WHERE u.id != :idUser
+                                ')
+                    ->setParameter('idUser', $idUser)
+                    ->getResult();
+
+    }
+
 }

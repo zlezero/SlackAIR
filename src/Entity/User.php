@@ -105,6 +105,11 @@ class User implements UserInterface
      */
     private $firstConnection;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Groupe::class)
+     */
+    private $DernierGroupe;
+
 
     public function __construct()
     {
@@ -379,7 +384,17 @@ class User implements UserInterface
     public function setFirstConnection(bool $firstConnection): self
     {
         $this->firstConnection = $firstConnection;
+        return $this;
+    }
 
+    public function getDernierGroupe(): ?Groupe
+    {
+        return $this->DernierGroupe;
+    }
+
+    public function setDernierGroupe(?Groupe $DernierGroupe): self
+    {
+        $this->DernierGroupe = $DernierGroupe;
         return $this;
     }
 

@@ -21,6 +21,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
     private ClientManipulatorInterface $clientManipulator;
     private EntityManager $entityManager;
 
+
     public function __construct(ClientManipulatorInterface $clientManipulator, EntityManagerInterface $entityManager)
     {
         $this->clientManipulator = $clientManipulator;
@@ -97,6 +98,8 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
 
         $this->entityManager->persist($message);
         $this->entityManager->flush();
+
+        $this->entityManager->getRepository(Invitation::class)->addNotification($user_entity->getId(), $groupe->getId());
 
         $this->broadcastMessage($topic, $message, $user_entity, false, $groupe);
         
