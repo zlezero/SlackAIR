@@ -72,12 +72,29 @@ class ChannelController extends AbstractController
 
             $channel = $this->getDoctrine()->getManager()->getRepository(Groupe::class)->findOneBy(['id' => $channelId]);
             
-            return new JsonResponse(["statut" => "ok",
-                                     "message" => ["channel" => [
-                                         "id" => $channel->getId(),
-                                         "nom" => $channel->getNom(),
-                                         "date_creation" => $channel->getDateCreation()
-                                     ]]]);
+            if ($channel) {
+                
+                $dataReponse = ["statut" => "ok"];
+
+                if ($channel->getTypeGroupeId()->getId() == 3) {
+                    $dataReponse["message"] = ["channel" => $this->getDoctrine()->getManager()->getRepository(Invitation::class)->getDMChannel($this->getUser()->getId(), $channel->getId())];
+                } else {
+                    $dataReponse["message"] = ["channel" => [
+                                                    "id" => $channel->getId(),
+                                                    "type" => $channel->getTypeGroupeId()->getId(),
+                                                    "nom" => $channel->getNom(),
+                                                    "description" => $channel->getDescription(),
+                                                    "date_creation" => $channel->getDateCreation()
+                                              ]
+                                    ];
+                }
+
+                return new JsonResponse($dataReponse);
+
+            } else {
+                return new JsonResponse(["statut" => "nok",
+                                         "message" => "Channel inexistant"]);
+            }
 
         } else {
             return new JsonResponse(["statut" => "nok",

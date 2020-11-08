@@ -53,6 +53,11 @@ class Groupe
      */
     private $messages;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $Description;
+
     public function __construct(EntityManager $entityManager=null)
     {
             $this->invitations = new ArrayCollection();
@@ -170,6 +175,18 @@ class Groupe
                 $message->setGroupeId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->Description;
+    }
+
+    public function setDescription(?string $Description): self
+    {
+        $this->Description = $Description;
 
         return $this;
     }

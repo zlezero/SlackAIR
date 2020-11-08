@@ -1,0 +1,51 @@
+
+<div class="col-1 pl-0 pr-0">
+    <div id="create-grp-modale{{groupe.typeGroupeId.id}}" class="modal fade create-grp-modale" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Créer un groupe</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid user-profile-container">
+                        <div >
+                            <div class="col-lg-12">
+                                {{ form_start(form, {'attr': {'id': "groupe-create-form#{groupe.typeGroupeId.id}",'class':'groupe-create-form'}}) }}
+                                    <div class="form-group row">
+                                        {{ form_label(form.nom, null, {
+                                            'label_attr': {'class': 'col-lg-3'}
+                                        }) }}
+                                        {{ form_widget(form.nom, {'attr': {'class': "col-lg-7 create_groupe_nom"}}) }}
+                                    </div>
+                                    <div class="form-group row">
+                                        {{ form_label(form.typeGroupeId, null, {
+                                            'label_attr': {'class': 'col-lg-3'}
+                                        }) }}
+
+                                        {{ form_widget(form.typeGroupeId, {'attr': {'class': "col-lg-7 create_groupe_typeGroupeId"}}) }}
+                                    </div>
+                                    <div class="form-group row">
+                                        {{ form_label(form.invitations, null, {
+                                            'label_attr': {'class': 'col-lg-3'}
+                                        }) }}
+                                        {{ form_widget(form.invitations, {'attr': {'class': "col-lg-7 create_groupe_invitations"}}) }}
+                                    </div>
+                                    <div class="form-group row center">
+                                        <label class="col-lg-3 col-form-label form-control-label"></label>
+                                        <div class="col-lg-7 update-btn-group">
+                                            {{ form_widget(form.annuler, {'label': "Annuler", 'attr': {'class': "btn btn-secondary cancel-button"}}) }}
+                                            {{ form_widget(form.confirmer,{'label': "Confirmer", 'attr': {'class': "btn change-button"}}) }}
+                                        </div>
+                                    </div>
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

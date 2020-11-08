@@ -47,4 +47,17 @@ class TypeGroupeRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getTypeGroupeExceptDM() {
+
+        $entityManager = $this->getEntityManager();
+        
+        return $entityManager->createQuery('SELECT typegroupe
+                                 FROM App\Entity\TypeGroupe typegroupe
+                                 WHERE typegroupe.id != 3
+                                ')
+                    ->getResult();
+
+    }
+
 }

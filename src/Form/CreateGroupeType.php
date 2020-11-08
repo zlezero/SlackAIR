@@ -8,19 +8,17 @@ use App\Entity\User;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\Extension\Core\Type\ResetType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CreateGroupeType extends AbstractType
 {
-
-
     
     private EntityManager $entityManager;
 
@@ -29,7 +27,6 @@ class CreateGroupeType extends AbstractType
         $this->entityManager = $entityManager;
     }
 
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -37,31 +34,47 @@ class CreateGroupeType extends AbstractType
                 'required' => true,
                 'constraints' => [new NotBlank()]
             ])
-            ->add('typeGroupeId',ChoiceType::class,[
-                
-            'choices'=>$this->entityManager->getRepository(TypeGroupe::class)->findAll(),
-            // "name" is a property path, meaning Symfony will look for a public
-            
-            
-            //'data'=>$this->entityManager->getReference("App:TypeGroupe", 3),
-            
-            
-            // a callback to return the label for a given choice
-            // if a placeholder is used, its empty value (null) may be passed but
-            // its label is defined by its own "placeholder" option
-            'choice_label' => function(?TypeGroupe $typeGroupe) {
-                return $typeGroupe ? $typeGroupe->getLabel() : '';
-            },
-            'choice_value' => function(?TypeGroupe $typeGroupe) {
-                return $typeGroupe ? $typeGroupe->getId() : '';
-            },
-            // returns the html attributes for each option input (may be radio/checkbox)
-            'choice_attr' => function(?TypeGroupe $typeGroupe) {
-                return $typeGroupe ? ['class' => 'typeGroupe_'.strtolower($typeGroupe->getLabel())] : [];
-            },                 
-            
+            ->add('typeGroupeId', EntityType::class,[
+                'class'=>TypeGroupe::class,
+                'choices'=>$this->entityManager->getRepository(TypeGroupe::class)->getTypeGroupeExceptDM(),
+                'choice_label' => function(?TypeGroupe $typeGroupe) {
+                    return $typeGroupe ? $typeGroupe->getLabel() : '';
+                },
+                'choice_value' => function(?TypeGroupe $typeGroupe) {
+                    return $typeGroupe ? $typeGroupe->getId() : null;
+                },
+                'choice_attr' => function(?TypeGroupe $typeGroupe) {
+                    return $typeGroupe ? ['class' => 'typeGroupe_'.strtolower($typeGroupe->getLabel())] : [];
+                },
+                'label' => "Type groupe"
             ])
-            ->add('CreateANewGroup', SubmitType::class)
+            ->add('invitations', EntityType::class, [
+                'class' => User::class,
+                'choices'=> $this->entityManager->getRepository(User::class)->getAllUsersExceptMe(array_key_exists("data", $options) ? ($options["data"]->getIdProprietaire() ? $options["data"]->getIdProprietaire()->getId() : -1) : -1),
+                'multiple'=> true,
+                'choice_label' => function(?User $user) {
+                    return $user ? $user->getPseudo() : '';
+                },
+                'choice_value'=> function(?User $user) {
+                    return $user ? $user->getId() : '';
+                },
+                'mapped' => false,
+                'choice_attr' => function(?User $user) {
+                    return $user ? ['class' => 'invitation_'.strtolower($user->getUsername())] : [];
+                },
+                ],
+            )
+            ->add('annuler', ResetType::class)
+            ->add('confirmer', SubmitType::class)
         ;
     }
+    
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => Groupe::class,
+            
+        ]);
+    }
+
 }

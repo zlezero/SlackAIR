@@ -94,17 +94,25 @@ $(function() {
 
     });
 
-    $(".channel").on("click", (e) => {
+    window.subscribeChannel = function subscribeChannel() {
+
+        $(".channel").off("click");
+
+        $(".channel").on("click", (e) => {
         
-        e.preventDefault();
+            e.preventDefault();
+    
+            let channel = $(e.currentTarget);
+    
+            if (channel.data('idchannel')) {
+                loadChannel(channel.data('idchannel'), channel);
+            }
+    
+        });
 
-        let channel = $(e.currentTarget);
+    }
 
-        if (channel.data('idchannel')) {
-            loadChannel(channel.data('idchannel'), channel);
-        }
-
-    });
+    window.subscribeChannel();
 
     function loadChannel(idChannel, target) {
 
@@ -294,6 +302,11 @@ $(function() {
             }
         });
     }
+
+    $(window).on('beforeunload', (e) => {
+        e.preventDefault();
+        e.returnValue = '';
+    })
 
     /*window.addEventListener('beforeunload', (event) => {
         // Cancel the event as stated by the standard.

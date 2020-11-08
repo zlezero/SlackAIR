@@ -43,9 +43,9 @@ class InvitationRepository extends ServiceEntityRepository
         $entityManager = $this->getEntityManager();
         
         return $entityManager->createQuery('SELECT u
-                                 FROM App\Entity\User u
-                                 INNER JOIN App\Entity\Invitation i
-                                 WHERE i.UserId = u.id AND i.GroupeId = :idChannel
+                                            FROM App\Entity\User u
+                                            INNER JOIN App\Entity\Invitation i
+                                            WHERE i.UserId = u.id AND i.GroupeId = :idChannel
                                 ')
                     ->setParameter('idChannel', $idChannel)
                     ->getResult();
@@ -77,7 +77,6 @@ class InvitationRepository extends ServiceEntityRepository
                 ) != NULL;
     }
 
-    /* NOT WORKING */
     public function getDMChannels(int $idUtilisateur) {
         
         $entityManager = $this->getEntityManager();
@@ -103,5 +102,63 @@ class InvitationRepository extends ServiceEntityRepository
         return $returnObj;
 
     }
+
+    public function getDMChannel(int $idUtilisateur, int $idChannel) {
+
+        $entityManager = $this->getEntityManager();
+            
+        $data = $entityManager->createQuery('SELECT utilisateur
+                                             FROM App\Entity\User utilisateur
+                                             INNER JOIN App\Entity\Invitation invitation
+                                             WHERE invitation.UserId != :idUtilisateur AND invitation.GroupeId = :idChannel AND utilisateur.id = invitation.UserId
+                                            ')
+                            ->setParameter('idChannel', $idChannel)
+                            ->setParameter('idUtilisateur', $idUtilisateur)
+                            ->getOneOrNullResult();
+
+        if ($data != null) {
+            return ["id" => $idChannel, "type" => 3, "user" => ["id" => $data->getId(), "pseudo" => $data->getPseudo(), "statut" => $data->getStatut()->getFormattedStatus()]];;
+        } else {
+            return null;
+        }
+
+    }
+
+    public function isDMChannelExist(int $idUtilisateur1, int $idUtilisateur2) {
+
+        $entityManager = $this->getEntityManager();
+
+        $data = $entityManager->createQuery('SELECT utilisateur
+                                             FROM App\Entity\User utilisateur
+                                             INNER JOIN App\Entity\Invitation invitation1
+                                             INNER JOIN App\Entity\Invitation invitation2
+                                             INNER JOIN App\Entity\Groupe groupe
+                                             WHERE invitation1.UserId = :idUtilisateur1 AND invitation2.UserId = :idUtilisateur2
+                                                   AND invitation1.GroupeId = invitation2.GroupeId
+                                                   AND groupe.id = invitation1.GroupeId
+                                                   AND groupe.TypeGroupeId = 3
+                                            ')
+                            ->setParameter('idUtilisateur1', $idUtilisateur1)
+                            ->setParameter('idUtilisateur2', $idUtilisateur2)
+                            ->getResult();
+
+        return $data != null;
+
+    }
+
+    function addNotification(int $idUtilisateur, int $idChannel) {
+
+        $entityManager = $this->getEntityManager();
+
+        $entityManager->createQuery('UPDATE App\Entity\Invitation i
+                                     SET i.NonLus = i.NonLus + 1
+                                     WHERE i.UserId != :idUtilisateur AND i.GroupeId = :idChannel')
+                      ->setParameter('idUtilisateur', $idUtilisateur)
+                      ->setParameter('idChannel', $idChannel)
+                      ->getResult();
+
+    }
+
+
     
 }
