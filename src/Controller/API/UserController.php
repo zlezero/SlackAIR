@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Gos\Bundle\WebSocketBundle\Pusher\PusherInterface;
 use Gos\Bundle\WebSocketBundle\Pusher\Wamp\WampPusher;
@@ -22,10 +23,11 @@ class UserController extends AbstractController
     private $passwordEncoder;
     private $pusher;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder, PusherInterface $wampPusher)
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, PusherInterface $wampPusher, EntityManagerInterface $entityManager)
     {
         $this->passwordEncoder = $passwordEncoder;
         $this->pusher = $wampPusher;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -171,6 +173,26 @@ class UserController extends AbstractController
         
         return $errors;
         
+    }
+
+    /**
+     * @Route("/getContacts", name="getAllUsers")
+     */
+    public function getContacts(Request $request){
+
+        $users = $this->entityManager->getRepository(User::class)->getAllUsersExceptMe($this->getUser()->getId());
+
+        $arrayReponse = array();
+
+        foreach($users as $user) {
+            $arrayReponse[] = $user->getFormattedUser();
+        }
+
+        return new JsonResponse([
+            "statut" => "ok",
+            "message" => ["users" => $arrayReponse]
+        ]);
+
     }
 
 }

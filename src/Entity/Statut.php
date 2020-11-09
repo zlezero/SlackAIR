@@ -90,6 +90,11 @@ class Statut
     {
         return $this->status_color;
     }
+    
+    public function getStatus_Color(): ?string
+    {
+        return $this->status_color;
+    }
 
     public function setStatusColor(string $status_color): self
     {

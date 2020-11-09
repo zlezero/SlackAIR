@@ -398,4 +398,15 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getFormattedUser() {
+        return [
+            "id" => $this->getId(),
+            "prenom" => $this->getPrenom(),
+            "nom" => $this->getNom(),
+            "pseudo" => $this->getPseudo(),
+            "profession" => $this->getProfession(),
+            "statut" => $this->getStatut()->getFormattedStatus()
+        ];
+    }
+
 }

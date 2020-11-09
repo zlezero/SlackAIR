@@ -3,6 +3,7 @@
 {% block stylesheets %}
     {{ encore_entry_link_tags('message') }}
     {{ encore_entry_link_tags('profile') }}
+    {{ encore_entry_link_tags('contact') }}
     {{ parent() }}
 {% endblock %}
 
@@ -12,10 +13,11 @@
     {{ encore_entry_script_tags('message') }}
     {{ encore_entry_script_tags('groupes') }}
     {{ encore_entry_script_tags('profile') }}
+    {{ encore_entry_script_tags('contact') }}
 {% endblock %}
 
 {% block body %}
-    <div class="container-fluid d-flex flex-column h-100">
+    <div class="container-fluid d-flex flex-column h-100 ">
       <nav class="row navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -131,8 +133,12 @@
     </nav>
 
       <div class="row flex-grow-1 h-80">
-        <aside id="sidebar" class="col-md-auto h-100 position-sticky" id="sidebar">
+        <aside id="sidebar" class="col-md-auto h-100 position-sticky">
             <header>
+                <div class="sidebar-item sidebar-brand">
+                    <a href="#"><br>SlackAIR</a>
+                </div>
+                
                 <!-- sidebar-header  -->
                 <div class="sidebar-item sidebar-header d-flex flex-nowrap">
                     <div class="user-pic">
@@ -163,20 +169,7 @@
                                 <i class="fas fa-caret-down icon-caret"></i>
                             </button>
                             <div class="collapse show hide collapse-container" id="collapse-favoris">
-                                <!-- <a href="#"><i class="fa fa-circle online"></i>Beyoncé</a>
-                                <a href="#"><i class="fa fa-circle busy"></i>Emmanuel Macron</a>
-                                -->
                             </div>
-                        </div>
-                        <div class="col-1 pl-0 pr-0">
-                            <!--
-                            TODO : add-favoris
-                            -->
-                            <a data-tooltip="Ajouter un groupe" type="button" class="tooltipped modal-trigger btn right-align" >
-                                <button type="button" class="btn">
-                                    <i class="fas fa-plus-circle"></i>
-                                </button>
-                            </a>
                         </div>
                     </li>
                     <li class="header-menu">
@@ -184,7 +177,7 @@
                     </li>
                     <li class="d-flex">
                         <div class="pl-0 pr-0 grpList">
-                            <button class="btn dropdown-btn" type="button">
+                            <button class="btn dropdown-btn" type="button" aria-expanded="false" data-target="#collapse-group-public" aria-controls="collapse-group-public">
                                 <span class="menu-text"><i class="fas fa-users"></i>    Groupes Publics</span>
                                 <i class="fas fa-caret-down icon-caret"></i>
                             </button>
@@ -200,9 +193,10 @@
                     </li>
                     <li class="d-flex">
                         <div class="pl-0 pr-0 grpList">
-                            <button class="btn dropdown-btn" type="button" >
-                                <span class="menu-text"><i class="fas fa-comments"></i> Groupes Privés</span>
-                                <i class="fas fa-caret-down icon-caret"></i>
+                            <button class="btn dropdown-btn" type="button" aria-expanded="false" data-target="#collapse-group-private" aria-controls="collapse-group-private">
+                               <span class="menu-text"><i class="fas fa-comments"></i> Groupes Privés</span>
+                                <i class="fas fa-caret-down">
+                                </i>
                             </button>
                             <div class="collapse show hide collapse-container" id="collapse-group-private">
                                 {% for groupePrive in channels.prives %}
@@ -216,9 +210,9 @@
                     </li>
                     <li class="d-flex">
                         <div class="pl-0 pr-0 grpList">
-                            <button class="btn dropdown-btn" type="button" aria-expanded="false" >
-                                <span class="menu-text"><i class="fas fa-inbox"></i> Messages Privés</span>
-                                <i class="fas fa-caret-down icon-caret"></i>
+                            <button class="btn dropdown-btn" type="button" aria-expanded="false" data-target="#collapse-message-private" aria-controls="collapse-message-private">
+                               <span class="menu-text"><i class="fas fa-inbox"></i> Messages Privés</span>
+                                <i class="fas fa-caret-down"></i>
                             </button>
                             <div class="collapse show hide collapse-container" id="collapse-message-private">
                                 {% for groupeDM in channels.dm %}
@@ -227,7 +221,7 @@
                             </div>
                         </div>
                         <div class="col-1 pl-0 pr-0">
-                            <a href="#" data-toggle="modal" data-target="#create-grp-modale3" class="right-align"><button type="button" class="btn"><i class="fas fa-plus-circle"></i></button></a> 
+                            <a href="#" data-toggle="modal" data-target="#annuaire-modal" class="right-align"><button type="button" class="btn"><i class="fas fa-plus-circle"></i></button></a> 
                         </div>
                     </li>
                 </ul>
@@ -296,7 +290,6 @@
             </main>
         </div>      
     </div>
-    <!-- A supprimer -->
     <script type="text/javascript">
 
         let server_host = "{{ gos_web_socket_server_host }}";
@@ -318,7 +311,7 @@
     )) }}
 
     {{ render(controller(
-        'App\\Controller\\API\\GroupeController::create',{'typeGroupeId':3}
+        'App\\Controller\\ContactController::getContact'
     )) }}
 
     {% include 'modals/index.html.twig' %}
