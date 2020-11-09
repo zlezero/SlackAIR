@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('password') }}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('password') }}
+{% endblock %}
+
+{% block body %}
+    <div class="password-div">
+        {{ form_start(resetForm, {'attr': {'id': 'password-update-form'}}) }}
+            {{ form_errors(resetForm) }}
+            <p> Réinitialisation du mot de passe </p>
+            <div class="form-group row">
+                {{ form_label(resetForm.plainPassword.first, null, {
+                    'label_attr': {'class': 'col-lg-3'}
+                }) }}
+                {{ form_widget(resetForm.plainPassword.first, {'attr': {'class': "col-lg-7"}}) }}
+            </div>
+            <div class="form-group row">
+                {{ form_label(resetForm.plainPassword.second, null, {
+                    'label_attr': {'class': 'col-lg-3'}
+                }) }}
+                {{ form_widget(resetForm.plainPassword.second, {'attr': {'class': "col-lg-7"}}) }}
+            </div>
+            <div class="form-group row">
+                <label class="col-lg-3 col-form-label form-control-label"></label>
+                <div class="col-lg-7 update-btn-group">
+                    {{ form_widget(resetForm.confirmer, {'label': "Confirmer", 'attr': {'class': "btn change-button"}}) }}
+                </div>
+            </div>
+        {{ form_end(resetForm) }}
+    </div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Email de réinitialisation de mot de passe envoyé !{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="card text-center">
+            <div class="card-header">
+                Email de réinitialisation de mot de passe envoyé !
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-dove" style="color: #000080";></i></h5>
+                <p class="card-text">Un mail a été envoyé, contenant un lien sur lequel vous pouvez cliquer pour réinitialiser votre mot de passe. Ce lien expirera dans {{ tokenLifetime|date('g') }} heure(s).</p>
+                <p class="card-text">Si vous n'avez pas reçu de mail, veuillez vérifier votre dossier de spams ou <a href="{{ path('app_login') }}">réessayer</a>.</p>
+            </div>
+            <div class="card-footer text-muted">
+                SlackAiR
+            </div>
+        </div>
+    </div>
+{% endblock %}

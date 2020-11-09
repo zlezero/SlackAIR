@@ -26,7 +26,7 @@ class FirstConnectionController extends AbstractController{
 
         $user = $this->getUser();
 
-        if($user->getFirstConnection()){
+        if($user && $user->getFirstConnection()){
             $passwordForm = $this->createForm(PasswordFormType::class, $user);
 
             $passwordForm->handleRequest($request);

@@ -32,7 +32,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request)
     {
-        return ($request->headers->has('X-AUTH-TOKEN') && $request->isMethod('POST')) || (($request->isXMLHttpRequest() || $request->isMethod('POST')) && $this->security->getUser() == NULL);
+        return ($request->headers->has('X-AUTH-TOKEN') && $request->isMethod('POST')) || (($request->isXMLHttpRequest() || $request->isMethod('POST')) && $this->security->getUser() == NULL && !$request->request->get('reset_password_request_form') && $request->attributes->get('_route')!="app_reset_password");
     }
 
     /**
