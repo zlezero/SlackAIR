@@ -29,6 +29,7 @@ Encore
     .addEntry('groupes', './assets/entrypoint/groupes.js')
     .addEntry('profile', './assets/entrypoint/profile.js')
     .addEntry('password', './assets/entrypoint/password.js')
+    .addEntry('contact', './assets/entrypoint/contact.js')
     //.addEntry('page1', './assets/page1.js')
     //.addEntry('page2', './assets/page2.js')
 
