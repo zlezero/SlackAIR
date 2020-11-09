@@ -13,21 +13,42 @@
 
 {% block body %}
 
-    {% if error %}
-        <div class="alert alert-danger">
-        {{ error.messageKey|trans(error.messageData, 'security') }}
-        </div>
-    {% endif %}
-
     <div class="login-dark">
-        {{ form_start(form) }}
+
+        {% if error %}
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+        
+        {% for flashError in app.flashes('reset_password_error') %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">{{ flashError }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+
+        {% for flashSuccess in app.flashes('reset_password_success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">{{ flashSuccess }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+
+        {{ form_start(form, {'attr': {'id': 'login-form'}}) }}
             <h2 class="sr-only">Se connecter</h2>
             <div class="illustration"><img src="https://img2.pngio.com/black-girl-magic-transparent-png-clipart-free-download-ywd-black-girl-magic-png-420_480.png"></div>
             <div class="form-group">{{ form_widget(form.email, {'attr': {'placeholder': "Email"}}) }}</div>
             <div class="form-group">{{ form_widget(form.password, {'attr': {'placeholder': "Mot de passe"}}) }}</div>
-            <div class="form-group">{{ form_widget(form.logIn, {'attr': {'class': "btn btn-primary btn-block"}}) }}</div>
-            <a href="#" class="forgot">Mot de passe ou email oublié ?</a>
+            <div class="form-group">{{ form_widget(form.logIn, {'attr': {'class': "btn btn-primary btn-block"}, 'label': 'Se connecter'}) }}</div>
+            <a href="" data-target="#resetPwdModal" data-toggle="modal" class="forgot">Mot de passe ou email oublié ?</a>
         {{ form_end(form) }}
+        {{ render(path('app_forgot_password_request')) }}
     </div>
     
 {% endblock %}
