@@ -127,3 +127,81 @@
     background: #214a80;
     outline: none;
 }
+
+
+.dark.modal-dialog, .dark .modal-content {
+    background: transparent;
+}
+
+.dark>.modal-content *{
+    background-color: #202225;
+    color: lightgray;
+    
+}
+
+
+.dark>.modal-content a.nav-link{
+    color: lightgray;
+    background-color: #202225;
+}
+.dark>.modal-content a.nav-link:hover{
+    color: white;
+}
+
+.dark>.modal-content a.nav-link.active{
+    color: lightgray;
+    background-color: #202225;
+    border-bottom: 2px solid #01012c;
+}
+
+.dark .modal-header{
+    background:linear-gradient(#080d24, #151a30);
+    color: lightgray;
+    border:0px;
+}
+.dark .modal-body{
+    border:1px solid black;
+}
+
+.dark .modal-header *{
+    background: transparent;
+}
+
+.dark .form-control{
+    border: 1px solid black;
+}
+
+.dark .form-control:focus{
+    background-color: #202225;
+    color:lightgray;
+}
+.dark .nav-tabs{
+    border-bottom: 1px solid #1a1b1d;
+}
+
+.modal-dialog.dark .btn{
+    background-color: #26292e;
+    border:0px;
+    color:lightgray;
+}
+
+.modal-dialog.dark .btn:hover{
+    background-color:#2e3035;
+}
+
+
+.modal-dialog.dark .change-button{
+    background-color: #080d24;
+}
+.modal-dialog.dark .change-button:hover{
+    color: white;
+    background-color: #123658;
+}
+
+.modal-dialog.dark .user-profile-img .btn-lg{
+    background : rgba(33,37,41,.7215686274509804);
+}
+
+.modal-dialog.dark .user-profile-img .btn-lg  >*{
+    background:transparent;
+}
