@@ -159,9 +159,10 @@
                                 <i class="fas fa-caret-down icon-caret"></i>
                             </button>
                             <div class="collapse show hide collapse-container" id="collapse-favoris">
-                                <a href="#"><i class="fa fa-circle online"></i>Beyoncé</a>
+                                <!-- <a href="#"><i class="fa fa-circle online"></i>Beyoncé</a>
                                 <a href="#"><i class="fa fa-circle busy"></i>Emmanuel Macron</a>
-                            </div>      
+                                -->
+                            </div>
                         </div>
                         <div class="col-1 pl-0 pr-0">
                             <!--
@@ -184,12 +185,10 @@
                                 <i class="fas fa-caret-down icon-caret"></i>
                             </button>
                             <div class="collapse show hide collapse-container" id="collapse-group-public">
-                                {% for grp in grpsPb %}
-                                    <a href="#"><i class="fas fa-hashtag"></i>{{grp.Nom}}</a>
+                                {% for groupePublic in channels.publiques %}
+                                    <a href="" data-idChannel={{groupePublic.GroupeId.id}} class="channel"><i class="fas fa-hashtag"></i>{{groupePublic.GroupeId.nom}}</a>
                                 {% endfor %}
-                                <a href="#"><i class="fas fa-hashtag"></i>Channel 2</a>
-                                <a href="#"><i class="fas fa-hashtag"></i>Channel 3</a>
-                            </div>      
+                            </div>
                         </div>
                         <div class="col-1 pl-0 pr-0">
                             <a data-tooltip="Ajouter un groupe" type="button" class="tooltipped modal-trigger btn right-align" data-toggle="modal" data-typeid="2" data-target="{{path('create-groupe', {'typeGroupeId':2})}}">
@@ -206,10 +205,10 @@
                                 <i class="fas fa-caret-down icon-caret"></i>
                             </button>
                             <div class="collapse show hide collapse-container" id="collapse-group-private">
-                                {% for grp in grpsPv %}
-                                    <a href="#"><i class="fas fa-lock"></i>{{grp.Nom}}</a>
+                                {% for groupePrive in channels.prives %}
+                                    <a href="" data-idChannel={{groupePrive.GroupeId.id}} class="channel"><i class="fas fa-lock"></i>{{groupePrive.GroupeId.nom}}</a>
                                 {% endfor %}
-                            </div>      
+                            </div>
                         </div>
                         <div class="col-1 pl-0 pr-0">
                             <a data-tooltip="voir"
@@ -229,10 +228,10 @@
                                 <i class="fas fa-caret-down icon-caret"></i>
                             </button>
                             <div class="collapse show hide collapse-container" id="collapse-message-private">
-                                <a href="#"><i class="fa fa-circle online"></i>Beyoncé</a>
-                                <a href="#"><i class="fa fa-circle busy"></i>Emmanuel Macron</a>
-                                <a href="#"><i class="fa fa-circle offline"></i>Youssou Ndour</a>
-                            </div>      
+                                {% for groupeDM in channels.dm %}
+                                    <a href="" data-idChannel={{groupeDM.channel.id}} data-userIdDM={{groupeDM.user.id}} class="channel user_channel"><i class="fa fa-circle {{groupeDM.user.statut.status_color}}"></i>{{groupeDM.user.pseudo}}</a>
+                                {% endfor %}
+                            </div>
                         </div>
                         <div class="col-1 pl-0 pr-0">
                             <a data-tooltip="voir"
@@ -258,8 +257,8 @@
                                     <div class="chat-title w-100 border-bottom">
                                         <div class="friend-drawer no-gutters friend-drawer--grey">
                                             <div class="text">
-                                                <h6>Titre</h6>
-                                                <p class="text-muted">Description</p>
+                                                <h6 id="titre_channel">Titre</h6>
+                                                <p id="description_channel" class="text-muted">Description</p>
                                             </div>
                                             <div class="search-box">
                                                 <div class="input-wrapper border">
@@ -276,48 +275,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="chat-messages" class="row">
-                                    <div class="col-12">
-                                        <div class="chat-bubble">    
-                                            <img class="profile-image" src="https://www.decoparty.fr/wp-content/uploads/2020/09/disney-the-princess-and-the-frog-tiana-cardboard-face-mask-for-children-product-image.jpg" alt="">
-                                            <div class="text">
-                                                <h6>Tiana</h6>
-                                                <p class="text-muted">Hi Girls</p>
-                                            </div>
-                                            <span class="time text-muted small">Aujourd'hui à 13:21</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="chat-bubble">
-                                            <img class="profile-image" src="https://www.decoparty.fr/wp-content/uploads/2020/09/disney-beauty-and-the-beast-belle-cardboard-face-mask-for-children-product-image.jpg" alt="">
-                                            <div class="text">
-                                                <h6>Belle</h6>
-                                                <p class="text-muted">Wanna go out?</p>
-                                            </div>
-                                            <span class="time text-muted small">Aujourd'hui à 13:29</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="chat-bubble">
-                                            <img class="profile-image" src="https://www.bebegavroche.com/media/catalog/product/cache/1/image/265x/9df78eab33525d08d6e5fb8d27136e95/S/M/SM336-Masque-en-carton-Cendrillon---Disney-Cendrillon---27--cm-1.jpg" alt="">
-                                            <div class="text">
-                                                <h6>Cendrillon</h6>
-                                                <p class="text-muted">Why not !</p>
-                                            </div>
-                                            <span class="time text-muted small">Aujourd'hui à 13:30</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="chat-bubble">
-                                            <img class="profile-image" src="https://www.bebegavroche.com/media/catalog/product/cache/1/thumbnail/1200x/040ec09b1e35df139433887a97daa66f/S/M/SM327-Masque-en-carton-Jasmine---Disney-Aladdin---27--cm-1.jpg" alt="">
-                                            <div class="text">
-                                                <h6>Jasmine</h6>
-                                                <p class="text-muted">Yes, I'm so hungry right now.</p>
-                                            </div>
-                                            <span class="time text-muted small">Aujourd'hui à 13:32</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div id="chat-messages" class="row"></div>
                                 <div class="container-fluid sticky-footer pr-0 pl-0">
                                     <div class="row w-100 mr-0 ml-0">
                                         <div id="emojis" style="display: none"></div>
@@ -340,16 +298,10 @@
                         <div class="col-3 h-100">
                             <div class="card h-100 rounded-bottom">
                                 <div class="card-body ">
-                                    <h5 class="card-title">Pouet Pouet Channel</h5>
+                                    <h5 class="card-title" id="titre_channel_right">Titre</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">Membres du groupe</h6>
                                     <hr>
-                                    <p class="card-text"><i class="fa fa-circle online"></i> Coco </p>
-                                    <p class="card-text"><i class="fa fa-circle online"></i> Zero</p>
-                                    <p class="card-text"><i class="fa fa-circle offline"></i> SeZonch</p>
-                                    <p class="card-text"><i class="fa fa-circle busy"></i> Soliman 1er</p>
-                                    <p class="card-text"><i class="fa fa-circle offline"></i> Vanelle</p>
-                                    <p class="card-text"><i class="fa fa-circle busy"></i> Le J</p>
-                                    <p class="card-text"><i class="fa fa-circle absent"></i> Armanitore</p>
+                                    <div id="listeMembres"></div>
                                 </div>
                             </div>
                         </div>
@@ -366,5 +318,19 @@
         </div>
         <div class="modal-footer"></div>
     </div>
+
+    <script type="text/javascript">
+
+        let server_host = "{{ gos_web_socket_server_host }}";
+
+        if (server_host == "127.0.0.1" && window.location.hostname.includes("localhost")) {
+            server_host = "localhost";
+        }
+
+        var _WS_URI = "ws://" + server_host + ":{{ gos_web_socket_server_port }}";
+        
+    </script>
+
     {% include 'modals/index.html.twig' %}
+
 {% endblock %}

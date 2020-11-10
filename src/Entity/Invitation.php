@@ -91,4 +91,10 @@ class Invitation
 
         return $this;
     }
+
+    public function getGroupeTypeId(): ?int
+    {
+        return $this->GroupeId->getTypeGroupeId()->getId();
+    }
+    
 }

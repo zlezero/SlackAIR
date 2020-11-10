@@ -97,4 +97,12 @@ class Statut
 
         return $this;
     }
+
+    public function getFormattedStatus() {
+        return [
+                "id" => $this->getId(),
+                "name" => $this->getName(),
+                "status_color" => $this->getStatusColor()
+               ];
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Groupe;
+use App\Entity\User;
 use App\Entity\Invitation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -35,16 +37,71 @@ class InvitationRepository extends ServiceEntityRepository
         ;
     }
     */
+    
+    public function getAllUtilisateurChannel(int $idChannel) {
 
-    /*
-    public function findOneBySomeField($value): ?Invitation
+        $entityManager = $this->getEntityManager();
+        
+        return $entityManager->createQuery('SELECT u
+                                 FROM App\Entity\User u
+                                 INNER JOIN App\Entity\Invitation i
+                                 WHERE i.UserId = u.id AND i.GroupeId = :idChannel
+                                ')
+                    ->setParameter('idChannel', $idChannel)
+                    ->getResult();
+
+    }
+
+    public function getChannelUtilisateur(int $typeChannel, int $idUtilisateur)
     {
         return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
+            ->join('i.GroupeId', 'groupe')
+            ->andWhere('i.UserId = :idUtilisateur')
+            ->andWhere('groupe.TypeGroupeId = :typeChannel')
+            ->setParameter('idUtilisateur', $idUtilisateur)
+            ->setParameter('typeChannel', $typeChannel)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
+
     }
-    */
+
+    public function isUserInChannel(int $idChannel, int $idUtilisateur) {
+        return ($this->createQueryBuilder('i')
+                    ->andWhere('i.UserId = :idUtilisateur')
+                    ->andWhere('i.GroupeId = :idChannel')
+                    ->setParameter('idUtilisateur', $idUtilisateur)
+                    ->setParameter('idChannel', $idChannel)
+                    ->getQuery()
+                    ->getOneOrNullResult()
+                ) != NULL;
+    }
+
+    /* NOT WORKING */
+    public function getDMChannels(int $idUtilisateur) {
+        
+        $entityManager = $this->getEntityManager();
+        $returnObj = array();
+
+        $listeChannelsDM = $this->getChannelUtilisateur(3, $idUtilisateur);
+
+        foreach($listeChannelsDM as $channel) {
+            
+            $data = $entityManager->createQuery('SELECT utilisateur
+                                                 FROM App\Entity\User utilisateur
+                                                 INNER JOIN App\Entity\Invitation invitation
+                                                 WHERE invitation.UserId != :idUtilisateur AND invitation.GroupeId = :idChannel AND utilisateur.id = invitation.UserId
+                                               ')
+                                ->setParameter('idChannel', $channel->getGroupeId()->getId())
+                                ->setParameter('idUtilisateur', $idUtilisateur)
+                                ->getOneOrNullResult();
+
+            $returnObj[] = ["channel" => ["id" => $channel->getGroupeId()->getId()], "user" => ["id" => $data->getId(), "pseudo" => $data->getPseudo(), "statut" => $data->getStatut()->getFormattedStatus()]];
+        
+        }
+
+        return $returnObj;
+
+    }
+    
 }

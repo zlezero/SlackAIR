@@ -31,18 +31,32 @@ $(function() {
 
     //Gestion des messages
 
-    const socket = WS.connect("ws://localhost:1337");
+    const socket = WS.connect(_WS_URI);
     var session_glob;
     var current_channel_id = 1;
+    var notif_channel_general = false;
+    var notif_channel_prive = 0;
 
     socket.on("socket/connect", function (session) {
 
         console.log("Connexion réussie !");
         session_glob = session;
 
-        session.subscribe("message/channel", function (uri, payload) {
-            console.log("Message reçu : ", payload);
-            addMessage(payload.pseudo, payload.message, payload.channel, payload.messageTime);
+        $('.channel').each(function (index) {
+            if ($(this).data("idchannel") != undefined) {
+                session.subscribe("message/channel/" + $(this).data("idchannel"), function (uri, payload) {
+                    console.log("Message reçu : ", payload);
+                    if (payload.channel == current_channel_id) {
+                        addMessage(payload.pseudo, payload.message, payload.messageTime, payload.messageId);
+                    }
+                });
+            }
+        });
+
+        $('.channel.user_channel').each(function(index) {
+            if ($(this).data("useriddm") != undefined) {
+                subscribeToUserEvent($(this).data("useriddm"));
+            }
         });
 
     });
@@ -58,8 +72,10 @@ $(function() {
             channel: current_channel_id
         };
 
-        session_glob.publish("message/channel", {data: JSON.stringify(data)});
-        $('#message').val('');
+        if ($("#message").val() != "") {
+            session_glob.publish("message/channel/" + current_channel_id, {data: JSON.stringify(data)});
+            $('#message').val('');
+        }
 
     });
 
@@ -78,12 +94,116 @@ $(function() {
 
     });
 
-    function addMessage(name, message, channel, messageTime) {
+    $(".channel").on("click", (e) => {
+        
+        e.preventDefault();
+
+        let channel = $(e.currentTarget);
+
+        if (channel.data('idchannel')) {
+            loadChannel(channel.data('idchannel'), channel);
+        }
+
+    });
+
+    function loadChannel(idChannel, target) {
+
+        current_channel_id = idChannel;
+
+        $('.channel-selected').removeClass('channel-selected');
+        target.addClass("channel-selected");
+        $('#chat-messages').html("");
+
+        $('.user_channel').each(function (index) {
+            if ($(this).data('userid')) {
+                unsubscribeToUserEvent($(this).data('userid'));
+            }
+        });
+        
+        $.post({
+            url: '/api/channel/getMessages',
+            data: {"channelId": current_channel_id},
+            success: function (result) {
+                result.message.messages.forEach((message) => {
+                    addMessage(message.pseudo, message.message, message.date.date, message.messageId);
+                });
+                scrollMessageToEnd();
+            }
+        });
+
+        $.post({
+            url: '/api/channel/getInfos',
+            data: {"channelId": current_channel_id},
+            success: function (result) {
+                $('#titre_channel').text(result.message.channel.nom);
+                $('#titre_channel_right').text(result.message.channel.nom);
+                $('#message').attr('placeholder', 'Envoyer un message à ' + result.message.channel.nom);
+            }
+        });
+
+        $.post({
+            url: '/api/channel/getAllUsers',
+            data: {"channelId": current_channel_id},
+            success: function (result) {
+                $('#listeMembres').html("");
+                result.message.utilisateurs.forEach((utilisateur) => {
+                    subscribeToUserEvent(utilisateur.id);
+                    $('#listeMembres').append('<p class="card-text user_channel" data-userid="' + utilisateur.id + '" ><i class="fa fa-circle ' + utilisateur.statut.status_color + ' "></i> ' + utilisateur.pseudo + ' </p>')
+                });
+            }
+        });
+
+    }
+
+    function subscribeToUserEvent(userId) {
+
+        session_glob.subscribe("user/" + userId, function (uri, payload) {
+            
+            let data = JSON.parse(payload.data);
+            console.log("Message reçu (Statut) : ", data);
+            
+            switch (data.typeEvent) {
+                case "statutChange":
+                    $('.user_channel[data-userid=' + data.data.user.id + '] i, .user_channel[data-useridDM=' + data.data.user.id + '] i').removeClass().addClass("fa fa-circle " + data.data.statut.status_color);
+                    break;
+                case "pseudoChange":
+                    let statutHTML = $('.user_channel[data-userid=' + data.data.user.id + '] i, .user_channel[data-useridDM=' + data.data.user.id + '] i').prop("outerHTML");
+                    $('.user_channel[data-userid=' + data.data.user.id + '], .user_channel[data-useridDM=' + data.data.user.id + ']').html(statutHTML + " " + data.data.user.pseudo);
+                    break;
+            }
+
+        });
+
+    }
+
+    function unsubscribeToUserEvent(userId) {
+        try {
+            session_glob.unsubscribe("user/" + userId);
+        } catch(error) {}
+    }
+
+    function addMessage(name, message, messageTime, id) {
+        
+        let scrollAtEnd = isScrollMessageAtEnd();
+
         const messageHTML = 
         "<div class='col-12'><div class='chat-bubble'><img class='profile-image' src='https://i.pinimg.com/originals/62/99/4c/62994ce35676d330091f6039278972f2.png' alt=''><div class='text'><h6>" + name + 
-        "</h6><p class='text-muted'>" + message + "</p></div><span class='time text-muted small'>"
+        "</h6><p class='text-muted' data-idMessage='" + id + "'>" + message + "</p></div><span class='time text-muted small'>"
         + formatDate(messageTime) +"</span></div></div>";
         $('#chat-messages').html($('#chat-messages').html() + messageHTML);
+
+        if (scrollAtEnd) {
+            scrollMessageToEnd();
+        }
+        
+    }
+
+    function scrollMessageToEnd() {
+        $('#chat').scrollTop($('#chat').prop("scrollHeight"));
+    }
+
+    function isScrollMessageAtEnd() {
+        return $('#chat').scrollTop() + $('#chat').innerHeight() >= $('#chat')[0].scrollHeight;
     }
 
     $('.dropdown-btn').on('click', (e) => {
@@ -112,7 +232,7 @@ $(function() {
     
     var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
 
-    $(this).on('mousemove',function (e) {
+    $(this).on('mousemove', function (e) {
 
         idleTime = 0;
 
@@ -134,11 +254,22 @@ $(function() {
 
     });
 
-    $("#statusDropright").on('show.bs.dropdown', function(){
-        $('#statusDroprightMenu').on("click", function(v){
-            statutId = v.target.attributes["data-id"].nodeValue;
+    $("#statusDropright").on('show.bs.dropdown', function() {
+        $('#statusDroprightMenu').on("click", function(v) {
+            
+            statutId = $(v.target).data("id");
+            
+            if (statutId == undefined) {
+                statutId = $(v.target.parentNode).data('id');
+            }
+            
             setStatutAjax(statutId);
+        
         });
+    });
+
+    $("#statusDropright").on('hide.bs.dropdown', function() {
+        $('#statusDroprightMenu').off('click');
     });
 
     function timerIncrement() {
@@ -150,8 +281,8 @@ $(function() {
     }
 
     function setStatusPrint(name, color){
-        $('#user-profile-statut').html('<i class="fa fa-circle ' +color+'"></i><span> ' + name + '</span>');
-        $('#user-status').html('<i class="fa fa-circle ' +color+'"></i><span> ' + name + '</span>');
+        $('#user-profile-statut').html('<i class="fa fa-circle ' + color +'"></i><span> ' + name + '</span>');
+        $('#user-status').html('<i class="fa fa-circle ' + color +'"></i><span> ' + name + '</span>');
     }
 
     function setStatutAjax(idStatut) {
@@ -159,7 +290,7 @@ $(function() {
             url: '/api/user/setStatut',
             data: {"statutId": idStatut},
             success: function(result){
-                setStatusPrint(result['statut']['nom'], result['statut']['color'])
+                setStatusPrint(result.statut.name, result.statut.status_color);
             }
         });
     }

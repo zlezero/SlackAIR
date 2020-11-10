@@ -15,7 +15,7 @@ use Ratchet\Wamp\Topic;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
-class MessageTopic implements TopicInterface, SecuredTopicInterface
+class UserEventTopic implements TopicInterface
 {
 
     private ClientManipulatorInterface $clientManipulator;
@@ -37,16 +37,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
      * @return void
      */
     public function onSubscribe(ConnectionInterface $connection, Topic $topic, WampRequest $request)
-    {
-        
-        $user = $this->clientManipulator->getClient($connection)->getUser();
-        $channelId = $request->getAttributes()->get('idChannel');
-
-        if ($user == NULL || !$this->entityManager->getRepository(Invitation::class)->isUserInChannel($channelId, $user->getId())) {
-            $connection->close();
-        }
-
-    }
+    {}
 
     /**
      * This will receive any unsubscription requests for this topic.
@@ -76,30 +67,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
      * @return mixed
      */
     public function onPublish(ConnectionInterface $connection, Topic $topic, WampRequest $request, $event, array $exclude, array $eligible) {
-
-        $data = json_decode($event["data"]);
-        $user = $this->clientManipulator->getClient($connection)->getUser();
-
-        $user_entity = $this->entityManager
-                        ->getRepository(User::class)
-                        ->find($user->getId());
-
-        $groupe = $this->entityManager
-                           ->getRepository(Groupe::class)
-                           ->find($data->channel);
-
-        $message = new Message();
-        $message->setTexte($data->message);
-        $message->setDateEnvoi(date_create());
-        $message->setUserId($user_entity);
-        $message->setGroupeId($groupe);
-        $message->setEstEfface(false);
-
-        $this->entityManager->persist($message);
-        $this->entityManager->flush();
-
-        $this->broadcastMessage($topic, $message, $user_entity, false, $groupe);
-        
+        $topic->broadcast(["data" => $event]);
     }
 
     /**
@@ -111,7 +79,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
      * @param string|null         $provider
      *
      * @return void
-     */
+     *//*
     public function secure(?ConnectionInterface $conn, Topic $topic, WampRequest $request, $payload = null, ?array $exclude = [], ?array $eligible = null, ?string $provider = null): void
     {
         // Check input data to verify if connection must be blocked
@@ -120,7 +88,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
         }
 
         // Access is granted
-    }
+    }*/
 
     /**
      * Like RPC the name is used to identify the channel
@@ -129,11 +97,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
      */
     public function getName(): string
     {
-        return 'message.topic';
-    }
-
-    private function broadcastMessage(Topic $topic, Message $message, User $user, bool $system, Groupe $groupe) {
-        $topic->broadcast(['message' => $message->getTexte(), 'messageTime' => date_format($message->getDateEnvoi(), 'r'), 'messageId' => $message->getId(), 'pseudo' => $system ? "SYSTEM" : $user->getPseudo(), 'clientId' => $system ? null : $user->getId(), 'system' => $system, 'channel' => $groupe->getId()]);
+        return 'userevent.topic';
     }
 
 }

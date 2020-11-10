@@ -10,8 +10,14 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $wampPusher: '@gos_web_socket.pusher.wamp'
     app.websocket.topic.message:
         class: App\Websocket\Topic\MessageTopic
+        tags:
+            - { name: gos_web_socket.topic }
+    app.websocket.topic.userevent:
+        class: App\Websocket\Topic\UserEventTopic
         tags:
             - { name: gos_web_socket.topic }
     session.handler.pdo:

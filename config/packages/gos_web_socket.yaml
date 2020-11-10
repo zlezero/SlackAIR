@@ -18,3 +18,10 @@ gos_web_socket:
     client:
         firewall: main
         session_handler: 'session.handler.pdo'
+    pushers:
+        wamp:
+            enabled: true # Flag to enable this pusher
+            host: '%env(GOS_WEB_SOCKET_SERVER_IP)%' # This will probably be the same as your `gos_web_socket.server.host` value
+            port: '%env(int:GOS_WEB_SOCKET_SERVER_PORT)%' # This will probably be the same as your `gos_web_socket.server.port` value
+            ssl: false # Flag to enable SSL connections to the websocket server, default false
+            origin: null # The origin domain for the pusher, default null (if origin checking is enabled on your websocket server, this value must be allowed)

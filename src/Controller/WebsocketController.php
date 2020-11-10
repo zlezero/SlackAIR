@@ -9,16 +9,18 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Statut;
+use Psr\Log\LoggerInterface;
 
 class WebsocketController extends AbstractController
 {
 
-    
+    private LoggerInterface $logger;
     private EntityManager $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
     }
 
 
@@ -33,23 +35,9 @@ class WebsocketController extends AbstractController
             return $this->redirectToRoute('userChangePassword');
         }
         
-        $grpsPb=array();
-
-        $grpsPv=array();
-
-        $grpsDM=array();
-
-        foreach($this->entityManager->getRepository(Invitation::class)->findBy(['UserId'=>$user]) as $invit){
-            if($invit->getGroupeId()->getTypeGroupeId()->getId()==1){
-                array_push($grpsPv,$invit->getGroupeId());
-            }else if($invit->getGroupeId()->getTypeGroupeId()->getId()==2){
-                array_push($grpsPb,$invit->getGroupeId());
-            }else{
-                array_push($grpsDM,$invit->getGroupeId());
-            }
-        }
-            
-        if( $user->getStatut()->getName() == "Hors Ligne"){
+        $emInvitation = $this->entityManager->getRepository(Invitation::class);
+        
+        if( $user->getStatut()->getName() == "Hors Ligne") {
             $user->setStatut($this->getDoctrine()->getRepository(Statut::class)->findOneBy( array('id' => 1)));
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
@@ -59,9 +47,11 @@ class WebsocketController extends AbstractController
 
         return $this->render('websocket/index.html.twig', [
             'controller_name' => 'WebsocketController',
-            'grpsPb'=>$grpsPb,
-            'grpsPv'=>$grpsPv,
-            'grpsDM'=>$grpsDM,
+            'channels' => [
+                "publiques" => $emInvitation->getChannelUtilisateur(1, $user->getId()),
+                "prives" => $emInvitation->getChannelUtilisateur(2, $user->getId()),
+                "dm" => $emInvitation->getDMChannels($user->getId())
+            ],
             'user' => [
                 "pseudo" => $this->getUser()->getPseudo(),
                 "statut" => $this->getUser()->getStatut()->getName(),
@@ -69,4 +59,5 @@ class WebsocketController extends AbstractController
             ]
         ]);
     }
+
 }
