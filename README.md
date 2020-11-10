@@ -3,7 +3,7 @@
 Pour lancer :
 
 - Serveur Web : symfony server:start
-- Serveur Websocket : php bin/console gos:websocket:server (--vv) Pour les logs
+- Serveur Websocket : php bin/console gos:websocket:server (-vv) Pour les logs
 - Webpack : yarn encore dev / yarn encore production
 
 Pour installer :

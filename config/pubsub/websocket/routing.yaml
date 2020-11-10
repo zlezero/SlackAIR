@@ -1,3 +1,7 @@
 message_topic:
-    channel: message/channel
+    channel: message/channel/{idChannel}
     handler: 'message.topic'
+
+userevent_topic:
+    channel: user/{idUser}
+    handler: 'userevent.topic'

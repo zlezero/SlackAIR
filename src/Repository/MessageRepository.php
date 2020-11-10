@@ -36,15 +36,16 @@ class MessageRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Message
+    
+    public function getMessages(int $channelId, int $userId, int $messageMin = NULL, int $messageMax = NULL)
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('message')
+            ->andWhere('message.GroupeId = :channelId')
+            ->andWhere('message.EstEfface = 0')
+            ->setParameter('channelId', $channelId)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
-    */
+    
 }

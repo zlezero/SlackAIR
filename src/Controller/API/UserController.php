@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Gos\Bundle\WebSocketBundle\Pusher\PusherInterface;
+use Gos\Bundle\WebSocketBundle\Pusher\Wamp\WampPusher;
 
 /**
  * @Route("/user", name="user")
@@ -18,10 +20,12 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     private $passwordEncoder;
+    private $pusher;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, PusherInterface $wampPusher)
     {
         $this->passwordEncoder = $passwordEncoder;
+        $this->pusher = $wampPusher;
     }
 
     /**
@@ -71,6 +75,8 @@ class UserController extends AbstractController
             $em->persist($user);
             $em->flush();
             $em->refresh($user);
+
+            $this->pusher->push(["typeEvent" => "pseudoChange", "data" => ["user" => ["id" => $this->getUser()->getId(), "pseudo" => $this->getUser()->getPseudo()]]], "userevent_topic", ["idUser" => $this->getUser()->getId()], []);
 
             return new JsonResponse(["statut" => "ok",
             "message" => "Le profil a été mis à jour avec succès !",
@@ -126,26 +132,32 @@ class UserController extends AbstractController
     /**
      * @Route("/setStatut", name="userSetStatut")
      */
-    public function setStatut(Request $request){
+    public function setStatut(Request $request) {
+
         $statutId = $request->get("statutId");
 
-        if($statutId && $this->getUser()){
+        if($statutId && $this->getUser()) {
+
             $this->getUser()->setStatut($this->getDoctrine()->getRepository(Statut::class)->findOneBy( array('id' => $statutId)));
+
             $user = $this->getUser();
+            
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
             $em->refresh($user);
+
+            $this->pusher->push(["typeEvent" => "statutChange", "data" => ["user" => ["id" => $user->getId()], "statut" => $user->getStatut()->getFormattedStatus()]], "userevent_topic", ["idUser" => $user->getId(), "typeEvent" => "statut"], []);
+
             return new JsonResponse(["statut" => "ok",
             "message" => "Statut mis à jour !",
-            "statut" => [
-                "nom" => $user->getStatut()->getName(),
-                "color" => $user->getStatut()->getStatusColor()
-            ]]);
+            "statut" => $user->getStatut()->getFormattedStatus()]);
+
         }
 
         return new JsonResponse(["statut" => "nok",
         "message" => ""]);
+
     }
 
     public function getErrorMessages($form)
@@ -160,6 +172,5 @@ class UserController extends AbstractController
         return $errors;
         
     }
-
 
 }
