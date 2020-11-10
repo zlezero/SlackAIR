@@ -326,11 +326,10 @@ $(function() {
     $('#btn-theme').on('click', (e) => {
 
         if($('body').hasClass("dark")) {
-            $('.chat-title, body').removeClass("dark");
+            $('body, .modal-dialog').removeClass("dark");
         } else {
-            $('.chat-title, body').addClass("dark");
+            $('body, .modal-dialog').addClass("dark");
         }
 
     });
-
 });

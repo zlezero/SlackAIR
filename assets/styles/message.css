@@ -478,15 +478,16 @@ button {
     position:absolute;
 }
 
-.chat-title.dark{
+.dark .chat-title{
     background-color: #202225;
     color: lightgray;
 }
 
-.chat-title.dark *{
+.dark .chat-title *{
     background-color: #202225;
     color: lightgray;
 }
+
 .h-80{
     height: 80%;
 }

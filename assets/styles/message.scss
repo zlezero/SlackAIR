@@ -211,6 +211,9 @@ input {
 }
 
 .dark{
+  .border{
+    border:1px solid black!important;
+  }
   input{    
     border:1px solid black;
     color: lightgray;
@@ -236,7 +239,7 @@ input {
   }
 
   #sidebar{
-    background: linear-gradient(#080d24, #1f1f24);
+    background: linear-gradient(#080d24, #151a30);
   }
   nav{
     background:#080d24;
