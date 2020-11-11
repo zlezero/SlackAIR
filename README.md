@@ -13,3 +13,7 @@ Pour installer :
   - Faire un : yarn install
   - Faire la migration de la bdd : php bin/console doctrine:migrations:migrate
   - Faire un : yarn encore production
+
+Pour passer en prod :
+  - php bin/console cache:clear --env=prod
+  - Changer APP_ENV=dev en APP_ENV=prod dans le .env
