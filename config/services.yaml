@@ -4,7 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-
+    pdp_directory: '%kernel.project_dir%/public/uploads/pdp'
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -53,3 +53,6 @@ services:
             - name: 'kernel.event_listener'
               event: 'Symfony\Component\Security\Http\Event\LogoutEvent'
               dispatcher: security.event_dispatcher.main
+    App\Service\FileUploader:
+            arguments:
+                $targetDirectory: '%pdp_directory%'

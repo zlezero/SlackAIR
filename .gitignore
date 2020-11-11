@@ -19,6 +19,9 @@
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/
+/public/uploads/pdp/*.*
+!/public/uploads/pdp/.gitdirectory
+!/public/uploads/pdp/default.jpg
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###

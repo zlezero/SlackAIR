@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\PasswordFormType;
+use App\Form\UploadPdpType;
 use App\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,11 +16,12 @@ class UserProfileController extends AbstractController
         $form = $this->createForm(UserType::class, null);
 
         $passwordForm = $this->createForm(PasswordFormType::class, null);
-        
+        $pdpForm= $this->createForm(UploadPdpType::class,null);
         return $this->render('websocket/_profile.html.twig', [
             "user" => [
                 "email"  => $this->getUser()->getEmail(),
                 "prenom" => $this->getUser()->getPrenom(),
+                "photo_de_profile" => $this->getUser()->getFileName(),
                 "nom"    => $this->getUser()->getNom(),
                 "age"    => $this->getUser()->getAge(),
                 "pseudo" => $this->getUser()->getPseudo(),
@@ -35,7 +37,8 @@ class UserProfileController extends AbstractController
                 ]
                     ],
             "form" =>  $form->createView(),
-            "passwordForm" => $passwordForm->createView()
+            "passwordForm" => $passwordForm->createView(),
+            "pdpForm" => $pdpForm->createView()
         ]);
     }
 }

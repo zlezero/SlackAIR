@@ -110,6 +110,11 @@ class User implements UserInterface
      */
     private $DernierGroupe;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $FileName;
+
 
     public function __construct()
     {
@@ -405,8 +410,19 @@ class User implements UserInterface
             "nom" => $this->getNom(),
             "pseudo" => $this->getPseudo(),
             "profession" => $this->getProfession(),
-            "statut" => $this->getStatut()->getFormattedStatus()
+            "statut" => $this->getStatut()->getFormattedStatus(),
+            "photo_de_profile" => $this->getFileName(),
         ];
+    }
+    public function getFileName(): ?string
+    {
+        return '/uploads/pdp/'.($this->FileName ? $this->FileName : 'default.jpg');
+    }
+
+    public function setFileName(?string $FileName): self
+    {
+        $this->FileName = $FileName;
+        return $this;
     }
 
 }

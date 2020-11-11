@@ -6,6 +6,7 @@ use App\Form\UserType;
 use App\Form\PasswordFormType;
 use App\Entity\User;
 use App\Entity\Statut;
+use App\Form\UploadPdpType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Gos\Bundle\WebSocketBundle\Pusher\PusherInterface;
-use Gos\Bundle\WebSocketBundle\Pusher\Wamp\WampPusher;
+use App\Service\FileUploader;
 
 /**
  * @Route("/user", name="user")
@@ -162,8 +163,7 @@ class UserController extends AbstractController
 
     }
 
-    public function getErrorMessages($form)
-    {
+    public function getErrorMessages($form) {
         $errors = array();
 
         foreach ($form->getErrors(true, true) as $error) {
@@ -178,7 +178,7 @@ class UserController extends AbstractController
     /**
      * @Route("/getContacts", name="getAllUsers")
      */
-    public function getContacts(Request $request){
+    public function getContacts(Request $request) {
 
         $users = $this->entityManager->getRepository(User::class)->getAllUsersExceptMe($this->getUser()->getId());
 
@@ -192,6 +192,54 @@ class UserController extends AbstractController
             "statut" => "ok",
             "message" => ["users" => $arrayReponse]
         ]);
+
+    }
+
+    /**
+     * @Route("/setPdp", name="userSetPdp", methods={"POST"})
+     */
+    public function setPdp(Request $request, FileUploader $fileUploader) {
+
+        $user = $this->getUser();
+
+        $pdp = $request->files->get('image_path');
+
+        if($pdp) {
+
+            try {
+
+                //$form = $this->createForm(UploadPdpType::class);
+
+                //$form->handleRequest($request);
+
+                //if ($form->isSubmitted() && $form->isValid()) {
+
+                    $pdpFileName = $fileUploader->upload($pdp);
+                    $user->setFileName($pdpFileName);
+        
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($user);
+                    $em->flush();
+                    $em->refresh($user);
+        
+                    return new JsonResponse(["statut" => "ok",
+                                             "message" => ["photo_de_profile" =>$user->getFileName()]]);
+
+                //} else {
+                    //return new JsonResponse(["statut" => "nok",
+                                             //"message"=> "Photo non valide"]);
+                //}
+
+
+            } catch(Exception $error) {
+                return new JsonResponse(["statut" => "nok",
+                                         "message"=>"Erreur lors l'ajout de la photo"]);
+            }
+
+        } else {
+            return new JsonResponse(["statut" => "nok",
+                                     "message"=>"Aucune photo envoyée"]);
+        }
 
     }
 

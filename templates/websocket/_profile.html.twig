@@ -14,10 +14,13 @@
                         <div class="row my-2">
                             <div class="col-lg-4 order-lg-1">
                                 <div class="user-profile-img">
-                                    <img src="https://i.etsystatic.com/14629925/r/il/bf50b4/1921160378/il_570xN.1921160378_lw7l.jpg" alt="userProfileImage"/>
+                                    <img src='{{ asset(user.photo_de_profile) }}' alt="userProfileImage" id="pdpUser"/>
                                     <label class="file btn btn-lg text-center">
                                         <span>Changer Photo</span>
-                                        <input type="file" name="file"/>
+                                        {{ form_start(pdpForm, {'attr': {'id': 'pdp-fileUpload-form'}}) }}
+                                        {{ form_widget(pdpForm.pdp, {'attr': {'id': "pdpFileUpload",'class':''}}) }}
+                                        {{ form_widget(pdpForm.confirmer, {'label_attr ':{'class':'hidden'}}) }}
+                                        {{form_end(pdpForm)}}
                                     </label>
                                 </div>
                                 <div class="profile-settings">

@@ -142,7 +142,7 @@
                 <!-- sidebar-header  -->
                 <div class="sidebar-item sidebar-header d-flex flex-nowrap">
                     <div class="user-pic">
-                        <img class="img-responsive img-rounded" src="https://i.etsystatic.com/14629925/r/il/bf50b4/1921160378/il_570xN.1921160378_lw7l.jpg" alt="User picture">
+                        <img class="img-responsive img-rounded" id="mainPdp" src='{{ asset(user.photo_de_profile) }}' alt="Photo de profile">
                     </div>
                     <div class="user-info">
                         <span id="sidebar-user-pseudo" class="user-name">{{user.pseudo}}

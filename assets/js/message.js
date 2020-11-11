@@ -49,7 +49,7 @@ $(function() {
                 session.subscribe("message/channel/" + $(this).data("idchannel"), function (uri, payload) {
                     console.log("Message reçu : ", payload);
                     if (payload.channel == current_channel_id) {
-                        addMessage(payload.pseudo, payload.message, payload.messageTime, payload.messageId);
+                        addMessage(payload.pseudo, payload.message, payload.messageTime, payload.messageId, payload.photo_de_profile);
                     }
                 });
             }
@@ -135,7 +135,7 @@ $(function() {
             data: {"channelId": current_channel_id},
             success: function (result) {
                 result.message.messages.forEach((message) => {
-                    addMessage(message.pseudo, message.message, message.date.date, message.messageId);
+                    addMessage(message.pseudo, message.message, message.date.date, message.messageId, message.photo_de_profile);
                 });
                 scrollMessageToEnd();
             }
@@ -208,16 +208,16 @@ $(function() {
         } catch(error) {}
     }
 
-    function addMessage(name, message, messageTime, id) {
+    function addMessage(name, message, messageTime, id, url_photo_de_profile) {
         
         let scrollAtEnd = isScrollMessageAtEnd();
 
         const messageHTML = 
-        "<div class='col-12'><div class='chat-bubble'><img class='profile-image' src='https://i.pinimg.com/originals/62/99/4c/62994ce35676d330091f6039278972f2.png' alt=''><div class='text'><h6>" + name + 
+        "<div class='col-12'><div class='chat-bubble'><img class='profile-image' src='" + url_photo_de_profile + "' alt=''><div class='text'><h6>" + name + 
         "</h6><p class='text-muted' data-idMessage='" + id + "'>" + message + "</p></div><span class='time text-muted small'>"
         + formatDate(messageTime) +"</span></div></div>";
         
-        $('#chat-messages').html($('#chat-messages').html() + messageHTML);
+        $('#chat-messages').append(messageHTML);
 
         //cache_messages[current_channel_id][id] = {"id": id, "pseudo": name, "message": message, "date": formatDate(messageTime)}
         

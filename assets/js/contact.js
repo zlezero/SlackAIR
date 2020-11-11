@@ -14,7 +14,8 @@ $(function () {
 
                     data.message.users.forEach((user) => {
 
-                        let html = '<div class=" card-col col-sm-12"><div class="card shadow user-card w-100"><div class="card-body row"><div class="col-12 col-sm-3 mb-3 mb-sm-0 text-center"><div class="img-content"><img class="thumb-lg rounded-circle bx-s" src="https://www.bebegavroche.com/media/catalog/product/cache/1/thumbnail/1200x/040ec09b1e35df139433887a97daa66f/S/M/SM327-Masque-en-carton-Jasmine---Disney-Aladdin---27--cm-1.jpg" alt="">' 
+                        let html = '<div class=" card-col col-sm-12"><div class="card shadow user-card w-100"><div class="card-body row"><div class="col-12 col-sm-3 mb-3 mb-sm-0 text-center"><div class="img-content"><img class="thumb-lg rounded-circle bx-s"'
+                                    + 'src="' + user.photo_de_profile + '" alt="">' 
                                     + '<i class="fa fa-circle ' + user.statut.status_color +'"></i></div></div>'
                                     + '<div class="col-12 col-sm-9"><div class="send-message-contact p-t-10 btn-group-sm contact-options">'
                                     + '<a href="#" class="float-right" data-toggle="tooltip" title="Envoyer un message" data-user-id="' + user.id + '" ><i class="far fa-envelope"></i></a></div>'

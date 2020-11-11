@@ -55,6 +55,7 @@ class WebsocketController extends AbstractController
             'user' => [
                 "pseudo" => $this->getUser()->getPseudo(),
                 "statut" => $this->getUser()->getStatut()->getName(),
+                "photo_de_profile" => $this->getUser()->getFileName(),
                 "statut_color" => $this->getUser()->getStatut()->getStatusColor()
             ]
         ]);
