@@ -37,6 +37,8 @@ $(function() {
     var notif_channel_general = false;
     var notif_channel_prive = 0;
 
+    var cache_messages = {};
+
     socket.on("socket/connect", function (session) {
 
         console.log("Connexion réussie !");
@@ -143,9 +145,25 @@ $(function() {
             url: '/api/channel/getInfos',
             data: {"channelId": current_channel_id},
             success: function (result) {
-                $('#titre_channel').text(result.message.channel.nom);
-                $('#titre_channel_right').text(result.message.channel.nom);
-                $('#message').attr('placeholder', 'Envoyer un message à ' + result.message.channel.nom);
+
+                if (result.message.channel.type == 3) {
+                    $('#titre_channel').text(result.message.channel.user.pseudo);
+                    $('#titre_channel_right').text(result.message.channel.user.pseudo);
+                    $('#message').attr('placeholder', 'Envoyer un message à ' + result.message.channel.user.pseudo);
+                } else {
+                    $('#titre_channel').text(result.message.channel.nom);
+                    $('#titre_channel_right').text(result.message.channel.nom);
+                    $('#message').attr('placeholder', 'Envoyer un message à ' + result.message.channel.nom);
+                }
+                
+                if (result.message.channel.type != 3 && result.message.channel.description != null) {
+                    $('#description_channel').show();
+                    $('#description_channel').text(result.message.channel.description);
+                } else {
+                    $('#description_channel').hide();
+                    $('#description_channel').text("");
+                }
+
             }
         });
 
@@ -198,6 +216,7 @@ $(function() {
         "<div class='col-12'><div class='chat-bubble'><img class='profile-image' src='https://i.pinimg.com/originals/62/99/4c/62994ce35676d330091f6039278972f2.png' alt=''><div class='text'><h6>" + name + 
         "</h6><p class='text-muted' data-idMessage='" + id + "'>" + message + "</p></div><span class='time text-muted small'>"
         + formatDate(messageTime) +"</span></div></div>";
+        
         $('#chat-messages').html($('#chat-messages').html() + messageHTML);
 
         if (scrollAtEnd) {

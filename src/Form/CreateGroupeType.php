@@ -34,7 +34,10 @@ class CreateGroupeType extends AbstractType
                 'required' => true,
                 'constraints' => [new NotBlank()]
             ])
-            ->add('typeGroupeId', EntityType::class,[
+            ->add('description', TextType::class, [
+                'required' => false
+            ])
+            ->add('typeGroupeId', EntityType::class, [
                 'class'=>TypeGroupe::class,
                 'choices'=>$this->entityManager->getRepository(TypeGroupe::class)->getTypeGroupeExceptDM(),
                 'choice_label' => function(?TypeGroupe $typeGroupe) {
@@ -73,7 +76,6 @@ class CreateGroupeType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Groupe::class,
-            
         ]);
     }
 
