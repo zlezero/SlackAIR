@@ -15,10 +15,15 @@ $(function() {
         emoji => $('#message').val($('#message').val() + emoji)
     );
 
+    function disableEmojis() {
+        $('#btnEmojis').off('click');
+    }
 
-    $('#btnEmojis').on('click', (e) => {
-        $('#emojis').css('display') == "none" ? $('#emojis').css('display', '') : $('#emojis').css('display', 'none');
-    });
+    function enableEmojis() {
+        $('#btnEmojis').on('click', (e) => {
+            $('#emojis').css('display') == "none" ? $('#emojis').css('display', '') : $('#emojis').css('display', 'none');
+        });
+    }
 
     $(document).on('mouseup', function(e) {
 
@@ -34,7 +39,7 @@ $(function() {
 
     const socket = WS.connect(_WS_URI);
     var session_glob;
-    var current_channel_id = 1;
+    var current_channel_id = -1;
     var notif_channel_general = false;
     var notif_channel_prive = 0;
 
@@ -47,12 +52,7 @@ $(function() {
 
         $('.channel').each(function (index) {
             if ($(this).data("idchannel") != undefined) {
-                session.subscribe("message/channel/" + $(this).data("idchannel"), function (uri, payload) {
-                    console.log("Message reçu : ", payload);
-                    if (payload.channel == current_channel_id) {
-                        addMessage(payload.pseudo, payload.message, payload.messageTime, payload.messageId, payload.photo_de_profile);
-                    }
-                });
+                subscribeToChannel($(this).data("idchannel"));
             }
         });
 
@@ -63,6 +63,15 @@ $(function() {
         });
 
     });
+
+    window.subscribeToChannel = function subscribeToChannel(idChannel) {
+        session_glob.subscribe("message/channel/" + idChannel, function (uri, payload) {
+            console.log("Message reçu : ", payload);
+            if (payload.channel == current_channel_id) {
+                addMessage(payload.pseudo, payload.message, payload.messageTime, payload.messageId, payload.photo_de_profile);
+            }
+        });
+    }
 
     socket.on("socket/disconnect", function (error) {
         console.log("Déconnecté : " + error.reason + " / Code : " + error.code);
@@ -75,7 +84,7 @@ $(function() {
             channel: current_channel_id
         };
 
-        if ($("#message").val() != "") {
+        if ($("#message").val() != "" && current_channel_id != -1 && !$('#message').val().includes('<script>')) {
             session_glob.publish("message/channel/" + current_channel_id, {data: JSON.stringify(data)});
             $('#message').val('');
         }
@@ -116,8 +125,19 @@ $(function() {
     }
 
     window.subscribeChannel();
+    disableChannelInteraction();
+
+    function disableChannelInteraction() {
+        $('#titre_channel').hide();
+        $('#description_channel').hide();
+        $('#titre_channel_right').hide();
+        $('#message').prop('disabled', true);
+        disableEmojis();
+    }
 
     function loadChannel(idChannel, target) {
+
+        disableChannelInteraction();
 
         $("#chat").append("<img src='https://cdn.dribbble.com/users/415849/screenshots/9782953/crawford_portfolio_loading.gif' id='loading'/>")
         current_channel_id = idChannel;
@@ -131,6 +151,7 @@ $(function() {
                 unsubscribeToUserEvent($(this).data('userid'));
             }
         });
+        
         $.post({
             url: '/api/channel/getMessages',
             data: {"channelId": current_channel_id},
@@ -140,6 +161,8 @@ $(function() {
                 });
                 scrollMessageToEnd();
                 $("#loading").remove();
+                $('#message').prop('disabled', false);
+                enableEmojis();
             }
         });
 
@@ -171,6 +194,9 @@ $(function() {
                     $('#description_channel').hide();
                     $('#description_channel').text("");
                 }
+
+                $('#titre_channel').show();
+                $('#titre_channel_right').show();
 
             }
             

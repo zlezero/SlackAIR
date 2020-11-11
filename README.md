@@ -16,4 +16,8 @@ Pour installer :
 
 Pour passer en prod :
   - php bin/console cache:clear --env=prod
+  - yarn encore production
   - Changer APP_ENV=dev en APP_ENV=prod dans le .env
+
+Importer des utilisateurs :
+  - php bin/console run:import-csv <CheminVersCSV>

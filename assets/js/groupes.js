@@ -37,10 +37,12 @@ $(function() {
                         }
 
                         $("#create_groupe_nom").val("");
+                        $('#create_groupe_description').val("");
                         $("#create_groupe_typeGroupeId").val($("#create_groupe_typeGroupeId option:first").val());
                         $('#create_groupe_invitations').prop('selectedIndex', -1);
 
-                        window.subscribeChannel();
+                        window.subscribeChannel(); //Subscribe à l'event onClick
+                        window.subscribeToChannel(data.message.groupe.id); //Subscribe au websocket
 
                         $(".channel[data-idchannel=" + data.message.groupe.id + "]").trigger('click');
 
