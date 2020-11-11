@@ -119,6 +119,7 @@ $(function() {
 
     function loadChannel(idChannel, target) {
 
+        $("#chat").append("<img src='https://cdn.dribbble.com/users/415849/screenshots/9782953/crawford_portfolio_loading.gif' id='loading'/>")
         current_channel_id = idChannel;
 
         $('.channel-selected').removeClass('channel-selected');
@@ -130,7 +131,6 @@ $(function() {
                 unsubscribeToUserEvent($(this).data('userid'));
             }
         });
-        
         $.post({
             url: '/api/channel/getMessages',
             data: {"channelId": current_channel_id},
@@ -139,6 +139,7 @@ $(function() {
                     addMessage(message.pseudo, message.message, message.date.date, message.messageId, message.photo_de_profile);
                 });
                 scrollMessageToEnd();
+                $("#loading").remove();
             }
         });
 
@@ -172,8 +173,9 @@ $(function() {
                 }
 
             }
+            
         });
-
+        
         $.post({
             url: '/api/channel/getAllUsers',
             data: {"channelId": current_channel_id},
@@ -183,6 +185,7 @@ $(function() {
                     subscribeToUserEvent(utilisateur.id);
                     $('#listeMembres').append('<p class="card-text user_channel" data-userid="' + utilisateur.id + '" ><i class="fa fa-circle ' + utilisateur.statut.status_color + ' "></i> ' + utilisateur.pseudo + ' </p>')
                 });
+
             }
         });
 
