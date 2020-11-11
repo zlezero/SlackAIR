@@ -68,7 +68,7 @@ class GroupeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $groupe=$form->getData();
+            $groupe = $form->getData();
 
             $invitations = $request->request->get($form->getName())['invitations'];
 
