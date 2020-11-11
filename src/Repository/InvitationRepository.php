@@ -66,6 +66,18 @@ class InvitationRepository extends ServiceEntityRepository
 
     }
 
+    public function getUserChannelInvitation(int $idChannel, int $idUtilisateur)
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.UserId = :idUtilisateur')
+            ->andWhere('i.GroupeId = :idChannel')
+            ->setParameter('idUtilisateur', $idUtilisateur)
+            ->setParameter('idChannel', $idChannel)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
     public function isUserInChannel(int $idChannel, int $idUtilisateur) {
         return ($this->createQueryBuilder('i')
                     ->andWhere('i.UserId = :idUtilisateur')
@@ -95,7 +107,7 @@ class InvitationRepository extends ServiceEntityRepository
                                 ->setParameter('idUtilisateur', $idUtilisateur)
                                 ->getOneOrNullResult();
 
-            $returnObj[] = ["channel" => ["id" => $channel->getGroupeId()->getId()], "user" => ["id" => $data->getId(), "pseudo" => $data->getPseudo(), "statut" => $data->getStatut()->getFormattedStatus()]];
+            $returnObj[] = ["channel" => ["id" => $channel->getGroupeId()->getId(), "isFavorite" => $channel->getIsFavorite()], "user" => ["id" => $data->getId(), "pseudo" => $data->getPseudo(), "statut" => $data->getStatut()->getFormattedStatus()]];
         
         }
 

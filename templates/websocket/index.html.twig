@@ -165,10 +165,25 @@
                     <li class="d-flex">
                         <div class="pl-0 pr-0 grpList">
                             <button class="btn dropdown-btn" type="button">
-                                <span class="menu-text"><i class="fas fa-address-book"></i>    Contacts favoris</span>
+                                <span class="menu-text"><i class="far fa-bookmark"></i>    Discussions favorites</span>
                                 <i class="fas fa-caret-down icon-caret"></i>
                             </button>
                             <div class="collapse show hide collapse-container" id="collapse-favoris">
+                                {% for groupePublic in channels.publiques %}
+                                    {% if groupePublic.isFavorite %}
+                                        <a href="" data-idChannel={{groupePublic.GroupeId.id}} class="channel"><i class="fas fa-hashtag"></i>{{groupePublic.GroupeId.nom}}</a>
+                                    {% endif %}
+                                {% endfor %}
+                                {% for groupePrive in channels.prives %}
+                                    {% if groupePrive.isFavorite %}
+                                       <a href="" data-idChannel={{groupePrive.GroupeId.id}} class="channel"><i class="fas fa-lock"></i>{{groupePrive.GroupeId.nom}}</a>
+                                    {% endif %}
+                                {% endfor %}
+                                {% for groupeDM in channels.dm %}
+                                    {% if groupeDM.channel.isFavorite %}
+                                       <a href="" data-idChannel={{groupeDM.channel.id}} data-userIdDM={{groupeDM.user.id}} class="channel user_channel"><i class="fa fa-circle {{groupeDM.user.statut.status_color}}"></i>{{groupeDM.user.pseudo}}</a>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         </div>
                     </li>
@@ -247,7 +262,7 @@
                                                 </div>
                                             </div>
                                             <span class="chat-title--right">
-                                                <i class="fas fa-star"></i>
+                                                <i id="set-favorite" class="fas fa-star"></i>
                                                 <i class="fas fa-thumbtack"></i>
                                                 <i class="fas fa-sign-out-alt"></i>
                                                 <i class="fas fa-info-circle"></i>

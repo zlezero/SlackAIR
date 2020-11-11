@@ -90,6 +90,7 @@ class GroupeController extends AbstractController
                                             ->getRepository(User::class)
                                             ->find($userId));
                 $invitation->setNonLus(1);
+                $invitation->setIsFavorite(false);
 
                 $this->entityManager->persist($invitation);
                 $this->entityManager->flush();
@@ -104,6 +105,7 @@ class GroupeController extends AbstractController
             $invitation->setStatut(true);
             $invitation->setDate(new DateTime());
             $invitation->setNonLus(1);
+            $invitation->setIsFavorite(false);
 
             $this->entityManager->persist($invitation);
             $this->entityManager->flush();
@@ -150,6 +152,7 @@ class GroupeController extends AbstractController
                     $invitation->setStatut(false);
                     $invitation->setUserId($userDM);
                     $invitation->setNonLus(0);
+                    $invitation->setIsFavorite(false);
     
                     $this->entityManager->persist($invitation);
                     $this->entityManager->flush();
@@ -162,6 +165,7 @@ class GroupeController extends AbstractController
                     $invitation->setStatut(true);
                     $invitation->setUserId($this->getUser());
                     $invitation->setNonLus(0);
+                    $invitation->setIsFavorite(false);
         
                     $this->entityManager->persist($invitation);
                     $this->entityManager->flush();

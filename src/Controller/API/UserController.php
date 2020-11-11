@@ -2,6 +2,7 @@
 
 namespace App\Controller\API;
 
+use App\Entity\Invitation;
 use App\Form\UserType;
 use App\Form\PasswordFormType;
 use App\Entity\User;
@@ -15,6 +16,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Gos\Bundle\WebSocketBundle\Pusher\PusherInterface;
 use App\Service\FileUploader;
+use Gos\Bundle\WebSocketBundle\Pusher\Wamp\WampPusher;
+use Psr\Log\LoggerInterface;
 
 /**
  * @Route("/user", name="user")
@@ -24,11 +27,12 @@ class UserController extends AbstractController
     private $passwordEncoder;
     private $pusher;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder, PusherInterface $wampPusher, EntityManagerInterface $entityManager)
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, PusherInterface $wampPusher, EntityManagerInterface $entityManager, LoggerInterface $ConsoleLogger)
     {
         $this->passwordEncoder = $passwordEncoder;
         $this->pusher = $wampPusher;
         $this->entityManager = $entityManager;
+        $this->ConsoleLogger = $ConsoleLogger;
     }
 
     /**
@@ -239,6 +243,98 @@ class UserController extends AbstractController
         } else {
             return new JsonResponse(["statut" => "nok",
                                      "message"=>"Aucune photo envoyée"]);
+        }
+
+    }
+
+    /**
+     * @Route("/setInvitationShortcut", name="setInvitationShortcut")
+     */
+    public function setInvitationShortcut(Request $request) {
+        
+        $userId = $this->getUser()->getId();
+        $channelId = $request->get("currentChannelId");
+        $channelInvitation = $this->entityManager->getRepository(Invitation::class)->getUserChannelInvitation($channelId, $userId); 
+        
+        if($channelInvitation) {
+            
+            $channelInvitation->setIsFavorite(true);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($channelInvitation);
+            $em->flush();
+            $em->refresh($channelInvitation);
+
+            $data = "";
+
+            if($channelInvitation->getGroupeTypeId() == 3){
+                $data =  $this->entityManager->getRepository(Invitation::class)->getDMChannel($userId, $channelId);
+            } else {
+                $groupe = $channelInvitation->getGroupeId();
+                $data =  [
+                    "groupe" => [
+                        "id" => $groupe->getId(), 
+                        "nom" => $groupe->getNom(), 
+                        "type" => $groupe->getTypeGroupeId()->getId()
+                    ]
+                ];
+            }
+            
+            return new JsonResponse(["statut" => "ok",
+                                     "message" => $data]);
+        } else {
+
+            return new JsonResponse([
+                "statut" => "nok",
+                "message" => "Ce channel n'existe pas."
+            ]);
+
+        }
+
+    }
+
+    /**
+     * @Route("/removeInvitationShortcut", name="removeInvitationShortcut")
+     */
+    public function removeInvitationShortcut(Request $request) {
+        
+        $userId = $this->getUser()->getId();
+        $channelId = $request->get("currentChannelId");
+        $channelInvitation = $this->entityManager->getRepository(Invitation::class)->getUserChannelInvitation($channelId, $userId); 
+        
+        if($channelInvitation) {
+            
+            $channelInvitation->setIsFavorite(false);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($channelInvitation);
+            $em->flush();
+            $em->refresh($channelInvitation);
+
+            $data = "";
+
+            if($channelInvitation->getGroupeTypeId() == 3){
+                $data =  $this->entityManager->getRepository(Invitation::class)->getDMChannel($userId, $channelId);
+            } else {
+                $groupe = $channelInvitation->getGroupeId();
+                $data =  [
+                    "groupe" => [
+                        "id" => $groupe->getId(), 
+                        "nom" => $groupe->getNom(), 
+                        "type" => $groupe->getTypeGroupeId()->getId()
+                    ]
+                ];
+            }
+            
+            return new JsonResponse(["statut" => "ok",
+                                     "message" => $data]);
+        } else {
+            
+            return new JsonResponse([
+                "statut" => "nok",
+                "message" => "Ce channel n'existe pas."
+            ]);
+
         }
 
     }
