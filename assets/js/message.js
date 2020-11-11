@@ -47,12 +47,7 @@ $(function() {
 
         $('.channel').each(function (index) {
             if ($(this).data("idchannel") != undefined) {
-                session.subscribe("message/channel/" + $(this).data("idchannel"), function (uri, payload) {
-                    console.log("Message reçu : ", payload);
-                    if (payload.channel == current_channel_id) {
-                        addMessage(payload.pseudo, payload.message, payload.messageTime, payload.messageId, payload.photo_de_profile);
-                    }
-                });
+                subscribeToChannel($(this).data("idchannel"));
             }
         });
 
@@ -63,6 +58,15 @@ $(function() {
         });
 
     });
+
+    window.subscribeToChannel = function subscribeToChannel(idChannel) {
+        session_glob.subscribe("message/channel/" + idChannel, function (uri, payload) {
+            console.log("Message reçu : ", payload);
+            if (payload.channel == current_channel_id) {
+                addMessage(payload.pseudo, payload.message, payload.messageTime, payload.messageId, payload.photo_de_profile);
+            }
+        });
+    }
 
     socket.on("socket/disconnect", function (error) {
         console.log("Déconnecté : " + error.reason + " / Code : " + error.code);

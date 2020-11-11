@@ -50,8 +50,9 @@ $(function () {
                                             $('.dropdown-btn', $('#collapse-message-private').parent())[0].click();
                                         }
                 
-                                        window.subscribeChannel();
-                
+                                        window.subscribeChannel(); //Subscribe à l'event onClick
+                                        window.subscribeToChannel(data.message.id); //Subscribe au websocket
+
                                         $(".channel[data-idchannel=" + data.message.id + "]").trigger('click');
                                         $('#annuaire-modal').modal('hide');
                 
