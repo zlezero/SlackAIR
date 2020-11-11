@@ -76,16 +76,20 @@ class ChannelController extends AbstractController
             if ($channel) {
                 
                 $dataReponse = ["statut" => "ok"];
-
+                
+                $channelInvitation = $this->getDoctrine()->getManager()->getRepository(Invitation::class)->getUserChannelInvitation($channelId, $this->getUser()->getId()); 
+                
                 if ($channel->getTypeGroupeId()->getId() == 3) {
                     $dataReponse["message"] = ["channel" => $this->getDoctrine()->getManager()->getRepository(Invitation::class)->getDMChannel($this->getUser()->getId(), $channel->getId())];
+                    $dataReponse["message"]["channel"]["isFavorite"] = $channelInvitation->getIsFavorite();
                 } else {
                     $dataReponse["message"] = ["channel" => [
                                                     "id" => $channel->getId(),
                                                     "type" => $channel->getTypeGroupeId()->getId(),
                                                     "nom" => $channel->getNom(),
                                                     "description" => $channel->getDescription(),
-                                                    "date_creation" => $channel->getDateCreation()
+                                                    "date_creation" => $channel->getDateCreation(),
+                                                    "isFavorite" => $channelInvitation->getIsFavorite()
                                               ]
                                     ];
                 }

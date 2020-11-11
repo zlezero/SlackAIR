@@ -3,6 +3,10 @@
     color: lightgray;
 }
 
+.saved-channel{
+    color: orange !important;
+}
+
 #content {
   margin-right: 0;
   margin: 0 auto;
@@ -474,8 +478,9 @@ button {
     z-index: -1;
 }
     
-.chat-title{
+.chat-title {
     position:absolute;
+    z-index: 1;
 }
 
 .dark .chat-title{

@@ -1,5 +1,6 @@
 import {formatDate} from './app';
 import {twemoji} from '../plugins/emoji-picker-twemoji/js/twemoji.min.js';
+import * as modals from './modals';
 
 $(function() {
 
@@ -145,6 +146,12 @@ $(function() {
             url: '/api/channel/getInfos',
             data: {"channelId": current_channel_id},
             success: function (result) {
+
+                if(result.message.channel.isFavorite) {
+                    $("#set-favorite").addClass("saved-channel");
+                } else {
+                    $("#set-favorite").removeClass("saved-channel");
+                }
 
                 if (result.message.channel.type == 3) {
                     $('#titre_channel').text(result.message.channel.user.pseudo);
@@ -344,6 +351,7 @@ $(function() {
         event.returnValue = '';
     });*/
 
+    //Gestion du dark theme
     $('#btn-theme, #switch_theme').on('click', (e) => {
 
         e.preventDefault();
@@ -355,4 +363,81 @@ $(function() {
         }
 
     });
+
+    //Gestion des discussions favorites
+    $("#set-favorite").on('click', (e) => {
+
+        if($("#set-favorite").hasClass("saved-channel")) {
+
+            $.post({
+                url: '/api/user/removeInvitationShortcut',
+                data: {'currentChannelId': current_channel_id},
+                success: function(data) {
+
+                    if(data.statut == "ok") {
+
+                        if(data.message.groupe) {
+                            var findElement = ".channel[data-idchannel=" + data.message.groupe.id + "]";
+                            $("#collapse-favoris").find(findElement).remove();
+                        } else {
+                            var findElement = ".channel[data-idchannel=" + data.message.id + "]";
+                            $("#collapse-favoris").find(findElement).remove();
+                        }
+
+                        if ($("#collapse-favoris").hasClass("hide")) {
+                            $('.dropdown-btn', $('#collapse-favoris').parent())[0].click();
+                        }
+
+                        $("#set-favorite").removeClass("saved-channel");
+                        window.subscribeChannel();
+
+                    } else {
+                        modals.openErrorModal("Une erreur est survenue lors de la suppression d'un channel favori : " + data.message);
+                    }
+                }
+            });
+
+        } else {
+
+            $.post({
+                url: '/api/user/setInvitationShortcut',
+                data: {'currentChannelId': current_channel_id},
+                success: function(data) {
+
+                    if(data.statut == "ok") {
+
+                        if(data.message.groupe) {
+    
+                            switch(data.message.groupe.type) {
+                                case 1:
+                                    $("#collapse-favoris").append('<a href="" data-idchannel="' + data.message.groupe.id + '" class="channel"><i class="fas fa-hashtag"></i>' + data.message.groupe.nom + '</a>');
+                                    break;
+                                case 2:
+                                    $("#collapse-favoris").append('<a href="" data-idchannel="' + data.message.groupe.id + '" class="channel"><i class="fas fa-lock"></i>' + data.message.groupe.nom + '</a>');
+                                    break;
+                                default:
+                                    break;
+                            }
+    
+                        } else {
+                            $("#collapse-favoris").append('<a href="" data-idchannel="' + data.message.id + '" data-userIdDM='+ data.message.user.id +' class="channel user_channel"><i class="fa fa-circle '+ data.message.user.statut.status_color +'"></i>' + data.message.user.pseudo + '</a>');
+                        }
+    
+                        if ($("#collapse-favoris").hasClass("hide")) {
+                            $('.dropdown-btn', $('#collapse-favoris').parent())[0].click();
+                        }
+    
+                        $("#set-favorite").addClass("saved-channel");
+                        window.subscribeChannel();
+    
+                    } else {
+                        modals.openErrorModal("Une erreur est survenue lors de l'ajout aux favoris : " + data.message);
+                    }
+                }
+            });
+
+        }
+        
+    });
+
 });
