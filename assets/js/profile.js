@@ -1,8 +1,40 @@
 import * as modals from './modals';
+import { openErrorModal } from './modals';
 
 $(function() {
-    
+
     $('#user-profile-modal').on('show.bs.modal', function (e) {
+        
+        $("#upload_pdp_pdp").on("change", function(e) {
+
+            e.preventDefault();
+
+            var formData = new FormData();
+            formData.append('category', 'general');
+            
+            var blob = $('#upload_pdp_pdp')[0].files[0];
+            formData.append('image_path', blob);
+
+            $.ajax({
+                type:'POST',
+                url: '/api/user/setPdp',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    
+                    if (data.statut == "ok") {
+                        $("#pdpUser").attr('src', data.message.photo_de_profile);
+                        $("#mainPdp").attr('src', data.message.photo_de_profile);
+                    } else {
+                        modals.openErrorModal("Une erreur est survenue lors de l'ajout de la photo de profile : " + data.message);
+                    }
+
+                }
+            });
+
+        });
 
         $("#user-update-form").on('submit', function (e) {
 
@@ -65,6 +97,8 @@ $(function() {
     $('#user-profile-modal').on('hidden.bs.modal', function (e) {
         $('#password-update-form').off('submit');
         $("#user-update-form").off('submit');
+        $("#pdp-fileUpload-form").off('submit');
+        $("#upload_pdp_pdp").off("change");
     });
 
 

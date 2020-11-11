@@ -136,7 +136,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
     }
 
     private function broadcastMessage(Topic $topic, Message $message, User $user, bool $system, Groupe $groupe) {
-        $topic->broadcast(['message' => $message->getTexte(), 'messageTime' => date_format($message->getDateEnvoi(), 'r'), 'messageId' => $message->getId(), 'pseudo' => $system ? "SYSTEM" : $user->getPseudo(), 'clientId' => $system ? null : $user->getId(), 'system' => $system, 'channel' => $groupe->getId()]);
+        $topic->broadcast(['message' => $message->getTexte(), 'messageTime' => date_format($message->getDateEnvoi(), 'r'), 'messageId' => $message->getId(), 'pseudo' => $system ? "SYSTEM" : $user->getPseudo(), 'clientId' => $system ? null : $user->getId(), 'system' => $system, 'channel' => $groupe->getId(), 'photo_de_profile' => $user->getFileName()]);
     }
 
 }

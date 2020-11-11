@@ -205,3 +205,17 @@
 .modal-dialog.dark .user-profile-img .btn-lg  >*{
     background:transparent;
 }
+
+.custom-file {
+    height: inherit;
+}
+.custom-file-label{
+    display: none;
+}
+
+.custom-file-input{
+    display: none;
+}
+#pdp-fileUpload-form{
+    height: 0px;
+}
