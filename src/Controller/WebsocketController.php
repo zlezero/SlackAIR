@@ -10,19 +10,22 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Statut;
 use Psr\Log\LoggerInterface;
+use Gos\Bundle\WebSocketBundle\Pusher\Wamp\WampPusher;
+use Gos\Bundle\WebSocketBundle\Pusher\PusherInterface;
 
 class WebsocketController extends AbstractController
 {
 
     private LoggerInterface $logger;
     private EntityManager $entityManager;
+    private $pusher;
 
-    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, PusherInterface $wampPusher)
     {
         $this->entityManager = $entityManager;
         $this->logger = $logger;
+        $this->pusher = $wampPusher;
     }
-
 
     /**
      * @Route("/app", name="app")
@@ -44,6 +47,8 @@ class WebsocketController extends AbstractController
             $em->flush();
             $em->refresh($user);
         }
+
+        $this->pusher->push(["typeEvent" => "statutChange", "data" => ["user" => ["id" => $user->getId()], "statut" => $user->getStatut()->getFormattedStatus()]], "userevent_topic", ["idUser" => $user->getId(), "typeEvent" => "statut"], []);
 
         return $this->render('websocket/index.html.twig', [
             'controller_name' => 'WebsocketController',
