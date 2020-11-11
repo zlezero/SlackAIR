@@ -22,6 +22,7 @@
 /public/uploads/pdp/*.*
 !/public/uploads/pdp/.gitdirectory
 !/public/uploads/pdp/default.jpg
+User_Data.csv
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###

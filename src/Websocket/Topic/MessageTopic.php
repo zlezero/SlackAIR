@@ -101,6 +101,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
 
         $this->entityManager->getRepository(Invitation::class)->addNotification($user_entity->getId(), $groupe->getId());
 
+        $this->entityManager->refresh($user_entity);
         $this->broadcastMessage($topic, $message, $user_entity, false, $groupe);
         
     }

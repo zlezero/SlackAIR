@@ -145,10 +145,11 @@
                         <img class="img-responsive img-rounded" id="mainPdp" src='{{ asset(user.photo_de_profile) }}' alt="Photo de profile">
                     </div>
                     <div class="user-info">
-                        <span id="sidebar-user-pseudo" class="user-name">{{user.pseudo}}
+                        <span id="sidebar-user-pseudo" class="user-name">
                             <a href="{{ logout_path() }}">
                                 <i class="fa fa-power-off"></i>
                             </a>
+                            {{user.pseudo}}
                         </span>
                         <span id="user-status" class="user-status">
                             <i class="fa fa-circle {{user.statut_color}}"></i>
@@ -280,7 +281,7 @@
                                                     <button type="button" class="btn" id="btnEmojis"><i class="fas fa-smile-beam"></i></button>
                                                     <button type="button" class="btn btn-file"><i class="fas fa-paperclip"></i> <input type="file"></button>
                                                 </div>
-                                                <input type="text" id="message" placeholder="Envoyer un message à nom_user_channel">
+                                                <input type="text" id="message" placeholder="Envoyer un message à nom_user_channel" disabled>
                                                 <div class="d-flex flex-grow-1 justify-content-around">
                                                     <button type="button" class="btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
                                                 </div>
@@ -293,8 +294,8 @@
                         <div class="col-3 h-100">
                             <div class="card h-100 rounded-bottom">
                                 <div class="card-body ">
-                                    <h5 class="card-title" id="titre_channel_right">Titre</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">Membres du groupe</h6>
+                                    <h5 class="card-title" id="titre_channel_right" style="display: none">Titre</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted" style="display: none">Membres du groupe</h6>
                                     <hr>
                                     <div id="listeMembres"></div>
                                 </div>
@@ -303,7 +304,7 @@
                     </div>
                 </div>
             </main>
-        </div>      
+        </div>
     </div>
     <script type="text/javascript">
 
