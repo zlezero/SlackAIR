@@ -219,6 +219,8 @@ $(function() {
         
         $('#chat-messages').html($('#chat-messages').html() + messageHTML);
 
+        //cache_messages[current_channel_id][id] = {"id": id, "pseudo": name, "message": message, "date": formatDate(messageTime)}
+        
         if (scrollAtEnd) {
             scrollMessageToEnd();
         }
@@ -342,8 +344,10 @@ $(function() {
         event.returnValue = '';
     });*/
 
-    $('#btn-theme').on('click', (e) => {
+    $('#btn-theme, #switch_theme').on('click', (e) => {
 
+        e.preventDefault();
+        
         if($('body').hasClass("dark")) {
             $('body, .modal-dialog').removeClass("dark");
         } else {

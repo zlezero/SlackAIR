@@ -296,6 +296,8 @@
 
         if (server_host == "127.0.0.1" && window.location.hostname.includes("localhost")) {
             server_host = "localhost";
+        } else {
+            server_host = window.location.hostname;
         }
 
         var _WS_URI = "ws://" + server_host + ":{{ gos_web_socket_server_port }}";

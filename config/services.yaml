@@ -25,6 +25,9 @@ services:
         arguments:
             - '%env(DATABASE_URL)%'
             - { db_table: 'sessions', lock_mode: 0 }
+    App\EventListener\Error404Listener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
