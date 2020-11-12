@@ -4,14 +4,33 @@ import * as modals from './modals';
 
 $(function() {
 
+    $('.searchContact').on('keydown',function(e) {
+        var key = e.key || e.keyCode;
+        var id=this.id;
+        console.log(key);
+        if (key === 'Enter' || key === 13) {
+            e.preventDefault();
+            var vals=$("#invits"+id.slice(-1)+" .create_groupe_invitations").val();
+                    $("#invits"+id.slice(-1)+" .create_groupe_invitations>option:contains("+$("#"+this.id).val()+")").each(function(index){
+                        var elet=$($("#invits"+id.slice(-1)+" .create_groupe_invitations>option:contains("+$("#"+id).val()+")")[index]);
+                        vals.push(elet.val());
+                    });
+            vals.push($("#invits"+id.slice(-1)+" .create_groupe_invitations>option:contains("+$("#"+id).val()+")").val());
+            $("#invits"+id.slice(-1)+" .create_groupe_invitations").val(vals);
+            $("#"+id).val("");
+        }
+    });
+    $('.searchContact').on('keyup',function(e) {
+        $("#invits"+this.id.slice(-1)+" .create_groupe_invitations>option").css("display", "none");
+        $("#invits"+this.id.slice(-1)+" .create_groupe_invitations>option:contains("+$("#"+this.id).val()+")").css("display", "block");
+        
+    });
     $('.create-grp-modale').on('show.bs.modal', function (e) {
-
-        $("#create_groupe_typeGroupeId").val($("#create_groupe_typeGroupeId option:first").val());
-
+        $(".create_groupe_invitations>option").prop("disabled",true);
+        $("#create_groupe_typeGroupeId").val(this.id.slice(-1));
         $(".groupe-create-form").on('submit', function (f) {
 
             f.preventDefault();
-            
             $.post({
                 url: '/api/groupe/createGrp',
                 data: $(this).serialize(),
