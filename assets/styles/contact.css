@@ -10,6 +10,7 @@
 #annuaire-modal .search-button {
     background-color: #000080;
     color: white;
+    border-radius: 0;
 }
 
 #annuaire-modal .p-t-10 {

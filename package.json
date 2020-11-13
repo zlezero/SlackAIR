@@ -19,6 +19,7 @@
         "@fortawesome/fontawesome-free": "^5.15.1",
         "bootstrap": "^4.5.2",
         "jquery": "^3.5.1",
+        "paginationjs": "^2.1.5",
         "popper.js": "^1.16.1"
     }
 }
