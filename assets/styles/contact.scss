@@ -1,0 +1,51 @@
+$OceanBlue_color_base: #000080;
+$OceanBlue_color_font: $OceanBlue_color_base;
+$OceanBlue_color_border: $OceanBlue_color_base;
+$OceanBlue_bgColor_active: $OceanBlue_color_base;
+$OceanBlue_bgColor_hover: #a7a7d4 ;
+$OceanBlue_bgColor_buttonHover: #2d2dc2 ;
+
+
+.paginationjs{
+    &.custom-paginationjs{
+      .paginationjs-pages{
+        float: right;
+        ul{
+            float: right;
+        }
+        li{
+          border-color: $OceanBlue_color_border;
+          > a{
+            color: $OceanBlue_color_font;
+            &:hover{
+              background: $OceanBlue_bgColor_hover;
+            }
+          }
+          &.active{
+            > a{
+              background: $OceanBlue_bgColor_active;
+              color: #fff;
+            }
+          }
+          &.disabled > a:hover{
+              background: none;
+          }
+        }
+      }
+      .paginationjs-go-input{
+        > input[type="text"]{
+          border-color: $OceanBlue_color_border;
+        }
+      }
+      .paginationjs-go-button{
+        > input[type="button"]{
+          background: $OceanBlue_bgColor_active;
+          border-color: $OceanBlue_color_border;
+          color: #fff;
+          &:hover{
+            background-color: $OceanBlue_bgColor_buttonHover;
+          }
+        }
+      }
+    }
+  }
