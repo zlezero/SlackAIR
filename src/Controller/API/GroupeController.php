@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Gos\Bundle\WebSocketBundle\Pusher\PusherInterface;
 
 /**
  * @Route("/groupe", name="groupe")
@@ -22,10 +23,12 @@ class GroupeController extends AbstractController
 {
 
     private EntityManager $entityManager;
+    private $pusher;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, PusherInterface $wampPusher)
     {
         $this->entityManager = $entityManager;
+        $this->pusher = $wampPusher;
     }
     
     /**
@@ -78,7 +81,7 @@ class GroupeController extends AbstractController
             $this->entityManager->persist($groupe);
             $this->entityManager->flush();
 
-            foreach($invitations as $userId){
+            foreach($invitations as $userId) {
 
                 $invitation = new Invitation();
 
@@ -94,6 +97,8 @@ class GroupeController extends AbstractController
 
                 $this->entityManager->persist($invitation);
                 $this->entityManager->flush();
+
+                $this->pusher->push(["typeEvent" => "nouveau_channel", "data" => $groupe->getFormattedGroupe()], "privateevent_topic", ["idUser" => $userId], []);
 
             }
 
@@ -171,6 +176,8 @@ class GroupeController extends AbstractController
                     $this->entityManager->flush();
                     
                     $infosChannel = $this->entityManager->getRepository(Invitation::class)->getDMChannel($this->getUser()->getId(), $groupe->getId());
+
+                    $this->pusher->push(["typeEvent" => "nouveau_channel", "data" => array_merge($groupe->getFormattedGroupe(), ["user" => $this->getUser()->getFormattedUser()])], "privateevent_topic", ["idUser" => $userDM->getId()], []);
     
                     return new JsonResponse(["statut" => "ok", "message" => $infosChannel]);
 

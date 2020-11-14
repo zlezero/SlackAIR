@@ -13,8 +13,9 @@ $(function() {
             formData.append('category', 'general');
             
             var blob = $('#upload_pdp_pdp')[0].files[0];
-            formData.append('image_path', blob);
-
+            formData.append('upload_pdp[pdp]', blob);
+            formData.append('upload_pdp[_token]', $('#upload_pdp__token').val());
+            
             $.ajax({
                 type:'POST',
                 url: '/api/user/setPdp',

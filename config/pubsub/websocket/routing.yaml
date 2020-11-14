@@ -5,3 +5,7 @@ message_topic:
 userevent_topic:
     channel: user/{idUser}
     handler: 'userevent.topic'
+
+privateevent_topic:
+    channel: privateUserEvent/{idUser}
+    handler: 'privateevent.topic'

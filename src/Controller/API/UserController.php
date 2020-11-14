@@ -206,43 +206,35 @@ class UserController extends AbstractController
 
         $user = $this->getUser();
 
-        $pdp = $request->files->get('image_path');
+        try {
 
-        if($pdp) {
+            $form = $this->createForm(UploadPdpType::class);
 
-            try {
+            $form->handleRequest($request);
 
-                //$form = $this->createForm(UploadPdpType::class);
+            if ($form->isSubmitted() && $form->isValid()) {
 
-                //$form->handleRequest($request);
+                $pdp = $request->files->get('upload_pdp')['pdp'];
 
-                //if ($form->isSubmitted() && $form->isValid()) {
+                $pdpFileName = $fileUploader->upload($pdp);
+                $user->setFileName($pdpFileName);
+    
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+                $em->refresh($user);
+    
+                return new JsonResponse(["statut" => "ok",
+                                            "message" => ["photo_de_profile" =>$user->getFileName()]]);
 
-                    $pdpFileName = $fileUploader->upload($pdp);
-                    $user->setFileName($pdpFileName);
-        
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($user);
-                    $em->flush();
-                    $em->refresh($user);
-        
-                    return new JsonResponse(["statut" => "ok",
-                                             "message" => ["photo_de_profile" =>$user->getFileName()]]);
-
-                //} else {
-                    //return new JsonResponse(["statut" => "nok",
-                                             //"message"=> "Photo non valide"]);
-                //}
-
-
-            } catch(Exception $error) {
+            } else {
                 return new JsonResponse(["statut" => "nok",
-                                         "message"=>"Erreur lors l'ajout de la photo"]);
+                                            "message"=> "Photo non valide ou trop volumineuse (2Mo maximum)"]);
             }
 
-        } else {
+        } catch(Exception $error) {
             return new JsonResponse(["statut" => "nok",
-                                     "message"=>"Aucune photo envoyée"]);
+                                        "message"=>"Erreur lors l'ajout de la photo"]);
         }
 
     }

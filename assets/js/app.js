@@ -11,9 +11,9 @@ function formatDate(date) {
     let messageDate = new Date(date);
 
     if (messageDate.getUTCDate() == new Date().getUTCDate()) {
-        return "Aujourd'hui à " + messageDate.getHours() + ":" + messageDate.getMinutes();
+        return "Aujourd'hui à " + messageDate.getHours() + ":" + (messageDate.getMinutes() < 10 ? '0':'' ) + messageDate.getMinutes();
     } else if (messageDate.getUTCDate() == new Date().getUTCDate() - 1) {
-        return "Hier à " + messageDate.getHours() + ":" + messageDate.getMinutes();
+        return "Hier à " + messageDate.getHours() + ":" + (messageDate.getMinutes() < 10 ? '0':'' ) + messageDate.getMinutes();
     } else {
         return capitalizeFirstLetter(messageDate.toLocaleDateString('fr-FR',  {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'}));
     }
