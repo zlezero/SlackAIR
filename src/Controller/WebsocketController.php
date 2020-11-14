@@ -58,6 +58,7 @@ class WebsocketController extends AbstractController
                 "dm" => $emInvitation->getDMChannels($user->getId())
             ],
             'user' => [
+                "id" => $this->getUser()->getId(),
                 "pseudo" => $this->getUser()->getPseudo(),
                 "statut" => $this->getUser()->getStatut()->getName(),
                 "photo_de_profile" => $this->getUser()->getFileName(),

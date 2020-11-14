@@ -82,4 +82,11 @@ class TypeGroupe
 
         return $this;
     }
+
+    public function getFormattedTypeGroupe() {
+        return [
+            "id" => $this->getId(),
+            "label" => $this->getLabel()
+        ];
+    }
 }

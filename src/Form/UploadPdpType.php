@@ -12,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Image;
 
 class UploadPdpType extends AbstractType
 {
@@ -24,8 +24,8 @@ class UploadPdpType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
-                    new File([
-                        'maxSize' => '4M',
+                    new Image([
+                        'maxSize' => '2M',
                         'mimeTypes' => [
                             'image/png',
                             'image/jpeg',
@@ -41,7 +41,6 @@ class UploadPdpType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
-    {
-    }
+    public function configureOptions(OptionsResolver $resolver) {}
+    
 }

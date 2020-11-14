@@ -191,4 +191,15 @@ class Groupe
         return $this;
     }
 
+    public function getFormattedGroupe() {
+        return [
+            "id" => $this->getid(),
+            "nom" => $this->getNom(),
+            "id_proprietaire" => $this->getIdProprietaire()->getId(),
+            "date_creation" => $this->getDateCreation(),
+            "description" => $this->getDescription(),
+            "type_groupe" => $this->getTypeGroupeId()->getFormattedTypeGroupe()
+        ];
+    }
+
 }

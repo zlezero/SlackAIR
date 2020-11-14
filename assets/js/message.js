@@ -42,7 +42,7 @@ $(function() {
     var current_channel_id = -1;
     var notif_channel_general = false;
     var notif_channel_prive = 0;
-
+    var id_user = $('#id_current_user').data('id-current-user');
     var cache_messages = {};
 
     socket.on("socket/connect", function (session) {
@@ -56,13 +56,57 @@ $(function() {
             }
         });
 
+        subscribeToUserEvents();
+
+        //Gestion des event sur l'utilisateur
+        session.subscribe("privateUserEvent/" + id_user, function (uri, payload) {
+
+            let data = JSON.parse(payload.data);
+            console.dir(data);
+            if (data.typeEvent == "nouveau_channel") {
+                addGroupe(data.data.type_groupe.id, data.data.id, data.data.nom, false, data.data.user.id, data.data.user.statut.status_color, data.data.user.pseudo);
+                window.subscribeChannel();
+                window.subscribeToChannel(data.data.id);
+                subscribeToUserEvents();
+            }
+
+        });
+
+    });
+
+    function subscribeToUserEvents() {
         $('.channel.user_channel').each(function(index) {
             if ($(this).data("useriddm") != undefined) {
                 subscribeToUserEvent($(this).data("useriddm"));
             }
         });
+    }
 
-    });
+    function addGroupe(typeGroupe, idGroupe, nomGroupe, openGroupe, idUtilisateur, statusColorUser, pseudoUser) {
+        
+        switch(typeGroupe) {
+            case 1:
+                $("#collapse-group-public").append('<a href="" data-idchannel="' + idGroupe + '" class="channel"><i class="fas fa-hashtag"></i>' + nomGroupe + '</a>');
+                if ($("#collapse-group-public").hasClass("hide") && openGroupe) {
+                    $('.dropdown-btn', $('#collapse-group-public').parent())[0].click();
+                }
+                break;
+            case 2:
+                $("#collapse-group-private").append('<a href="" data-idchannel="' + idGroupe + '" class="channel"><i class="fas fa-lock"></i>' + nomGroupe + '</a>');
+                if ($("#collapse-group-private").hasClass("hide") && openGroupe) {
+                    $('.dropdown-btn', $('#collapse-group-private').parent())[0].click();
+                }
+                break;
+            case 3:
+                $("#collapse-message-private").append('<a href="" data-idchannel="' + idGroupe + '" data-userIdDM='+ idUtilisateur +' class="channel user_channel"><i class="fa fa-circle '+ statusColorUser +'"></i>' + pseudoUser + '</a>');
+                if ($("#collapse-message-private").hasClass("hide") && openGroupe) {
+                    $('.dropdown-btn', $('#collapse-message-private').parent())[0].click();
+                }
+            default:
+                break;
+        }
+
+    }
 
     window.subscribeToChannel = function subscribeToChannel(idChannel) {
         session_glob.subscribe("message/channel/" + idChannel, function (uri, payload) {
@@ -131,6 +175,7 @@ $(function() {
         $('#titre_channel').hide();
         $('#description_channel').hide();
         $('#titre_channel_right').hide();
+        $('#label_membres_du_groupe').hide();
         $('#message').prop('disabled', true);
         disableEmojis();
     }
@@ -197,6 +242,7 @@ $(function() {
 
                 $('#titre_channel').show();
                 $('#titre_channel_right').show();
+                $('#label_membres_du_groupe').show();
 
             }
             
@@ -247,6 +293,8 @@ $(function() {
     function addMessage(name, message, messageTime, id, url_photo_de_profile) {
         
         let scrollAtEnd = isScrollMessageAtEnd();
+        let urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/g;
+        message = message.replace(urlRegex, function(url) { return '<a href=' + url + ' target="_blank">' + url + '</a>'});
 
         const messageHTML = 
         "<div class='col-12'><div class='chat-bubble'><img class='profile-image' src='" + url_photo_de_profile + "' alt=''><div class='text'><h6>" + name + 
@@ -320,7 +368,8 @@ $(function() {
     });
 
     $("#statusDropright").on('show.bs.dropdown', function() {
-        $('#statusDroprightMenu').on("click", function(v) {
+
+        $('#statusDroprightMenu :not(.dropdown-header)').on("click", function(v) {
             
             statutId = $(v.target).data("id");
             
@@ -331,6 +380,7 @@ $(function() {
             setStatutAjax(statutId);
         
         });
+
     });
 
     $("#statusDropright").on('hide.bs.dropdown', function() {
@@ -365,20 +415,19 @@ $(function() {
         e.returnValue = '';
     })
 
-    /*window.addEventListener('beforeunload', (event) => {
-        // Cancel the event as stated by the standard.
+    window.addEventListener('beforeunload', (event) => {
+
         event.preventDefault();
-        statutId = 2;
-            $.post({
-                url: '/api/user/setStatut',
-                data: {"statutId": statutId},
-                success: function(result){
-                    console.log(result["message"]);
-                }
-            })
-        // Chrome requires returnValue to be set.
-        event.returnValue = '';
-    });*/
+
+        $.post({
+            url: '/api/user/setStatut',
+            data: {"statutId": 2},
+            success: function(result) {
+                statutId = 2;
+            }
+        });
+
+    });
 
     //Gestion du dark theme
     $('#btn-theme, #switch_theme').on('click', (e) => {

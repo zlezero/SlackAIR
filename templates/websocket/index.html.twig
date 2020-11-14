@@ -295,7 +295,7 @@
                             <div class="card h-100 rounded-bottom">
                                 <div class="card-body ">
                                     <h5 class="card-title" id="titre_channel_right" style="display: none">Titre</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted" style="display: none">Membres du groupe</h6>
+                                    <h6 class="card-subtitle mb-2 text-muted" id="label_membres_du_groupe" style="display: none">Membres du groupe</h6>
                                     <hr>
                                     <div id="listeMembres"></div>
                                 </div>
@@ -333,5 +333,7 @@
     )) }}
 
     {% include 'modals/index.html.twig' %}
+
+    <span id="id_current_user" data-id-current-user={{user.id}} style="display: none"></span>
 
 {% endblock %}
