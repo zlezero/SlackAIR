@@ -449,14 +449,16 @@ button {
 
 
 .btn-file {
-      position: relative;
-      overflow: hidden;
+    position: relative;
+    overflow: hidden;
  }
   
 .btn-file input[type=file] {
   position: absolute;
   top: 0;
   right: 0;
+  margin: 0;
+  padding: 0;
   min-width: 100%;
   min-height: 100%;
   font-size: 100px;
@@ -468,15 +470,20 @@ button {
   display: block;
 }
 
+.custom-file {
+    height: inherit;
+}
+
+#media-fileUpload-form{
+    height: 6px;
+}
+
 #chat-messages{
     margin-top:5%;
     margin-bottom:5%;
-    z-index: -1;
 }
 
-.chat-bubble{
-    z-index: -1;
-}
+.chat-bubble{}
     
 .chat-title {
     position:absolute;

@@ -47,7 +47,8 @@ class ChannelController extends AbstractController
                                     "messageId" => $message->getId(),
                                     "pseudo" => $message->getUserId()->getPseudo(),
                                     "photo_de_profile" => $message->getUserId()->getFileName(),
-                                    "date" => $message->getDateEnvoi()
+                                    "date" => $message->getDateEnvoi(),
+                                    "media" => $message->getMedia() ? $message->getMedia()->getFormattedMedia() : null,
                                 ];
             }
 

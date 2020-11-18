@@ -279,7 +279,13 @@
                                             <div class="chat-box-tray form-group w-100">
                                                 <div class="d-flex flex-grow-1 justify-content-around">
                                                     <button type="button" class="btn" id="btnEmojis"><i class="fas fa-smile-beam"></i></button>
-                                                    <button type="button" class="btn btn-file"><i class="fas fa-paperclip"></i> <input type="file"></button>
+                                                    <button type="button" class="btn btn-file">
+                                                        <span><i class="fas fa-paperclip" id="btn_upload"></i></span>
+                                                        {{ form_start(fileForm, {'attr': {'id': 'media-fileUpload-form'}}) }}
+                                                        {{ form_widget(fileForm.file, {'attr': {'id': "mediaFileUpload",'class':''}}) }}
+                                                        {{ form_widget(fileForm.confirmer, {'label_attr ':{'class':'hidden'}}) }}
+                                                        {{form_end(fileForm)}}
+                                                    </button>
                                                 </div>
                                                 <input type="text" id="message" placeholder="Envoyer un message à nom_user_channel" disabled>
                                                 <div class="d-flex flex-grow-1 justify-content-around">

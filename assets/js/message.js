@@ -111,8 +111,8 @@ $(function() {
     window.subscribeToChannel = function subscribeToChannel(idChannel) {
         session_glob.subscribe("message/channel/" + idChannel, function (uri, payload) {
             console.log("Message reçu : ", payload);
-            if (payload.channel == current_channel_id) {
-                addMessage(payload.pseudo, payload.message, payload.messageTime, payload.messageId, payload.photo_de_profile);
+            if (payload.message.channel == current_channel_id) {
+                addMessage(payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.messageId, payload.message.photo_de_profile, payload.message.media);
             }
         });
     }
@@ -125,7 +125,8 @@ $(function() {
     
         const data = {
             message: $("#message").val(),
-            channel: current_channel_id
+            channel: current_channel_id,
+            type: "texte"
         };
 
         if ($("#message").val() != "" && current_channel_id != -1 && !$('#message').val().includes('<script>')) {
@@ -202,7 +203,7 @@ $(function() {
             data: {"channelId": current_channel_id},
             success: function (result) {
                 result.message.messages.forEach((message) => {
-                    addMessage(message.pseudo, message.message, message.date.date, message.messageId, message.photo_de_profile);
+                    addMessage(message.pseudo, message.message, message.date.date, message.messageId, message.photo_de_profile, message.media);
                 });
                 scrollMessageToEnd();
                 $("#loading").remove();
@@ -290,16 +291,191 @@ $(function() {
         } catch(error) {}
     }
 
-    function addMessage(name, message, messageTime, id, url_photo_de_profile) {
+    function addMessage(name, message, messageTime, id, url_photo_de_profile, media) {
         
         let scrollAtEnd = isScrollMessageAtEnd();
-        let urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/g;
-        message = message.replace(urlRegex, function(url) { return '<a href=' + url + ' target="_blank">' + url + '</a>'});
+        let messageHTML = "";
 
-        const messageHTML = 
-        "<div class='col-12'><div class='chat-bubble'><img class='profile-image' src='" + url_photo_de_profile + "' alt=''><div class='text'><h6>" + name + 
-        "</h6><p class='text-muted' data-idMessage='" + id + "'>" + message + "</p></div><span class='time text-muted small'>"
-        + formatDate(messageTime) +"</span></div></div>";
+        if(media) {
+            
+            if(media.fileLabel == 'Fichier') {
+
+               messageHTML =
+               `<div class='col-12'>
+                    <div class='chat-bubble'>
+                        <img class='profile-image' src='${url_photo_de_profile}' alt=''>
+                        <div class='media-text'>
+                            <h6>${name}</h6>
+                            <div class="col-sm-12">
+                                <div class="row p-l-5 p-t-10 media-message-row" data-idMessage='${id}'>
+                                    <div class="text-center p-l-5 icon-file">
+                                        <i class="far fa-file-alt"></i>
+                                    </div>
+                                    <div class="col-12 col-sm-9">
+                                        <div class="download-button p-t-10 btn-group-sm">
+                                            <a class="float-right" href='${media.fileName}' download>
+                                                <i class="fas fa-arrow-circle-down"></i>
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a href='${media.fileName}' download>${(media.fileName).split('/')[3]}</a>
+                                            <p class="text-muted">${media.fileSize} bytes</p>
+                                        </div>
+                                    </div>   
+                                </div>
+                            </div>
+                        </div>
+                        <span class='time text-muted small'>
+                            ${formatDate(messageTime)}
+                        </span>
+                    </div>
+                </div>`; 
+
+            } else if(media.fileLabel == 'PDF') {
+
+                messageHTML = 
+                `<div class='col-12'>
+                    <div class='chat-bubble'>
+                        <img class='profile-image' src='${url_photo_de_profile}' alt=''>
+                        <div class='media-text'>
+                            <h6>${name}</h6>
+                            <div class='col-sm-12'>
+                                <div class='row p-l-5 p-t-10 media-message-row' data-idMessage='${id}'>
+                                    <div class='text-center p-l-5 icon-file'>
+                                        <i class='far fa-file-pdf'></i>
+                                    </div>
+                                    <div class='col-12 col-sm-9'>
+                                        <div class='download-button p-t-10 btn-group-sm'>
+                                            <a class='float-right' href='${media.fileName}' download>
+                                                <i class="fas fa-arrow-circle-down"></i>
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a href='${media.fileName}' download>${(media.fileName).split('/')[3]}</a>
+                                            <p class="text-muted">${media.fileSize} bytes</p>
+                                        </div>
+                                    </div>   
+                                </div>
+                            </div>
+                        </div>
+                        <span class='time text-muted small'>
+                            ${formatDate(messageTime)}
+                        </span>
+                    </div>
+                </div>`;
+
+            } else if(media.fileLabel == 'Zip') {
+
+                messageHTML =
+                `<div class='col-12'>
+                    <div class='chat-bubble'>
+                        <img class='profile-image' src='${url_photo_de_profile}' alt=''>
+                        <div class='media-text'>
+                            <h6>${name}</h6>
+                            <div class="col-sm-12">
+                                <div class="row p-l-5 p-t-10 media-message-row" data-idMessage='${id}'>
+                                    <div class="text-center p-l-5 icon-file">
+                                        <i class="far fa-file-archive"></i>
+                                    </div>
+                                    <div class="col-12 col-sm-9">
+                                        <div class="download-button p-t-10 btn-group-sm">
+                                            <a class="float-right" href='${media.fileName}' download>
+                                                <i class="fas fa-arrow-circle-down"></i>
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a href='${media.fileName}' download>${(media.fileName).split('/')[3]}</a>
+                                            <p class="text-muted">${media.fileSize} bytes</p>
+                                        </div>
+                                    </div>   
+                                </div>
+                            </div>
+                        </div>
+                        <span class='time text-muted small'>
+                            ${formatDate(messageTime)}
+                        </span>
+                    </div>
+                </div>`;
+
+            } else if (media.fileLabel == 'Image') {
+
+                messageHTML = 
+                `<div class='col-12'>
+                    <div class='chat-bubble'>
+                        <img class='profile-image' src='${url_photo_de_profile}' alt=''>
+                        <div class='media-text'>
+                            <h6>${name}</h6>
+                            <div class="col-sm-12">
+                                <div class="row p-l-5 p-t-10 p-b-10" data-idMessage='${id}'>
+                                    <img src="${media.fileName}" style="width: 300px;object-fit: contain;" alt=''>   
+                                </div>
+                            </div>
+                        </div>
+                        <span class='time text-muted small'>
+                            ${formatDate(messageTime)}
+                        </span>
+                    </div>
+                </div>`;
+
+            } else if(media.fileLabel == 'Audio') {
+                
+                messageHTML =
+                `<div class='col-12'>
+                    <div class='chat-bubble'>
+                        <img class='profile-image' src='${url_photo_de_profile}' alt=''>
+                        <div class='media-text'>
+                            <h6>${name}</h6>
+                            <div class="col-sm-12">
+                                <div class="row p-l-5 p-t-10 p-b-10 media-message-row"  data-idMessage='${id}'>
+                                    <audio controls>
+                                        <source src="${media.fileName}" type="${media.fileMimeType}">
+                                        Votre navigateur ne reconnait pas la balise HTML audio.
+                                    </audio>
+                                </div>
+                            </div>
+                        </div>
+                        <span class='time text-muted small'>
+                            ${formatDate(messageTime)}
+                        </span>
+                    </div>
+                </div>`;
+
+            } else {
+
+                messageHTML =
+                `<div class='col-12'>
+                    <div class='chat-bubble'>
+                        <img class='profile-image' src='${url_photo_de_profile}' alt=''>
+                        <div class='media-text'>
+                            <h6>${name}</h6>
+                            <div class="col-sm-12">
+                                <div class="row p-l-5 p-t-10 p-b-10"  data-idMessage='${id}'>
+                                    <video controls preload="auto" style="height: 300px;">
+                                        <source src="${media.fileName}" type="${media.fileMimeType}"></source>
+                                        Votre navigateur ne supporte pas la balise HTML video.
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                        <span class='time text-muted small'>
+                            ${formatDate(messageTime)}
+                        </span>
+                    </div>
+                </div>`;
+
+            }
+
+        } else {
+            
+            let urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/g;
+            message = message.replace(urlRegex, function(url) { return '<a href=' + url + ' target="_blank">' + url + '</a>'});
+            
+            messageHTML = 
+            "<div class='col-12'><div class='chat-bubble'><img class='profile-image' src='" + url_photo_de_profile + "' alt=''><div class='text'><h6>" + name + 
+            "</h6><p class='text-muted' data-idMessage='" + id + "'>" + message + "</p></div><span class='time text-muted small'>"
+            + formatDate(messageTime) +"</span></div></div>";
+
+        }
         
         $('#chat-messages').append(messageHTML);
 
@@ -516,6 +692,42 @@ $(function() {
 
         }
         
+    });
+
+    //Gestion de l'envoi de fichiers
+    $("#upload_file_file").on("change", function(e) {
+
+        e.preventDefault();
+
+        var formData = new FormData();
+        formData.append('category', 'general');
+        
+        var blob = $('#upload_file_file')[0].files[0];
+        formData.append('upload_file[file]', blob);
+        formData.append('groupe_id', current_channel_id);
+        formData.append('upload_file[_token]', $('#upload_file__token').val());
+
+        if ($('#upload_file_file')[0].files[0].size > 8000000) {
+            modals.openErrorModal("Fichier non valide ou trop volumineux (8Mo maximum)");
+        } else {
+
+            $.post({
+                url: '/api/message/sendMediaMessage',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(data){
+    
+                    if (data.statut != "ok") {
+                        modals.openErrorModal("Une erreur est survenue lors de l'ajout du fichier : " + data.message);
+                    }
+    
+                }
+            });
+
+        }
+
     });
 
 });

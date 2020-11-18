@@ -21,6 +21,8 @@
 /public/build/
 /public/uploads/pdp/*.*
 !/public/uploads/pdp/.gitdirectory
+!/public/uploads/files/.gitdirectory
+/public/uploads/files/*.*
 !/public/uploads/pdp/default.jpg
 User_Data.csv
 npm-debug.log

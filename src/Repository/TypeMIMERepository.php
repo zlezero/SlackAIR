@@ -47,4 +47,11 @@ class TypeMIMERepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getDefaultTypeMime(): ?TypeMIME
+    {
+        $entityManager = $this->getEntityManager();
+        return $this->findOneBy(['TypeMIME' => 'text/text']);
+    }
+
 }

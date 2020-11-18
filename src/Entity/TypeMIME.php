@@ -22,20 +22,16 @@ class TypeMIME
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $Label;
-
-    /**
-     * @ORM\Column(type="string", length=5)
-     */
-    private $Extension;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     private $TypeMIME;
 
     /**
-     * @ORM\OneToMany(targetEntity=Media::class, mappedBy="TypeMIMEId")
+     * @ORM\ManyToOne(targetEntity=MimeLabels::class, inversedBy="typeMimes")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $label;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Media::class, mappedBy="MimeType")
      */
     private $medias;
 
@@ -49,30 +45,6 @@ class TypeMIME
         return $this->id;
     }
 
-    public function getLabel(): ?string
-    {
-        return $this->Label;
-    }
-
-    public function setLabel(string $Label): self
-    {
-        $this->Label = $Label;
-
-        return $this;
-    }
-
-    public function getExtension(): ?string
-    {
-        return $this->Extension;
-    }
-
-    public function setExtension(string $Extension): self
-    {
-        $this->Extension = $Extension;
-
-        return $this;
-    }
-
     public function getTypeMIME(): ?string
     {
         return $this->TypeMIME;
@@ -81,6 +53,18 @@ class TypeMIME
     public function setTypeMIME(string $TypeMIME): self
     {
         $this->TypeMIME = $TypeMIME;
+
+        return $this;
+    }
+
+    public function getLabel(): ?MimeLabels
+    {
+        return $this->label;
+    }
+
+    public function setLabel(?MimeLabels $label): self
+    {
+        $this->label = $label;
 
         return $this;
     }
@@ -97,7 +81,7 @@ class TypeMIME
     {
         if (!$this->medias->contains($media)) {
             $this->medias[] = $media;
-            $media->setTypeMIMEId($this);
+            $media->setMimeType($this);
         }
 
         return $this;
@@ -105,11 +89,10 @@ class TypeMIME
 
     public function removeMedia(Media $media): self
     {
-        if ($this->medias->contains($media)) {
-            $this->medias->removeElement($media);
+        if ($this->medias->removeElement($media)) {
             // set the owning side to null (unless already changed)
-            if ($media->getTypeMIMEId() === $this) {
-                $media->setTypeMIMEId(null);
+            if ($media->getMimeType() === $this) {
+                $media->setMimeType(null);
             }
         }
 

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Invitation;
+use App\Form\UploadFileType;
 use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,6 +40,8 @@ class WebsocketController extends AbstractController
         }
         
         $emInvitation = $this->entityManager->getRepository(Invitation::class);
+
+        $fileForm= $this->createForm(UploadFileType::class,null);
         
         if( $user->getStatut()->getName() == "Hors Ligne") {
             $user->setStatut($this->getDoctrine()->getRepository(Statut::class)->findOneBy( array('id' => 1)));
@@ -63,7 +66,8 @@ class WebsocketController extends AbstractController
                 "statut" => $this->getUser()->getStatut()->getName(),
                 "photo_de_profile" => $this->getUser()->getFileName(),
                 "statut_color" => $this->getUser()->getStatut()->getStatusColor()
-            ]
+            ],
+            'fileForm' => $fileForm->createView()
         ]);
     }
 

@@ -18,12 +18,6 @@ class Media
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=TypeMIME::class, inversedBy="medias")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $TypeMIMEId;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $Filename;
@@ -34,36 +28,19 @@ class Media
     private $Size;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $HASH;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Message::class, inversedBy="Medias")
+     * @ORM\ManyToOne(targetEntity=TypeMIME::class, inversedBy="medias")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $MessageId;
+    private $MimeType;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTypeMIMEId(): ?TypeMIME
-    {
-        return $this->TypeMIMEId;
-    }
-
-    public function setTypeMIMEId(?TypeMIME $TypeMIMEId): self
-    {
-        $this->TypeMIMEId = $TypeMIMEId;
-
-        return $this;
-    }
-
     public function getFilename(): ?string
     {
-        return $this->Filename;
+        return '/uploads/files/'.($this->Filename);
     }
 
     public function setFilename(string $Filename): self
@@ -85,26 +62,23 @@ class Media
         return $this;
     }
 
-    public function getHASH(): ?string
-    {
-        return $this->HASH;
+    public function getFormattedMedia(){
+        return [
+            'fileName' => $this->getFilename(),
+            'fileMimeType' => $this->getMimeType()->getTypeMIME(),
+            'fileLabel' => $this->getMimeType()->getLabel()->getLabelName(),
+            'fileSize' => $this->getSize()
+        ];
     }
 
-    public function setHASH(string $HASH): self
+    public function getMimeType(): ?TypeMIME
     {
-        $this->HASH = $HASH;
-
-        return $this;
+        return $this->MimeType;
     }
 
-    public function getMessageId(): ?Message
+    public function setMimeType(?TypeMIME $MimeType): self
     {
-        return $this->MessageId;
-    }
-
-    public function setMessageId(?Message $MessageId): self
-    {
-        $this->MessageId = $MessageId;
+        $this->MimeType = $MimeType;
 
         return $this;
     }

@@ -77,33 +77,44 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
      * @return mixed
      */
     public function onPublish(ConnectionInterface $connection, Topic $topic, WampRequest $request, $event, array $exclude, array $eligible) {
+            
+        if(gettype($event) == 'string'){
 
-        $data = json_decode($event["data"]);
-        $user = $this->clientManipulator->getClient($connection)->getUser();
+            $data = json_decode($event);
+            $message = $this->entityManager
+                            ->getRepository(Message::class)
+                            ->find($data->data->message->id);
+            $this->broadcastMessage($topic, $message, false);
 
-        $user_entity = $this->entityManager
-                        ->getRepository(User::class)
-                        ->find($user->getId());
+        } else {
+            
+            $data = json_decode($event["data"]);
+            $user = $this->clientManipulator->getClient($connection)->getUser();
 
-        $groupe = $this->entityManager
-                           ->getRepository(Groupe::class)
-                           ->find($data->channel);
+            $user_entity = $this->entityManager
+                            ->getRepository(User::class)
+                            ->find($user->getId());
 
-        $message = new Message();
-        $message->setTexte($data->message);
-        $message->setDateEnvoi(date_create());
-        $message->setUserId($user_entity);
-        $message->setGroupeId($groupe);
-        $message->setEstEfface(false);
+            $groupe = $this->entityManager
+                            ->getRepository(Groupe::class)
+                            ->find($data->channel);
 
-        $this->entityManager->persist($message);
-        $this->entityManager->flush();
+            $message = new Message();
+            $message->setTexte($data->message);
+            $message->setDateEnvoi(date_create());
+            $message->setUserId($user_entity);
+            $message->setGroupeId($groupe);
+            $message->setEstEfface(false);
 
-        $this->entityManager->getRepository(Invitation::class)->addNotification($user_entity->getId(), $groupe->getId());
+            $this->entityManager->persist($message);
+            $this->entityManager->flush();
 
-        $this->entityManager->refresh($user_entity);
-        $this->broadcastMessage($topic, $message, $user_entity, false, $groupe);
-        
+            $this->entityManager->getRepository(Invitation::class)->addNotification($user_entity->getId(), $groupe->getId());
+
+            $this->entityManager->refresh($user_entity);
+            $this->broadcastMessage($topic, $message, false);
+        }
+          
     }
 
     /**
@@ -136,8 +147,8 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
         return 'message.topic';
     }
 
-    private function broadcastMessage(Topic $topic, Message $message, User $user, bool $system, Groupe $groupe) {
-        $topic->broadcast(['message' => $message->getTexte(), 'messageTime' => date_format($message->getDateEnvoi(), 'r'), 'messageId' => $message->getId(), 'pseudo' => $system ? "SYSTEM" : $user->getPseudo(), 'clientId' => $system ? null : $user->getId(), 'system' => $system, 'channel' => $groupe->getId(), 'photo_de_profile' => $user->getFileName()]);
+    private function broadcastMessage(Topic $topic, Message $message, bool $system) {
+        $topic->broadcast(['system' => $system, 'message' => $message->getFormattedMessage()]);
     }
 
 }

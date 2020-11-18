@@ -16,24 +16,30 @@ $(function() {
             formData.append('upload_pdp[pdp]', blob);
             formData.append('upload_pdp[_token]', $('#upload_pdp__token').val());
             
-            $.ajax({
-                type:'POST',
-                url: '/api/user/setPdp',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    
-                    if (data.statut == "ok") {
-                        $("#pdpUser").attr('src', data.message.photo_de_profile);
-                        $("#mainPdp").attr('src', data.message.photo_de_profile);
-                    } else {
-                        modals.openErrorModal("Une erreur est survenue lors de l'ajout de la photo de profile : " + data.message);
-                    }
+            if ($('#upload_pdp_pdp')[0].files[0].size > 2000000) {
+                modals.openErrorModal("Photo non valide ou trop volumineuse (2Mo maximum)");
+            } else {
 
-                }
-            });
+                $.ajax({
+                    type:'POST',
+                    url: '/api/user/setPdp',
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data) {
+                        
+                        if (data.statut == "ok") {
+                            $("#pdpUser").attr('src', data.message.photo_de_profile);
+                            $("#mainPdp").attr('src', data.message.photo_de_profile);
+                        } else {
+                            modals.openErrorModal("Une erreur est survenue lors de l'ajout de la photo de profile : " + data.message);
+                        }
+    
+                    }
+                });
+
+            }
 
         });
 

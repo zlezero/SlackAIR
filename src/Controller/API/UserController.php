@@ -216,7 +216,7 @@ class UserController extends AbstractController
 
                 $pdp = $request->files->get('upload_pdp')['pdp'];
 
-                $pdpFileName = $fileUploader->upload($pdp);
+                $pdpFileName = $fileUploader->upload($pdp)["fileName"];
                 $user->setFileName($pdpFileName);
     
                 $em = $this->getDoctrine()->getManager();
@@ -225,7 +225,7 @@ class UserController extends AbstractController
                 $em->refresh($user);
     
                 return new JsonResponse(["statut" => "ok",
-                                            "message" => ["photo_de_profile" =>$user->getFileName()]]);
+                                            "message" => ["photo_de_profile" => $user->getFileName()]]);
 
             } else {
                 return new JsonResponse(["statut" => "nok",
