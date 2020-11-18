@@ -23,13 +23,23 @@ class FileUploader
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $this->slugger->slug($originalFilename);
         $fileName = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+        $fileMimeType = $file->getClientMimeType();
+        $fileSize = $file->getSize();
 
         try {
             $file->move($this->getTargetDirectory(), $fileName);
         } catch (FileException $e) {}
 
-        return $fileName;
+        return [
+            "fileName" => $fileName,
+            "fileMimeType" => $fileMimeType,
+            "fileSize" => $fileSize
+        ];
         
+    }
+
+    public function setTargetDirectory($targetDirectory) {
+        $this->targetDirectory = $targetDirectory;
     }
 
     public function getTargetDirectory()

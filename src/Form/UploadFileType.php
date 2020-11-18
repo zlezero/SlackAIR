@@ -2,30 +2,27 @@
 
 namespace App\Form;
 
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\File;
 
-class UploadPdpType extends AbstractType
+class UploadFileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('pdp', FileType::class, [
+            ->add('file', FileType::class, [
                 'label' => '',
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
-                    new Image([
-                        'maxSize' => '2M',
-                        'mimeTypes' => [
-                            'image/png',
-                            'image/jpeg',
-                        ],
-                        'mimeTypesMessage' => 'Merci de sélectionner une image valide',
+                    new File([
+                        'maxSize' => '8M',
+                        'maxSizeMessage' =>  'Votre fichier dépasse la taille maximale.'
                         ])
                     ],
                 'attr'=>['class'=>'input']
@@ -36,6 +33,7 @@ class UploadPdpType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver) {}
-    
+    public function configureOptions(OptionsResolver $resolver)
+    {
+    }
 }

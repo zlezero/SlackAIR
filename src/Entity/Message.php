@@ -47,9 +47,9 @@ class Message
     private $GroupeId;
 
     /**
-     * @ORM\OneToMany(targetEntity=Media::class, mappedBy="MessageId")
+     * @ORM\OneToOne(targetEntity=Media::class, cascade={"persist", "remove"})
      */
-    private $Medias;
+    private $Media;
 
     public function __construct()
     {
@@ -121,34 +121,30 @@ class Message
         return $this;
     }
 
-    /**
-     * @return Collection|Media[]
-     */
-    public function getMedias(): Collection
+    public function getMedia(): ?media
     {
-        return $this->Medias;
+        return $this->Media;
     }
 
-    public function addMedia(Media $media): self
+    public function setMedia(?media $Media): self
     {
-        if (!$this->Medias->contains($media)) {
-            $this->Medias[] = $media;
-            $media->setMessageId($this);
-        }
+        $this->Media = $Media;
 
         return $this;
     }
 
-    public function removeMedia(Media $media): self
-    {
-        if ($this->Medias->contains($media)) {
-            $this->Medias->removeElement($media);
-            // set the owning side to null (unless already changed)
-            if ($media->getMessageId() === $this) {
-                $media->setMessageId(null);
-            }
-        }
+    public function getFormattedMessage(){
+        return [
+            'messageId' => $this->getId(),
+            'messageTime' => date_format($this->getDateEnvoi(), 'r'),
+            'message' => $this->getTexte(),
+            'media' => $this->getMedia() ? $this->getMedia()->getFormattedMedia() : null,
+            'pseudo' => $this->getUserId()->getPseudo(),
+            'clientId' => $this->getUserId()->getId(),
+            'channel' => $this->getGroupeId()->getId(),
+            'photo_de_profile' => $this->getUserId()->getFileName()
 
-        return $this;
+        ];
     }
+
 }
