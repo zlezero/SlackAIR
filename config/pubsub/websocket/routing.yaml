@@ -1,6 +1,10 @@
 message_topic:
     channel: message/channel/{idChannel}
     handler: 'message.topic'
+    
+notif_topic:
+    channel: notif/{idUser}
+    handler: 'notif.topic'
 
 userevent_topic:
     channel: user/{idUser}

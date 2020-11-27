@@ -115,12 +115,18 @@ class User implements UserInterface
      */
     private $FileName;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Notification::class, mappedBy="Utilisateur")
+     */
+    private $notifications;
+
 
     public function __construct()
     {
         $this->GroupesCrees = new ArrayCollection();
         $this->invitations = new ArrayCollection();
         $this->messages = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -446,6 +452,36 @@ class User implements UserInterface
     public function setFileName(?string $FileName): self
     {
         $this->FileName = $FileName;
+        return $this;
+    }
+
+    /**
+     * @return Collection|Notification[]
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications[] = $notification;
+            $notification->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): self
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUtilisateur() === $this) {
+                $notification->setUtilisateur(null);
+            }
+        }
+
         return $this;
     }
 

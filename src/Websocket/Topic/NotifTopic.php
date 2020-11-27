@@ -6,7 +6,6 @@ use App\Entity\Message;
 use App\Entity\User;
 use App\Entity\Groupe;
 use App\Entity\Invitation;
-use App\Entity\Notification;
 use Gos\Bundle\WebSocketBundle\Client\ClientManipulatorInterface;
 use Gos\Bundle\WebSocketBundle\Router\WampRequest;
 use Gos\Bundle\WebSocketBundle\Topic\SecuredTopicInterface;
@@ -16,12 +15,11 @@ use Ratchet\Wamp\Topic;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
-class MessageTopic implements TopicInterface, SecuredTopicInterface
+class NotifTopic implements TopicInterface
 {
 
     private ClientManipulatorInterface $clientManipulator;
     private EntityManager $entityManager;
-
 
     public function __construct(ClientManipulatorInterface $clientManipulator, EntityManagerInterface $entityManager)
     {
@@ -39,16 +37,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
      * @return void
      */
     public function onSubscribe(ConnectionInterface $connection, Topic $topic, WampRequest $request)
-    {
-        
-        $user = $this->clientManipulator->getClient($connection)->getUser();
-        $channelId = $request->getAttributes()->get('idChannel');
-
-        if ($user == NULL || !$this->entityManager->getRepository(Invitation::class)->isUserInChannel($channelId, $user->getId())) {
-            $connection->close();
-        }
-
-    }
+    {}
 
     /**
      * This will receive any unsubscription requests for this topic.
@@ -78,51 +67,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
      * @return mixed
      */
     public function onPublish(ConnectionInterface $connection, Topic $topic, WampRequest $request, $event, array $exclude, array $eligible) {
-            
-        $user = $this->clientManipulator->getClient($connection)->getUser();
-
-        $user_entity = $this->entityManager
-                        ->getRepository(User::class)
-                        ->find($user->getId());
-                        
-        if(gettype($event) == 'string') { //Si il s'agit d'un message avec media
-
-            $data = json_decode($event);
-
-            $message = $this->entityManager
-                            ->getRepository(Message::class)
-                            ->find($data->data->message->id);
-
-            $this->entityManager->getRepository(Notification::class)->addNotification($user_entity->getId(), $message->getGroupeId()->getId());
-
-            $this->broadcastMessage($topic, $message, false);
-
-        } else { //Si il s'agit d'un message textuel
-            
-            $data = json_decode($event["data"]);
-
-            $groupe = $this->entityManager
-                            ->getRepository(Groupe::class)
-                            ->find($data->channel);
-
-            $message = new Message();
-            $message->setTexte($data->message);
-            $message->setDateEnvoi(date_create());
-            $message->setUserId($user_entity);
-            $message->setGroupeId($groupe);
-            $message->setEstEfface(false);
-            $message->setEstEpingle(false);
-
-            $this->entityManager->persist($message);
-            $this->entityManager->flush();
-
-            $this->entityManager->getRepository(Notification::class)->addNotification($user_entity->getId(), $groupe->getId());
-
-            $this->entityManager->refresh($user_entity);
-            $this->broadcastMessage($topic, $message, false);
-
-        }
-          
+        $topic->broadcast(["data" => $event]);
     }
 
     /**
@@ -134,7 +79,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
      * @param string|null         $provider
      *
      * @return void
-     */
+     *//*
     public function secure(?ConnectionInterface $conn, Topic $topic, WampRequest $request, $payload = null, ?array $exclude = [], ?array $eligible = null, ?string $provider = null): void
     {
         // Check input data to verify if connection must be blocked
@@ -143,7 +88,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
         }
 
         // Access is granted
-    }
+    }*/
 
     /**
      * Like RPC the name is used to identify the channel
@@ -152,11 +97,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
      */
     public function getName(): string
     {
-        return 'message.topic';
-    }
-
-    private function broadcastMessage(Topic $topic, Message $message, bool $system) {
-        $topic->broadcast(['system' => $system, 'message' => $message->getFormattedMessage()]);
+        return 'notif.topic';
     }
 
 }

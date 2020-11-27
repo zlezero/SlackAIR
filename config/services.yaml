@@ -20,6 +20,10 @@ services:
         class: App\Websocket\Topic\UserEventTopic
         tags:
             - { name: gos_web_socket.topic }
+    app.websocket.topic.notif:
+        class: App\Websocket\Topic\NotifTopic
+        tags:
+            - { name: gos_web_socket.topic }
     session.handler.pdo:
         class: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
         arguments:

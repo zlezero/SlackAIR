@@ -1,0 +1,76 @@
+<div id="create-grp-modale2" class="modal fade create-grp-modale" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nouveau groupe public</h5>
+                <button type="button" style="font-size: 24px; color:white;" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="channel-description">
+                    <ul class="nav nav-tabs" id="anotherTab" role="tablist">
+                        <li class="nav-item"><a class="nav-link active" id="channel-public-tab" data-toggle="tab" href="#print-channel-public" role="tab" aria-controls="print-channel-public" aria-selected="true">Rejoindre un groupe</a></li>
+                        <li class="nav-item"><a class="nav-link" id="create-channel-tab" data-toggle="tab" href="#edit-channel-public" role="tab" aria-controls="edit-channel-public" aria-selected="false">Créer un groupe</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active show in" id="print-channel-public" role="tabpanel" aria-labelledby="channel-public-tab">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="input-group">
+                                            <input type="text" id="annuaire-input-group2" name="annuaire-input-group2" class="form-control" placeholder="Rechercher un groupe">
+                                            <span class="input-group-text search-button">
+                                                <i class="fa fa-search"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row ml-md-0 mb-2 p-t-10 d-flex align-content-stretch flex-wrap" id="listGrps">
+                                </div>
+                                <div id="listGrpsPagination">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="edit-channel-public" role="tabpanel" aria-labelledby="create-channel-tab">
+                            {{ form_start(form, {'attr': {'id': "groupe-create-form#{groupe.typeGroupeId.id}",'class':'groupe-create-form'}}) }}
+                                    <div class="form-group row">
+                                        {{ form_label(form.nom, null, {
+                                            'label_attr': {'class': 'col-lg-3'}
+                                        }) }}
+                                        {{ form_widget(form.nom, {'attr': {'class': "col-lg-7 create_groupe_nom"}}) }}
+                                    </div>
+                                    <div class="form-group row">
+                                        {{ form_label(form.description, null, {
+                                            'label_attr': {'class': 'col-lg-3'}
+                                        }) }}
+                                        {{ form_widget(form.description, {'attr': {'class': "col-lg-7 create_groupe_description"}}) }}
+                                    </div>
+                                    <div class="form-group row">
+                                        {{ form_label(form.typeGroupeId, null, {
+                                            'label_attr': {'class': 'col-lg-3'}
+                                        }) }}
+
+                                        {{ form_widget(form.typeGroupeId, {'attr': {'class': "col-lg-7 create_groupe_typeGroupeId"}}) }}
+                                    </div>
+                                    <div class="form-group row">
+                                        {{ form_label(form.invitations, null, {
+                                            'label_attr': {'class': 'col-lg-3'}
+                                        }) }}
+                                        {{ form_widget(form.invitations, {'attr': {'class': "col-lg-7 create_groupe_invitations"}}) }}
+                                    </div>
+                                    <div class="form-group row center">
+                                        <label class="col-lg-3 col-form-label form-control-label"></label>
+                                        <div class="col-lg-7 update-btn-group">
+                                            {{ form_widget(form.confirmer,{'label': "Confirmer", 'attr': {'class': "btn change-button"}}) }}
+                                        </div>
+                                    </div>
+                                {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div> 

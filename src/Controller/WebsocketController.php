@@ -10,6 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Statut;
+use App\Entity\Notification;
 use Psr\Log\LoggerInterface;
 use Gos\Bundle\WebSocketBundle\Pusher\Wamp\WampPusher;
 use Gos\Bundle\WebSocketBundle\Pusher\PusherInterface;
@@ -41,7 +42,8 @@ class WebsocketController extends AbstractController
         
         $emInvitation = $this->entityManager->getRepository(Invitation::class);
 
-        $fileForm= $this->createForm(UploadFileType::class,null);
+        $fileForm = $this->createForm(UploadFileType::class,null);
+        $emNotifications = $this->entityManager->getRepository(Notification::class);
         
         if( $user->getStatut()->getName() == "Hors Ligne") {
             $user->setStatut($this->getDoctrine()->getRepository(Statut::class)->findOneBy( array('id' => 1)));
@@ -50,7 +52,6 @@ class WebsocketController extends AbstractController
             $em->flush();
             $em->refresh($user);
         }
-
         $this->pusher->push(["typeEvent" => "statutChange", "data" => ["user" => ["id" => $user->getId()], "statut" => $user->getStatut()->getFormattedStatus()]], "userevent_topic", ["idUser" => $user->getId(), "typeEvent" => "statut"], []);
 
         return $this->render('websocket/index.html.twig', [
@@ -67,7 +68,13 @@ class WebsocketController extends AbstractController
                 "photo_de_profile" => $this->getUser()->getFileName(),
                 "statut_color" => $this->getUser()->getStatut()->getStatusColor()
             ],
-            'fileForm' => $fileForm->createView()
+            'fileForm' => $fileForm->createView(),
+            'notifications'=>[
+                'nbgroupes'=>count($emNotifications->getNotificationsGroupes($user->getId())),
+                'groupes'=> $emNotifications->getNotificationsGroupes($user->getId()),
+                'nbmessages'=> count($emNotifications->getNotificationsMessages($user->getId())),
+                'messages'=> $emNotifications->getNotificationsMessages($user->getId()),
+            ]
         ]);
     }
 

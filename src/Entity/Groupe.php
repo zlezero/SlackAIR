@@ -63,10 +63,27 @@ class Groupe
      */
     private $isDeleted;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Notification::class, mappedBy="Groupe")
+     */
+    private $notifications;
+
     public function __construct(EntityManager $entityManager=null)
     {
             $this->invitations = new ArrayCollection();
             $this->messages = new ArrayCollection();
+            $this->notifications = new ArrayCollection();
+    }
+
+    public function getFormattedGroupe() {
+        return [
+            "id" => $this->getid(),
+            "nom" => $this->getNom(),
+            "id_proprietaire" => $this->getIdProprietaire()->getId(),
+            "date_creation" => $this->getDateCreation(),
+            "description" => $this->getDescription(),
+            "type_groupe" => $this->getTypeGroupeId()->getFormattedTypeGroupe()
+        ];
     }
 
     public function getId(): ?int
@@ -196,17 +213,6 @@ class Groupe
         return $this;
     }
 
-    public function getFormattedGroupe() {
-        return [
-            "id" => $this->getid(),
-            "nom" => $this->getNom(),
-            "id_proprietaire" => $this->getIdProprietaire()->getId(),
-            "date_creation" => $this->getDateCreation(),
-            "description" => $this->getDescription(),
-            "type_groupe" => $this->getTypeGroupeId()->getFormattedTypeGroupe()
-        ];
-    }
-
     public function getIsDeleted(): ?bool
     {
         return $this->isDeleted;
@@ -215,8 +221,37 @@ class Groupe
     public function setIsDeleted(bool $isDeleted): self
     {
         $this->isDeleted = $isDeleted;
+        return $this;
+    }
+
+    /**
+     * @return Collection|Notification[]
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications[] = $notification;
+            $notification->setGroupe($this);
+        }
 
         return $this;
+    }
+
+    public function removeNotification(Notification $notification): self
+    {
+        if ($this->notifications->removeElement($notification)) {
+            if ($notification->getGroupe() === $this) {
+                $notification->setGroupe(null);
+            }
+        }
+
+        return $this;
+
     }
 
 }

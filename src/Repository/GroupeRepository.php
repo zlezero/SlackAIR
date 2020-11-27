@@ -47,4 +47,12 @@ class GroupeRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getAllGroupes(){
+
+        $entityManager = $this->getEntityManager();
+        
+        return $entityManager->createQuery('SELECT g FROM App\Entity\Groupe g where g.TypeGroupeId = 1')
+                    ->getResult();
+    }
 }

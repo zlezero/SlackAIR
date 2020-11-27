@@ -286,7 +286,7 @@ window.gestionOptionsMessage = function(current_message_id, current_user_id, cur
 
 
         // Gestion modification d'un message
-        $('#modifyMessageModal').on('show.bs.modal', function(e){
+        $('#modifyMessageModal').on('show.bs.modal', function(e) {
 
             let previousText = $('[data-idmessage="' + current_message_id +'"]').text();
             $("#update_message_message").val(previousText);
