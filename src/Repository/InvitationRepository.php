@@ -63,7 +63,6 @@ class InvitationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
-
     }
 
     public function getUserChannelInvitation(int $idChannel, int $idUtilisateur)
@@ -171,19 +170,6 @@ class InvitationRepository extends ServiceEntityRepository
                             ->getResult();
 
         return $data != null;
-
-    }
-
-    function addNotification(int $idUtilisateur, int $idChannel) {
-
-        $entityManager = $this->getEntityManager();
-
-        $entityManager->createQuery('UPDATE App\Entity\Invitation i
-                                     SET i.NonLus = i.NonLus + 1
-                                     WHERE i.UserId != :idUtilisateur AND i.GroupeId = :idChannel')
-                      ->setParameter('idUtilisateur', $idUtilisateur)
-                      ->setParameter('idChannel', $idChannel)
-                      ->getResult();
 
     }
 

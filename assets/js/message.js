@@ -83,6 +83,7 @@ $(function() {
     const socket = WS.connect(_WS_URI);
     var session_glob;
     var current_channel_id = -1;
+    var id_user = $('#id_current_user').data('id-current-user');;
     var notif_channel_general = false;
     var notif_channel_prive = 0;
     var id_user = $('#id_current_user').data('id-current-user');
@@ -149,16 +150,23 @@ $(function() {
                 break;
         }
 
+        subscribeToNotif(id_user);
+
     }
 
     window.subscribeToChannel = function subscribeToChannel(idChannel) {
 
         session_glob.subscribe("message/channel/" + idChannel, function (uri, payload) {
+
             console.log("Message reçu : ", payload);
+
             if (payload.message.channel == current_channel_id) {
                 addMessage(payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.messageId, payload.message.photo_de_profile, payload.message.media);
                 gestionMessage();
+            } else{
+                addMsgNotification(payload.message.channel, payload.message.pseudo, payload.message.message, payload.message.messageTime);
             }
+
         });
 
         session_glob.subscribe("channelEvent/" + idChannel, function(uri, payload) {
@@ -553,6 +561,19 @@ $(function() {
 
     }
 
+    function subscribeToNotif(userId) {
+
+        console.log("connection aux notifications : ", userId);
+        session_glob.subscribe("notif/" + userId, function (uri, payload) {
+            
+            let data = JSON.parse(payload.data);
+            console.log("Notification reçue : ", data);
+            addGrpNotification(data.data.notif.typeGroupeId, data.data.notif.groupeId, data.data.notif.groupe, data.data.notif.dateNotif, data.data.notif.propGrp);
+
+        });
+
+    }
+
     function unsubscribeToUserEvent(userId) {
         try {
             session_glob.unsubscribe("user/" + userId);
@@ -564,7 +585,7 @@ $(function() {
         let scrollAtEnd = isScrollMessageAtEnd();
         let messageHTML = "";
         let messageOptions = 
-        `<div class="dropleft" data-message-id="${id}" >
+        `<div class="dropleft dropleft-message" data-message-id="${id}" >
             <a class="text-muted opacity-60 ml-3" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
             <div class="messageActionsDropdown dropdown-menu"></div>
         </div>`;
@@ -776,7 +797,8 @@ $(function() {
         
     }
 
-    function popUpMedia(){
+    function popUpMedia() {
+
         let modal = $('#mediaImageModal');
         let img = $('.media-text img');
         let modalImg = $('#imagePopUp');
@@ -794,11 +816,11 @@ $(function() {
         });
     }
 
-    function gestionMessage(){
+    function gestionMessage() {
 
-        $('.dropleft').off('show.bs.dropdown');
+        $('.dropleft-message').off('show.bs.dropdown');
         
-        $('.dropleft').on('show.bs.dropdown', function(e){
+        $('.dropleft-message').on('show.bs.dropdown', function(e){
 
             let current_message_id = $(this).data('message-id');
             var menu = "";
@@ -857,9 +879,164 @@ $(function() {
             
         });
 
-        $('.dropleft').on('hide.bs.dropdown', function(e) {
+        $('.dropleft-message').on('hide.bs.dropdown', function(e) {
             $(this).children('.messageActionsDropdown').empty();
         });
+
+    }
+
+    function addMsgNotification(channel, pseudo, message, messageTime) {
+
+        const messageHTML = 
+        '<div class="dropdown-item btn notification" data-idchannel="' + channel + '" id="notif' + channel + '">'
+        +'<div class="message-content"><div class="message-title">'
+        +'<strong>'+$(".channel[data-idchannel='" + channel + "']").text()+'</strong>'
+        +'</div><div class="message-detail">Nouveau(x) message(x)</div>'
+        +'<a class="channel" data-idchannel="channelId">Consulter la discussion</a>'
+        +'</div><span class="time text-muted small">' + formatDate(messageTime) + '</span></div>';
+
+        if($("#notif" + channel).length < 1) {
+            increaseNotifNb("notif-msg-count");
+        } else {
+            $("#notif"+ channel).remove();
+        }
+
+        $("#notif-msg-ddlist").after(messageHTML);
+
+        $("#notif" + channel).on("click", (e) => {
+
+            let channid = $("#notif" + channel).data("idchannel");
+
+            let chann = $(".channel[data-idchannel='" + channid + "']");
+            let select = chann.parent();
+            
+
+            $.post({
+                url: '/api/notification/readNotifMsg',
+                data: {"groupeId": channid},
+                success: function(result){
+                    changeNotifNb("notif-msg-count", result.nbNotifs);
+                }
+            });
+
+            if (select.hasClass("hide")) {
+                $('.dropdown-btn', select.parent())[0].click();
+            }
+
+            $(".channel[data-idchannel='" + channid + "']").trigger("click");
+            $("#notif" + channel).off('click');
+            $("#notif" + channel).remove();
+
+        });
+
+        playsound();
+
+    }
+
+    $(".notification").on("click", function() {
+
+        let id = this.id;
+
+        let channid = $("#" + id).data("idchannel");
+        let chann = $(".channel[data-idchannel='" + channid + "']");
+        let select = chann.parent();
+
+        if (select.hasClass("hide")) {
+            $('.dropdown-btn', select.parent())[0].click();
+        }
+
+        $(".channel[data-idchannel='" + channid + "']").trigger("click");
+
+        if($("#" + id).parent().hasClass("messages")) {
+            
+            $.post({
+                url: '/api/notification/readNotifMsg',
+                data: {"groupeId": channid},
+                success: function(result){
+                    changeNotifNb("notif-msg-count",result.nbNotifs);
+                }
+            });
+
+        } else {
+
+            $.post({
+                url: '/api/notification/readNotifGrp',
+                data: {"groupeId": channid},
+                success: function(result){
+                    changeNotifNb("notif-count",result.nbNotifs);
+                }
+            });
+
+        }
+
+        $("#" + id).remove();
+
+    });
+
+    function addGrpNotification(typeChannelId, channelId, channel, messageTime, pseudo) {
+
+        const notifHTML = 
+
+        '<div class="dropdown-item btn notification" data-idchannel="' + channelId + '" id="notif' + channelId + '">'
+        +'<div class="message-content"><div class="message-title"><strong>'+pseudo+'</strong>'
+        +'</div><div class="message-detail">'
+        +'Vous avez été invité à '+ typeChannelId == 3 ? 'discuter avec ' : 'rejoindre le groupe ' + channel
+        +'</div><a class="channel" data-idchannel="' + channelId + '">Consulter la discussion</a>'
+        +'</div><span class="time text-muted small">'
+        + formatDate(messageTime)
+        +'</span></div>';
+
+        $("#notif-ddlist").after(notifHTML);
+
+        increaseNotifNb("notif-count");
+
+        $("#notif" + channel).on("click", (e) => {
+
+            let channid = $("#notif"+channel).data("idchannel");
+            let chann = $(".channel[data-idchannel='"+channid+"']");
+            let select = chann.parent();
+
+            if (select.hasClass("hide")){
+                $('.dropdown-btn', select.parent())[0].click();
+            }
+
+            $(".channel[data-idchannel='"+channid+"']").trigger("click");
+
+            $("#notif" + channel).remove();
+            
+            $.post({
+                url: '/api/notification/readNotifGrp',
+                data: {"groupeId": channid},
+                success: function(result){
+                    changeNotifNb("notif-count", result.nbNotifs);
+                }
+            });
+
+        });
+
+        playsound();
+    
+    }
+
+    function increaseNotifNb(typeNotif) {
+    
+        let notifnb = $("#" + typeNotif).text();
+    
+        if(!notifnb.includes("+")){
+            changeNotifNb(typeNotif, parseInt(notifnb) + 1);
+        }
+    
+    }
+
+    function changeNotifNb(typeNotif, nbnotif){
+
+        if(parseInt(nbnotif) <= 9){
+            $("#" + typeNotif).text((nbnotif).toString());
+        }
+        else {
+            $("#" + typeNotif).text("9+");
+        }
+
     }
 
     function scrollMessageToEnd() {
@@ -1205,5 +1382,12 @@ $(function() {
         }
 
     });
+
+    function playsound() {
+        if(statutId != 4){
+            var audio = $("#notif-sound")[0];
+            audio.play();
+        }
+    }
 
 });

@@ -40,11 +40,6 @@ class Invitation
     private $GroupeId;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
-     */
-    private $NonLus;
-
-    /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
     private $isFavorite;
@@ -107,18 +102,6 @@ class Invitation
         return $this->GroupeId->getTypeGroupeId()->getId();
     }
     
-    public function getNonLus(): ?int
-    {
-        return $this->NonLus;
-    }
-
-    public function setNonLus(int $NonLus): self
-    {
-        $this->NonLus = $NonLus;
-
-        return $this;
-    }
-
     public function getIsFavorite(): ?bool
     {
         return $this->isFavorite;

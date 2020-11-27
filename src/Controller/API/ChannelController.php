@@ -237,7 +237,7 @@ class ChannelController extends AbstractController
 
             if($channelInvitation->getUserId()->getId() == $userId) {
 
-                if($channelAdmin == $userId){
+                if($channelAdmin == $userId) {
 
                     // Nommer un nouvel admin
                     $newAdminInvitation = $em->getRepository(Invitation::class)->getNewChannelAdmin($channelId, $userId)[0];

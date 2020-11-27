@@ -20,7 +20,8 @@
 
 {% block body %}
     <div class="container-fluid d-flex flex-column h-100 ">
-      <nav class="row navbar navbar-expand-lg navbar-light">
+        <audio id='notif-sound' style='display:none;' controls src='https://cdn.discordapp.com/attachments/458358268692004870/777589617671012362/swiftly-610.mp3'></audio>
+        <nav class="row navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button class="navbar-brand btn" id="btn-theme" href="#">
@@ -31,42 +32,30 @@
                 <div class="dropdown dropleft">
                     <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-bell"></i>
-                        <sup><span class="badge badge-pill badge-danger notification">0</span></sup>
+                        <sup><span class="badge badge-pill badge-danger notification" id="notif-count">{{notifications.nbgroupes < 9 ? notifications.nbgroupes  : "9+"}}</span></sup>
                     </a>
-                    <div class="dropdown-menu notifications" aria-labelledby="dropdownMenuMessage">
+                    <div class="dropdown-menu notifications" aria-labelledby="dropdownMenuMessage" >
                         <div class="notifications-header">
                             <i class="fa fa-bell"></i>
                             Notifications
                         </div>
-                        <div class="dropdown-divider"></div>
-                        <!--
-                        <a class="dropdown-item" href="#">
-                            <div class="notification-content">
-                                <div class="icon">
-                                    <i class="fas fa-check text-success border border-success"></i>
-                                </div>
-                                <div class="content">
-                                    <div class="notification-detail">Vous avez reçu un message de Thomas</div>
-                                    <div class="notification-time">
-                                        Il y'a 6 minutes
+                        <div class="dropdown-divider"  id="notif-ddlist" ></div>
+                        {% for notif in notifications.groupes %}
+                            <div class="dropdown-item btn notification" data-idchannel="{{notif.groupe.id}}" id="notif{{notif.groupe.id}}">
+                                <div class="message-content">
+                                    <div class="message-title">
+                                        <strong>{{notif.groupe.nom}}</strong>
                                     </div>
-                                </div>
-                            </div>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <div class="notification-content">
-                                <div class="icon">
-                                    <i class="fas fa-exclamation text-info"></i>
-                                </div>
-                                <div class="content">
-                                    <div class="notification-detail">Vous avez été ajouté au channel PHP Project</div>
-                                    <div class="notification-time">
-                                        Aujourd'hui
+                                    <div class="message-detail">
+                                        Vous avez été invité à {{notif.groupe.TypeGroupeId.id == "3" ? "discuter avec #{notif.groupe.IdProprietaire.pseudo}"  : "rejoindre le groupe #{notif.groupe.nom}"}}
                                     </div>
+                                    <a class="channel" data-idchannel="channelId">Consulter la discussion</a>
                                 </div>
+                                <span class="time text-muted small">
+                                    {{notif.DateNotification|date("d-M-20y h:m")}}
+                                </span>
                             </div>
-                        </a>
-                        -->
+                        {% endfor %}
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item text-center" href="#">Voir toutes les notifications</a>
                     </div>
@@ -74,55 +63,31 @@
                 <div class="dropdown dropleft">
                     <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-envelope"></i>
-                        <sup><span class="badge badge-pill badge-success notification">0</span></sup>
+                        <sup><span class="badge badge-pill badge-success notification" id="notif-msg-count">{{notifications.nbmessages < 9 ? notifications.nbmessages  : "9+"}}</span></sup>
                     </a>
                     <div class="dropdown-menu messages" aria-labelledby="dropdownMenuMessage">
                         <div class="messages-header">
                             <i class="fa fa-envelope"></i>
                             Messages
                         </div>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">
-                            <!--
-                            <div class="message-content">
-                                <div class="pic">
-                                    <img src="https://www.icone-png.com/png/28/28140.png" alt="">
-                                </div>
-                                <div class="content">
+                        <div class="dropdown-divider" id="notif-msg-ddlist">
+                        </div>
+                        {% for notif in notifications.messages %}
+                            <div class="dropdown-item btn notification" data-idchannel="{{notif.groupe.id}}" id="notif{{notif.groupe.id}}">
+                                <div class="message-content">
                                     <div class="message-title">
-                                        <strong> Joris</strong>
+                                        <strong>{{notif.groupe.TypeGroupeId.id == "3" ? "#{notif.groupe.IdProprietaire.pseudo}"  : "#{notif.groupe.nom}"}}</strong>
                                     </div>
-                                    <div class="message-detail">Faudrait dormir Monsieur</div>
-                                </div>
-                            </div>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <div class="message-content">
-                                <div class="pic">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Crystal_Clear_kdm_user_female.svg/1200px-Crystal_Clear_kdm_user_female.svg.png" alt="">
-                                </div>
-                                <div class="content">
-                                    <div class="message-title">
-                                        <strong> Maurane</strong>
+                                    <div class="message-detail">
+                                        Nouveau(x) message(x) 
                                     </div>
-                                    <div class="message-detail">La philo, c'est trop dar</div>
+                                    <a class="channel" data-idchannel="channelId">Consulter la discussion</a>
                                 </div>
+                                <span class="time text-muted small">
+                                    {{notif.DateNotification|date("d-M-20y h:m")}}
+                                </span>
                             </div>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <div class="message-content">
-                                <div class="pic">
-                                    <img src="https://www.icone-png.com/png/28/28140.png" alt="">
-                                </div>
-                                <div class="content">
-                                    <div class="message-title">
-                                        <strong> Coco</strong>
-                                    </div>
-                                    <div class="message-detail">J'ai faim</div>
-                                </div>
-                            </div>
-                        </a>
-                        -->
+                        {% endfor %}
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item text-center" href="#">Voir tous les messages</a>
                     </div>
@@ -356,11 +321,11 @@
     </script>
 
     {{ render(controller(
-        'App\\Controller\\API\\GroupeController::create',{'typeGroupeId':2}
+        'App\\Controller\\API\\GroupeController::create',{'typeGroupeId':1}
     )) }}
 
     {{ render(controller(
-        'App\\Controller\\API\\GroupeController::create',{'typeGroupeId':1}
+        'App\\Controller\\API\\GroupeController::create',{'typeGroupeId':2}
     )) }}
 
     {{ render(controller(
