@@ -26,6 +26,7 @@ Encore
     .addEntry('app', './assets/entrypoint/app.js')
     .addEntry('login', './assets/entrypoint/login.js')
     .addEntry('message', './assets/entrypoint/message.js')
+    .addEntry('messageOptions', './assets/entrypoint/message_options.js')
     .addEntry('groupes', './assets/entrypoint/groupes.js')
     .addEntry('profile', './assets/entrypoint/profile.js')
     .addEntry('password', './assets/entrypoint/password.js')

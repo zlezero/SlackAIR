@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -24,7 +25,15 @@ class PasswordFormType extends AbstractType
                 'first_options' => ['label' => 'Mot de passe', 'error_bubbling'  => true],
                 'second_options' => ['label' => 'Confirmer le mot de passe'],
                 'constraints' => [
-                    new NotBlank()
+                    new NotBlank([
+                        'message' => 'Entrez un mot de passe svp !',
+                    ]),
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 4096,
+                    ]),
                 ]
             ])
             ->add('annuler', ResetType::class)

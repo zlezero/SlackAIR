@@ -78,6 +78,18 @@ class InvitationRepository extends ServiceEntityRepository
         ;
     }
 
+    public function getNewChannelAdmin(int $idChannel, int $idCurrentAdmin)
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.UserId != :idUtilisateur')
+            ->andWhere('i.GroupeId = :idChannel')
+            ->setParameter('idUtilisateur', $idCurrentAdmin)
+            ->setParameter('idChannel', $idChannel)
+            ->getQuery()
+            ->getResult()
+        ;   
+    }
+
     public function isUserInChannel(int $idChannel, int $idUtilisateur) {
         return ($this->createQueryBuilder('i')
                     ->andWhere('i.UserId = :idUtilisateur')
@@ -97,8 +109,10 @@ class InvitationRepository extends ServiceEntityRepository
         $listeChannelsDM = $this->getChannelUtilisateur(3, $idUtilisateur);
 
         foreach($listeChannelsDM as $channel) {
-            
-            $data = $entityManager->createQuery('SELECT utilisateur
+
+            if(!$channel->getGroupeId()->getIsDeleted()){
+
+                $data = $entityManager->createQuery('SELECT utilisateur
                                                  FROM App\Entity\User utilisateur
                                                  INNER JOIN App\Entity\Invitation invitation
                                                  WHERE invitation.UserId != :idUtilisateur AND invitation.GroupeId = :idChannel AND utilisateur.id = invitation.UserId
@@ -107,7 +121,9 @@ class InvitationRepository extends ServiceEntityRepository
                                 ->setParameter('idUtilisateur', $idUtilisateur)
                                 ->getOneOrNullResult();
 
-            $returnObj[] = ["channel" => ["id" => $channel->getGroupeId()->getId(), "isFavorite" => $channel->getIsFavorite()], "user" => ["id" => $data->getId(), "pseudo" => $data->getPseudo(), "statut" => $data->getStatut()->getFormattedStatus()]];
+                $returnObj[] = ["channel" => ["id" => $channel->getGroupeId()->getId(), "isFavorite" => $channel->getIsFavorite(), "isDeleted" => $channel->getGroupeId()->getIsDeleted()], "user" => ["id" => $data->getId(), "pseudo" => $data->getPseudo(), "statut" => $data->getStatut()->getFormattedStatus()]];
+            
+            }
         
         }
 

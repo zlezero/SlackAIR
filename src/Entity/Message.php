@@ -51,6 +51,11 @@ class Message
      */
     private $Media;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $EstEpingle;
+
     public function __construct()
     {
         $this->Medias = new ArrayCollection();
@@ -145,6 +150,18 @@ class Message
             'photo_de_profile' => $this->getUserId()->getFileName()
 
         ];
+    }
+
+    public function getEstEpingle(): ?bool
+    {
+        return $this->EstEpingle;
+    }
+
+    public function setEstEpingle(bool $EstEpingle): self
+    {
+        $this->EstEpingle = $EstEpingle;
+
+        return $this;
     }
 
 }

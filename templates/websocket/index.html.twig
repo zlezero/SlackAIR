@@ -2,6 +2,7 @@
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('message') }}
+    {{ encore_entry_link_tags('messageOptions') }}
     {{ encore_entry_link_tags('profile') }}
     {{ encore_entry_link_tags('contact') }}
     {{ parent() }}
@@ -11,6 +12,7 @@
     {{ parent() }}
     <script src="{{ asset('bundles/goswebsocket/js/vendor/autobahn.min.js') }}"></script>
     {{ encore_entry_script_tags('message') }}
+    {{ encore_entry_script_tags('messageOptions') }}
     {{ encore_entry_script_tags('groupes') }}
     {{ encore_entry_script_tags('profile') }}
     {{ encore_entry_script_tags('contact') }}
@@ -171,17 +173,17 @@
                             </button>
                             <div class="collapse show hide collapse-container" id="collapse-favoris">
                                 {% for groupePublic in channels.publiques %}
-                                    {% if groupePublic.isFavorite %}
+                                    {% if groupePublic.isFavorite and not groupePublic.GroupeId.isDeleted %}
                                         <a href="" data-idChannel={{groupePublic.GroupeId.id}} class="channel"><i class="fas fa-hashtag"></i>{{groupePublic.GroupeId.nom}}</a>
                                     {% endif %}
                                 {% endfor %}
                                 {% for groupePrive in channels.prives %}
-                                    {% if groupePrive.isFavorite %}
+                                    {% if groupePrive.isFavorite and not groupePrive.GroupeId.isDeleted %}
                                        <a href="" data-idChannel={{groupePrive.GroupeId.id}} class="channel"><i class="fas fa-lock"></i>{{groupePrive.GroupeId.nom}}</a>
                                     {% endif %}
                                 {% endfor %}
                                 {% for groupeDM in channels.dm %}
-                                    {% if groupeDM.channel.isFavorite %}
+                                    {% if groupeDM.channel.isFavorite and not groupeDM.channel.isDeleted %}
                                        <a href="" data-idChannel={{groupeDM.channel.id}} data-userIdDM={{groupeDM.user.id}} class="channel user_channel"><i class="fa fa-circle {{groupeDM.user.statut.status_color}}"></i>{{groupeDM.user.pseudo}}</a>
                                     {% endif %}
                                 {% endfor %}
@@ -199,7 +201,9 @@
                             </button>
                             <div class="collapse show hide collapse-container" id="collapse-group-public">
                                 {% for groupePublic in channels.publiques %}
-                                    <a href="" data-idChannel={{groupePublic.GroupeId.id}} class="channel"><i class="fas fa-hashtag"></i>{{groupePublic.GroupeId.nom}}</a>
+                                    {% if not groupePublic.GroupeId.isDeleted %}
+                                        <a href="" data-idChannel={{groupePublic.GroupeId.id}} class="channel"><i class="fas fa-hashtag"></i>{{groupePublic.GroupeId.nom}}</a>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -216,7 +220,9 @@
                             </button>
                             <div class="collapse show hide collapse-container" id="collapse-group-private">
                                 {% for groupePrive in channels.prives %}
-                                    <a href="" data-idChannel={{groupePrive.GroupeId.id}} class="channel"><i class="fas fa-lock"></i>{{groupePrive.GroupeId.nom}}</a>
+                                    {% if not groupePrive.GroupeId.isDeleted %}
+                                        <a href="" data-idChannel={{groupePrive.GroupeId.id}} class="channel"><i class="fas fa-lock"></i>{{groupePrive.GroupeId.nom}}</a>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -232,7 +238,9 @@
                             </button>
                             <div class="collapse show hide collapse-container" id="collapse-message-private">
                                 {% for groupeDM in channels.dm %}
-                                    <a href="" data-idChannel={{groupeDM.channel.id}} data-userIdDM={{groupeDM.user.id}} class="channel user_channel"><i class="fa fa-circle {{groupeDM.user.statut.status_color}}"></i>{{groupeDM.user.pseudo}}</a>
+                                    {% if not groupeDM.channel.isDeleted %}
+                                        <a href="" data-idChannel={{groupeDM.channel.id}} data-userIdDM={{groupeDM.user.id}} class="channel user_channel"><i class="fa fa-circle {{groupeDM.user.statut.status_color}}"></i>{{groupeDM.user.pseudo}}</a>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -264,14 +272,27 @@
                                             </div>
                                             <span class="chat-title--right">
                                                 <i id="set-favorite" class="fas fa-star"></i>
-                                                <i class="fas fa-thumbtack"></i>
-                                                <i class="fas fa-sign-out-alt"></i>
-                                                <i class="fas fa-info-circle"></i>
+                                                <div class="dropdown" id="pinnedMessagesDropdown">
+                                                    <i class="fas fa-thumbtack" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                                    <div class="dropdown-menu pinned-messages-dropdown-menu">
+                                                        <h6 class="dropdown-header">Messages épinglés</h6>
+                                                        <li id="pinnedMessagesLoader" class="dropdown-item dropdown-pinned-messages">
+                                                            <p class="pinned-message-solo text-center"><i class="fa fa-spinner fa-pulse fa-fw" aria-hidden="true"></i> Chargement des messages épinglés...</p>
+                                                        </li>
+                                                        <div id="pinnedMessagesContainer" class="pinned-messages-container">
+                                                        </div>
+                                                        <li id="noPinnedMessages" class="dropdown-item dropdown-pinned-messages">
+                                                            <p class="pinned-message-solo text-center">Aucune message épinglé !</p>
+                                                        </li>
+                                                    </div>
+                                                </div>
+                                                <i id="leave-channel-icon" class="fas fa-sign-out-alt" data-toggle="modal" href="#leaveChannelModal"></i>
+                                                <i id="channel-infos-icon" class="channel-infos-icon fas fa-info-circle"></i>
                                             </span>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="chat-messages" class="row"></div>
+                                <div id="chat-messages" class="row p-t-2"></div>
                                 <div class="container-fluid sticky-footer pr-0 pl-0">
                                     <div class="row w-100 mr-0 ml-0">
                                         <div id="emojis" style="display: none"></div>
@@ -344,6 +365,14 @@
 
     {{ render(controller(
         'App\\Controller\\ContactController::getContact'
+    )) }}
+
+    {{ render(controller(
+        'App\\Controller\\API\\MessageController::getMessageOptions'
+    )) }}
+
+    {{ render(controller(
+        'App\\Controller\\API\\ChannelController::getChannelInfos'
     )) }}
 
     {% include 'modals/index.html.twig' %}

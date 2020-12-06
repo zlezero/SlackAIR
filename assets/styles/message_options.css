@@ -1,0 +1,147 @@
+.messageActionsDropdown i{
+    margin-left: 15px;
+}
+
+.messageActionsDropdown a {
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.messageActionsDropdown .dropdown-item:active{
+    background-color: transparent;
+}
+
+#pin-message i{
+    -ms-transform: rotate(20deg);
+    transform: rotate(20deg);
+}
+
+#delete-message{
+    color: red;
+}
+
+#deleteMessageModal, #modifyMessageModal, #leaveChannelModal {
+    font-family: sans-serif;
+}
+
+.modal-confirm {		
+    width: 400px;
+}
+
+.modal-confirm .modal-header{
+    background: linear-gradient(#01012c, #004280);
+    color: white;
+}
+
+.modal-confirm .modal-content {
+    border-radius: 5px;
+    border: none;
+    text-align: left;
+    font-size: 14px;
+}
+
+.modal-confirm h4 {
+    text-align: left;
+    font-size: 20px;
+}
+
+
+.modal-confirm .modal-footer {
+    border: none;
+    text-align: center;		
+    border-radius: 5px;
+    padding: 10px 15px 25px;
+}
+
+.modal-confirm .btn, .modal-confirm .btn:active {
+    color: #fff;
+    border-radius: 4px;
+    background: #60c7c1;
+    text-decoration: none;
+    transition: all 0.4s;
+    line-height: normal;
+    min-width: 120px;
+    border: none;
+    min-height: 40px;
+    border-radius: 3px;
+    margin: 0 5px;
+    font-size: 14px;
+}
+
+.modal-confirm .btn-secondary {
+    background: #c1c1c1;
+}
+
+.modal-confirm .btn-secondary:hover, .modal-confirm .btn-secondary:focus {
+    background: #a8a8a8;
+}
+
+.modal-confirm .btn-danger {
+    background: #f15e5e;
+}
+
+.modal-confirm .btn-danger:hover, .modal-confirm .btn-danger:focus {
+    background: #ee3535;
+}
+
+.modal-confirm .modify-btn{
+    background: #000080;
+}
+
+
+.pinned-messages-container {
+    max-height: 300px;
+    width: 510px;
+    overflow: auto;
+}
+
+.pinned-messages-dropdown-menu .dropdown-header{
+    background-color: #000080 !important;
+    color: white;
+}
+  
+.pinned-messages-dropdown-menu{
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+    min-width: 50%;
+    border-radius: 5px;
+}
+
+.dropdown-pinned-messages{
+    padding: 0 !important;
+}
+  
+.dropdown-pinned-messages:hover{
+    color: #34495E;
+}
+
+.pinned-messages-dropdown-menu .dropdown-item:active{
+    background-color: transparent;
+}
+
+.pinned-messages-dropdown-menu .dropdown-item i {
+    margin-top: 0;
+    margin-left: 0;
+}
+
+.pinned-messages-dropdown-menu .dropdown-item .media-icon{
+    color: black;
+}
+
+.pinned-messages-dropdown-menu .dropdown-item .media-icon:hover{
+    color: black;
+    cursor: auto;
+}
+  
+.pinned-message-solo {
+    margin-top: 1rem;
+}
+  
+.delete-pinned-message, .redirect-to-pinned-message {
+    margin: 0;
+    height: 48px;
+    vertical-align: top;
+    line-height: 48px;
+    padding-left: inherit;
+    float: right;
+}
