@@ -99,4 +99,12 @@ class Departement
 
         return $this;
     }
+
+    public function getFormattedDepartement() {
+        return [
+            "id" => $this->getId(),
+            "nom" => $this->getNom(),
+            "chef" => $this->getIdResponsable()->getFormattedUser()
+        ];
+    }
 }

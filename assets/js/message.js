@@ -1,4 +1,4 @@
-import {formatDate} from './app';
+import {formatDate, bytesToSize} from './app';
 import {twemoji} from '../plugins/emoji-picker-twemoji/js/twemoji.min.js';
 import * as modals from './modals';
 
@@ -107,7 +107,7 @@ $(function() {
             let data = JSON.parse(payload.data);
             console.dir(data);
             if (data.typeEvent == "nouveau_channel") {
-                addGroupe(data.data.type_groupe.id, data.data.id, data.data.nom, false, data.data.user.id, data.data.user.statut.status_color, data.data.user.pseudo);
+                addGroupe(data.data.type_groupe.id, data.data.id, data.data.nom, false, data.data.user ? data.data.user.id : null, data.data.user ? data.data.user.statut.status_color : null, data.data.user ? data.data.user.pseudo : null);
                 window.subscribeChannel();
                 window.subscribeToChannel(data.data.id);
                 subscribeToUserEvents();
@@ -157,6 +157,7 @@ $(function() {
             console.log("Message reçu : ", payload);
             if (payload.message.channel == current_channel_id) {
                 addMessage(payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.messageId, payload.message.photo_de_profile, payload.message.media);
+                gestionMessage();
             }
         });
 
@@ -255,6 +256,11 @@ $(function() {
         $('#titre_channel_right').hide();
         $('#label_membres_du_groupe').hide();
         $('#message').prop('disabled', true);
+        $('#upload_file_file').prop('disabled', true);
+        $('#pinnedMessagesDropdown').css('pointer-events','none');
+        $('#set-favorite').css('pointer-events','none');
+        $('#channel-infos-icon').css('pointer-events','none');
+        $('#leave-channel-icon').css('pointer-events','none');
         disableEmojis();
     }
 
@@ -274,7 +280,7 @@ $(function() {
                 unsubscribeToUserEvent($(this).data('userid'));
             }
         });
-        
+
         $.post({
             url: '/api/channel/getMessages',
             data: {"channelId": current_channel_id},
@@ -285,6 +291,11 @@ $(function() {
                 scrollMessageToEnd();
                 $("#loading").remove();
                 $('#message').prop('disabled', false);
+                $('#upload_file_file').prop('disabled', false);
+                $('#pinnedMessagesDropdown').css('pointer-events','auto');
+                $('#set-favorite').css('pointer-events','auto');
+                $('#channel-infos-icon').css('pointer-events','auto');
+                $('#leave-channel-icon').css('pointer-events','auto');
                 enableEmojis();
                 
                 $('#message').off('input');
@@ -298,7 +309,11 @@ $(function() {
                     gestionIsWriting(false);
                 }, 1000));
 
+                popUpMedia();
+                gestionMessage();
+
             }
+            
         });
 
         //Source : https://stackoverflow.com/questions/4220126/run-javascript-function-when-user-finishes-typing-instead-of-on-key-up
@@ -361,6 +376,143 @@ $(function() {
                 $('#titre_channel_right').show();
                 $('#label_membres_du_groupe').show();
 
+                // Gestion des infos du channel
+                $('#channel-infos-icon').off('click');
+                $("#contact-infos-modal").off('show.bs.modal');
+                $("#contact-infos-modal").off('hidden.bs.modal');
+                $("#channel-infos-modal").off('show.bs.modal');
+                $("#channel-infos-modal").off('hidden.bs.modal');
+
+                $('#channel-infos-icon').on('click', function(v){
+                    
+                    if (result.message.channel.type == 3){
+                        $("#contact-infos-modal").modal('toggle');
+                        $("#contact-infos-loader").show();
+                        $("#contact-infos-modal-body").hide();
+                    } else{
+                        $("#channel-infos-modal").modal('toggle');
+                        $("#channel-infos-loader").show();
+                        $("#channel-infos-modal-body").hide();
+                    }
+            
+                });
+
+                // Gestion affichage des infos du contact
+                $("#contact-infos-modal").on('show.bs.modal', function(e){
+                           
+                    $.post({
+                        url: '/api/channel/getInfos',
+                        data: {"channelId": current_channel_id},
+                        success: function (res){
+                      
+                            $("#contact-pdp-info").attr('src', res.message.channel.other_contact.photo_de_profile);
+                            $("#contact-status-info").addClass(res.message.channel.other_contact.statut.status_color);
+                            $("#contact-name-info").html(res.message.channel.other_contact.prenom + ' ' + res.message.channel.other_contact.nom);
+                            res.message.channel.other_contact.profession ?  $("#contact-profession-info").html(res.message.channel.other_contact.profession) : $("#contact-profession-info").hide();
+                            $("#contact-pseudo-info").html('<strong style="color: #000080">Pseudo:</strong> ' + res.message.channel.other_contact.pseudo);
+                            $("#contact-mail-info").html('<strong style="color: #000080">Email:</strong> ' + res.message.channel.other_contact.email);
+                            res.message.channel.other_contact.age ? $("#contact-age-info").html('<strong style="color: #000080">Age:</strong> ' + res.message.channel.other_contact.age) : $("#contact-age-info").hide();
+                            
+                            if(res.message.channel.other_contact.departement){
+                                $("#contact-departement-name-info").html('<strong style="color: #000080">Département:</strong> ' + res.message.channel.other_contact.departement.nom);
+                                $("#contact-departement-chef-info").html('<strong style="color: #000080">Chef de Département:</strong> ' + res.message.channel.other_contact.departement.chef.prenom + ' '+ res.message.channel.other_contact.departement.chef.nom);
+                            }else{
+                                $("#contact-departement-name-info").hide();
+                                $("#contact-departement-chef-info").hide();
+                            }
+
+                            $("#contact-infos-loader").hide();
+                            $("#contact-infos-modal-body").show();
+                            
+                        }
+                    });
+
+                });
+
+                $("#contact-infos-modal").on('hidden.bs.modal', function(e){
+ 
+                   $("#contact-pdp-info").attr('src', '');
+                   $("#contact-name-info").html('');
+                   $("#contact-profession-info").html('');
+                   $("#contact-pseudo-info").html('');
+                   $("#contact-mail-info").html('');
+                   $("#contact-age-info").html('');
+                   $("#contact-departement-name-info").html('');
+                   $("#contact-departement-chef-info").html('');
+
+                });
+
+                 // Gestion affichage des infos du channel
+                 $("#channel-infos-modal").on("show.bs.modal", function(e){
+
+                    $.post({
+                        url: '/api/channel/getInfos',
+                        data: {"channelId": current_channel_id},
+                        success: function (res) {
+
+                            $("#channel-title-info").html(res.message.channel.nom);
+                            $("#update_channel_nom").attr('value', res.message.channel.nom);
+                            $("#channel-creation-info").html('<i class="far fa-clock pr-1"></i>Créé le ' + formatDate(res.message.channel.date_creation.date));
+                            $("#channel-owner-info").html('<strong style="color: #000080">Propriétaire:</strong> ' + res.message.channel.proprietaire.pseudo);
+                            
+                            if (res.message.channel.type != 3 && res.message.channel.description != null) {
+                                $("#channel-description-info").html('<strong style="color: #000080">Description:</strong> ' + res.message.channel.description);
+                                $("#update_channel_description").attr('value', res.message.channel.description);
+                            } else {
+                                $("#channel-description-info").hide();
+                            }
+
+                            $("#channel-infos-loader").hide();
+                            $("#channel-infos-modal-body").show();
+
+                        }
+                        
+                    });
+
+                    $("#channel-infos-update-form").on('submit', function(m){
+
+                        m.preventDefault();
+                        let form_data = $("#channel-infos-update-form").serializeArray();
+                        form_data.push({name:'channel_id', value: current_channel_id});
+
+                        $.post({
+                            url: '/api/channel/setChannelInfos',
+                            data: form_data,
+                            success: function(data) {
+            
+                                if (data.statut == "ok") {
+                                    $("#channel-title-info").html(data.channel.titre);
+                                    $('#titre_channel').text(data.channel.titre);
+                                    $('#titre_channel_right').text(data.channel.titre);
+                                    $('#message').attr('placeholder', 'Envoyer un message à ' + data.channel.titre);
+                                    if(data.channel.description){
+                                        $("#channel-description-info").html('<strong style="color: #000080">Description:</strong> ' + data.channel.description);
+                                        $('#description_channel').text(data.channel.description);
+                                    }
+                                    modals.openSuccessModal(data.message);
+                                } else {
+                                    modals.openErrorModal(data.message);
+                                }
+            
+                            }
+                        });
+
+                    });
+                    
+                });
+
+                $("#channel-infos-modal").on('hidden.bs.modal', function(e){
+
+                    $("#channel-title-info").html('');
+                    $("#update_channel_nom").attr('value','');
+                    $("#channel-creation-info").html('');
+                    $("#channel-owner-info").html('');
+                    $("#channel-description-info").html('');
+                    $("#update_channel_description").attr('value','');
+                    $("#channel-infos-update-form").off('submit');
+
+                });
+
             }
             
         });
@@ -411,8 +563,13 @@ $(function() {
         
         let scrollAtEnd = isScrollMessageAtEnd();
         let messageHTML = "";
+        let messageOptions = 
+        `<div class="dropleft" data-message-id="${id}" >
+            <a class="text-muted opacity-60 ml-3" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+            <div class="messageActionsDropdown dropdown-menu"></div>
+        </div>`;
 
-        if(media) {
+        if (media) {
             
             if(media.fileLabel == 'Fichier') {
 
@@ -421,7 +578,11 @@ $(function() {
                     <div class='chat-bubble'>
                         <img class='profile-image' src='${url_photo_de_profile}' alt=''>
                         <div class='media-text'>
-                            <h6>${name}</h6>
+                            <h6>${name}
+                                <span class='time text-muted small' style='float: right;'>
+                                    ${formatDate(messageTime)}
+                                </span>
+                            </h6>
                             <div class="col-sm-12">
                                 <div class="row p-l-5 p-t-10 media-message-row" data-idMessage='${id}'>
                                     <div class="text-center p-l-5 icon-file">
@@ -435,15 +596,13 @@ $(function() {
                                         </div>
                                         <div>
                                             <a href='${media.fileName}' download>${(media.fileName).split('/')[3]}</a>
-                                            <p class="text-muted">${media.fileSize} bytes</p>
+                                            <p class="text-muted">${bytesToSize(media.fileSize)} </p>
                                         </div>
                                     </div>   
                                 </div>
                             </div>
                         </div>
-                        <span class='time text-muted small'>
-                            ${formatDate(messageTime)}
-                        </span>
+                        ${messageOptions}
                     </div>
                 </div>`; 
 
@@ -454,7 +613,11 @@ $(function() {
                     <div class='chat-bubble'>
                         <img class='profile-image' src='${url_photo_de_profile}' alt=''>
                         <div class='media-text'>
-                            <h6>${name}</h6>
+                            <h6>${name}
+                                <span class='time text-muted small' style='float: right;'>
+                                    ${formatDate(messageTime)}
+                                </span>
+                            </h6>
                             <div class='col-sm-12'>
                                 <div class='row p-l-5 p-t-10 media-message-row' data-idMessage='${id}'>
                                     <div class='text-center p-l-5 icon-file'>
@@ -468,15 +631,13 @@ $(function() {
                                         </div>
                                         <div>
                                             <a href='${media.fileName}' download>${(media.fileName).split('/')[3]}</a>
-                                            <p class="text-muted">${media.fileSize} bytes</p>
+                                            <p class="text-muted">${bytesToSize(media.fileSize)}</p>
                                         </div>
                                     </div>   
                                 </div>
                             </div>
                         </div>
-                        <span class='time text-muted small'>
-                            ${formatDate(messageTime)}
-                        </span>
+                        ${messageOptions}
                     </div>
                 </div>`;
 
@@ -487,7 +648,11 @@ $(function() {
                     <div class='chat-bubble'>
                         <img class='profile-image' src='${url_photo_de_profile}' alt=''>
                         <div class='media-text'>
-                            <h6>${name}</h6>
+                            <h6>${name}
+                                <span class='time text-muted small' style='float: right;'>
+                                    ${formatDate(messageTime)}
+                                </span>
+                            </h6>
                             <div class="col-sm-12">
                                 <div class="row p-l-5 p-t-10 media-message-row" data-idMessage='${id}'>
                                     <div class="text-center p-l-5 icon-file">
@@ -501,15 +666,13 @@ $(function() {
                                         </div>
                                         <div>
                                             <a href='${media.fileName}' download>${(media.fileName).split('/')[3]}</a>
-                                            <p class="text-muted">${media.fileSize} bytes</p>
+                                            <p class="text-muted">${bytesToSize(media.fileSize)}</p>
                                         </div>
                                     </div>   
                                 </div>
                             </div>
                         </div>
-                        <span class='time text-muted small'>
-                            ${formatDate(messageTime)}
-                        </span>
+                        ${messageOptions}
                     </div>
                 </div>`;
 
@@ -520,16 +683,22 @@ $(function() {
                     <div class='chat-bubble'>
                         <img class='profile-image' src='${url_photo_de_profile}' alt=''>
                         <div class='media-text'>
-                            <h6>${name}</h6>
+                            <h6>${name}
+                                <span class='time text-muted small' style='float: right;'>
+                                    ${formatDate(messageTime)}
+                                </span>
+                            </h6>
                             <div class="col-sm-12">
                                 <div class="row p-l-5 p-t-10 p-b-10" data-idMessage='${id}'>
-                                    <img src="${media.fileName}" style="width: 300px;object-fit: contain;" alt=''>   
+                                    <img src="${media.fileName}" style="width: 300px;object-fit: contain;cursor: pointer;" alt=''>   
                                 </div>
                             </div>
+                            <div id="mediaImageModal" class="modal">
+                                <span class="close">&times;</span>
+                                <img class="modal-content" id="imagePopUp">
+                            </div>
                         </div>
-                        <span class='time text-muted small'>
-                            ${formatDate(messageTime)}
-                        </span>
+                        ${messageOptions}
                     </div>
                 </div>`;
 
@@ -540,7 +709,11 @@ $(function() {
                     <div class='chat-bubble'>
                         <img class='profile-image' src='${url_photo_de_profile}' alt=''>
                         <div class='media-text'>
-                            <h6>${name}</h6>
+                            <h6>${name}
+                                <span class='time text-muted small' style='float: right;'>
+                                    ${formatDate(messageTime)}
+                                </span>
+                            </h6>
                             <div class="col-sm-12">
                                 <div class="row p-l-5 p-t-10 p-b-10 media-message-row"  data-idMessage='${id}'>
                                     <audio controls>
@@ -550,9 +723,7 @@ $(function() {
                                 </div>
                             </div>
                         </div>
-                        <span class='time text-muted small'>
-                            ${formatDate(messageTime)}
-                        </span>
+                        ${messageOptions}
                     </div>
                 </div>`;
 
@@ -563,19 +734,21 @@ $(function() {
                     <div class='chat-bubble'>
                         <img class='profile-image' src='${url_photo_de_profile}' alt=''>
                         <div class='media-text'>
-                            <h6>${name}</h6>
+                            <h6>${name}
+                                <span class='time text-muted small' style='float: right;'>
+                                    ${formatDate(messageTime)}
+                                </span>
+                            </h6>
                             <div class="col-sm-12">
-                                <div class="row p-l-5 p-t-10 p-b-10"  data-idMessage='${id}'>
-                                    <video controls preload="auto" style="height: 300px;">
+                                <div class="row p-l-5 p-t-10 p-b-10"  data-idMessage='${id}' style="object-fit: contain;">
+                                    <video controls preload="auto">
                                         <source src="${media.fileName}" type="${media.fileMimeType}"></source>
                                         Votre navigateur ne supporte pas la balise HTML video.
                                     </video>
                                 </div>
                             </div>
                         </div>
-                        <span class='time text-muted small'>
-                            ${formatDate(messageTime)}
-                        </span>
+                        ${messageOptions}
                     </div>
                 </div>`;
 
@@ -587,20 +760,106 @@ $(function() {
             message = message.replace(urlRegex, function(url) { return '<a href=' + url + ' target="_blank">' + url + '</a>'});
             
             messageHTML = 
-            "<div class='col-12'><div class='chat-bubble'><img class='profile-image' src='" + url_photo_de_profile + "' alt=''><div class='text'><h6>" + name + 
-            "</h6><p class='text-muted' data-idMessage='" + id + "'>" + message + "</p></div><span class='time text-muted small'>"
-            + formatDate(messageTime) +"</span></div></div>";
+            "<div class='col-12'><div class='chat-bubble'><img class='profile-image' src='" + url_photo_de_profile + "' alt=''><div class='text'><h6> " + name + 
+            "<span class='time text-muted small' style='float: right;'>"+ formatDate(messageTime) +"</span></h6><p class='text-muted' data-idMessage='" + id + "'>" + message + "</p></div>"
+            + messageOptions + "</div></div>";
 
         }
         
         $('#chat-messages').append(messageHTML);
+        popUpMedia();
 
         //cache_messages[current_channel_id][id] = {"id": id, "pseudo": name, "message": message, "date": formatDate(messageTime)}
-        
         if (scrollAtEnd) {
             scrollMessageToEnd();
         }
         
+    }
+
+    function popUpMedia(){
+        let modal = $('#mediaImageModal');
+        let img = $('.media-text img');
+        let modalImg = $('#imagePopUp');
+
+        img.off('click');
+        $('#mediaImageModal .close, #mediaImageModal').off('click');
+
+        img.on('click', (e) => {
+            modal.show();
+            modalImg.attr('src', $(e.currentTarget).attr('src'));
+        });
+
+        $('#mediaImageModal .close, #mediaImageModal').on('click', () => {
+            modal.hide();
+        });
+    }
+
+    function gestionMessage(){
+
+        $('.dropleft').off('show.bs.dropdown');
+        
+        $('.dropleft').on('show.bs.dropdown', function(e){
+
+            let current_message_id = $(this).data('message-id');
+            var menu = "";
+            let messageDropdown = $(this);
+
+            $.post({
+                url: '/api/message/checkMessageOptions',
+                data: {"message_id": current_message_id, "channel_id": current_channel_id},
+                success: function(data){
+
+                    if (data.statut == "ok") {
+
+                        if(data.message.estMedia == true) {
+
+                            if(data.message.userId != id_user) {
+                                menu = `<a id="pin-message" class="dropdown-item d-flex align-items-center" href="#">Epingler le message <i class="fas fa-thumbtack"></i></a>`;
+                            } else {
+                                menu = `<a id="pin-message" class="dropdown-item d-flex align-items-center" href="#">
+                                            Epingler le message <i class="fas fa-thumbtack"></i>
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a id="delete-message" class="dropdown-item d-flex align-items-center" data-toggle="modal" href="#deleteMessageModal">
+                                            Supprimer le message <i class="far fa-trash-alt"></i>
+                                        </a>`;
+                            }
+                        } else{
+
+                            if(data.message.userId != id_user) {
+                                menu = `<a id="pin-message" class="dropdown-item d-flex align-items-center" href="#">Epingler le message <i class="fas fa-thumbtack"></i></a>`;
+                            } else {
+                                menu = `<a id="modify-message" class="dropdown-item d-flex align-items-center" data-toggle="modal" href="#modifyMessageModal">
+                                            Modifier le message <i class="fas fa-pencil-alt"></i>
+                                        </a>
+                                        <a id="pin-message" class="dropdown-item d-flex align-items-center" href="#">
+                                            Epingler le message <i class="fas fa-thumbtack"></i>
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a id="delete-message" class="dropdown-item d-flex align-items-center" data-toggle="modal" href="#deleteMessageModal">
+                                            Supprimer le message <i class="far fa-trash-alt"></i>
+                                        </a>`;
+                            }
+
+                        }
+
+                        if(messageDropdown.children('.messageActionsDropdown').children().length == 0)
+                            messageDropdown.children('.messageActionsDropdown').append(menu);
+
+                        window.gestionOptionsMessage(current_message_id, id_user, current_channel_id);
+
+                    } else {
+                        modals.openErrorModal(data.message);
+                    }
+
+                }
+            }); 
+            
+        });
+
+        $('.dropleft').on('hide.bs.dropdown', function(e) {
+            $(this).children('.messageActionsDropdown').empty();
+        });
     }
 
     function scrollMessageToEnd() {
@@ -630,6 +889,107 @@ $(function() {
 
     });
 
+
+    // Gestion des messages épinglés
+
+    $('#pinnedMessagesDropdown').on('show.bs.dropdown', function(e) {
+
+        $("#pinnedMessagesLoader").show();
+        $("#noPinnedMessages").hide();
+        $('#pinnedMessagesContainer').empty();
+
+        $.post({
+            url: '/api/channel/getPinnedMessages',
+            data: {"channelId": current_channel_id},
+            success: function (result) {
+
+                if(result.message.messages.length > 0) {
+
+                    $("#pinnedMessagesLoader").hide();
+                    result.message.messages.forEach((message) => {
+                        window.addPinnedMessage(message.pseudo, message.message, message.date.date, message.messageId, message.photo_de_profile, message.media);
+                    });
+
+                } else {
+                    $("#pinnedMessagesLoader").hide();
+                    $("#noPinnedMessages").show();
+                }
+
+                //Gestion détachement d'un message
+                $('.unpin-message-icon').on('click', function(e) {
+                    
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    $.post({
+                        url: '/api/message/unpinMessage',
+                        data: {"message_id": $(this).data('pinned-message-id'), "channel_id": current_channel_id},
+                        success: function(data){
+                            if (data.statut == "ok") {
+                                $('#pinnedMessagesDropdown').trigger('show.bs.dropdown');
+                            } else {
+                                modals.openErrorModal(data.message);
+                            }
+                        }
+                    }); 
+                });
+
+                //Gestion redirection vers un message
+                $('.redirect-message-icon').on('click', function(e) {
+                    
+                    e.preventDefault();
+                    let pinnedMessageId = $(this).parent().siblings('.delete-pinned-message').children('.unpin-message-icon').data('pinned-message-id');
+                    
+                    $('#chat').animate({
+                        scrollTop: $('[data-idMessage="' + pinnedMessageId +'"]').closest('.chat-bubble').offset().top - $('#chat').offset().top + $('#chat').scrollTop()
+                    },500, function(){
+                        $('[data-idMessage="' + pinnedMessageId +'"]').closest('.chat-bubble').addClass('scroll-message-animation');
+                        setTimeout(() => {$('[data-idMessage="' + pinnedMessageId +'"]').closest('.chat-bubble').removeClass('scroll-message-animation');},4000);
+                    });
+            
+                });
+            }
+        });
+
+    });
+
+    $('#pinnedMessagesDropdown').on('hide.bs.dropdown', function(e){
+        $('.unpin-message-icon').off('click');
+        $('.redirect-message-icon').off('click');
+    });
+
+    // Gestion de la sortie d'un channel
+    $('#leaveChannelModal').off('show.bs.modal');
+    $("#confirm-leave-channel").off('click');
+    $('#leaveChannelModal').off('hidden.bs.modal');
+
+    $('#leaveChannelModal').on('show.bs.modal', function(e){
+        
+        $("#confirm-leave-channel").on('click', function(v){
+            
+            $.post({
+                url: '/api/channel/leaveChannel',
+                data: {"channel_id": current_channel_id},
+                success: function(data){
+                    if (data.statut == "ok"){
+                        $("#leaveChannelModal").modal('hide');
+                        modals.openSuccessModal(data.message);
+                        location.reload();
+                    }else{
+                        modals.openErrorModal(data.message);
+                        $("#leaveChannelModal").modal('hide');
+                    }
+                }
+            });
+
+        });
+    });
+
+    $("#leaveChannelModal").on('hidden.bs.modal', function (e) {
+        $("#leaveChannelModal").off('show.bs.modal');
+        $('#confirm-leave-channel').off('click');
+    });
+    
     // Gestion du statut
     
     var idleTime = 0;

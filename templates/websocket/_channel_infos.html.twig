@@ -1,0 +1,127 @@
+<div id="channel-infos-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Infos du channel</h5>
+                <button type="button" style="font-size: 24px; color:white;" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="channel-infos-loader">
+                    <span class="arrow-span">↓</span>
+                    <span class="arrow-span" style="--delay: 0.1s">↓</span>
+                    <span class="arrow-span" style="--delay: 0.3s">↓</span>
+                    <span class="arrow-span" style="--delay: 0.4s">↓</span>
+                    <span class="arrow-span" style="--delay: 0.5s">↓</span>
+                </div>
+                <div id="channel-infos-modal-body" class="channel-description">
+                    <ul class="nav nav-tabs" id="anotherTab" role="tablist">
+                        <li class="nav-item"><a class="nav-link active" id="channel-infos-tab" data-toggle="tab" href="#print-channel" role="tab" aria-controls="print-channel" aria-selected="true">Afficher infos</a></li>
+                        <li class="nav-item"><a class="nav-link" id="edit-infos-tab" data-toggle="tab" href="#edit-channel" role="tab" aria-controls="edit-channel" aria-selected="false">Modifier infos</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active show in" id="print-channel" role="tabpanel" aria-labelledby="edit-infos-tab">
+                            <div class="infos-card">
+                                <h1 id="channel-title-info" class="infos-card__title"></h1>
+                                <p id="channel-creation-info" class="card-text text-muted"></p>
+                                <p id="channel-owner-info" class="infos-card__description"></p>
+                                <p id="channel-description-info" class="infos-card__description"></p>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="edit-channel" role="tabpanel" aria-labelledby="channel-infos-tab">
+                            {{ form_start(form, {'attr': {'id': 'channel-infos-update-form'}}) }}
+                                <div class="form-group row">
+                                    {{ form_label(form.nom, null, {
+                                        'label': 'Titre',
+                                        'label_attr': {'class': 'col-lg-3'}
+                                    }) }}
+                                    {{ form_widget(form.nom, {'attr': {'class': "col-lg-7" }}) }}
+                                </div>
+
+                                <div class="form-group row">
+                                    {{ form_label(form.description, null, {
+                                        'label': 'Description',
+                                        'label_attr': {'class': 'col-lg-3'}
+                                    }) }}
+                                    {{ form_widget(form.description, {'attr': {'class': "col-lg-7"}}) }}
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label form-control-label"></label>
+                                    <div class="col-lg-7 update-btn-group">
+                                        {{ form_widget(form.annuler, {'label': "Annuler", 'attr': {'class': "btn btn-secondary cancel-button"}}) }}
+                                        {{ form_widget(form.confirmer, {'label': "Confirmer", 'attr': {'class': "btn change-button"}}) }}
+                                    </div>
+                                </div>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div> 
+
+<div id="contact-infos-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Infos du contact</h5>
+                <button type="button" style="font-size: 24px; color:white;" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="contact-infos-loader">
+                    <span class="arrow-span">↓</span>
+                    <span class="arrow-span" style="--delay: 0.1s">↓</span>
+                    <span class="arrow-span" style="--delay: 0.3s">↓</span>
+                    <span class="arrow-span" style="--delay: 0.4s">↓</span>
+                    <span class="arrow-span" style="--delay: 0.5s">↓</span>
+                </div>
+                <div id="contact-infos-modal-body" class=" card-col col-sm-12">
+                    <div class="card shadow user-card w-100">
+                        <div class="card-body row">
+                            <div class="col-12 col-sm-3 mb-3 mb-sm-0 text-center">
+                                <div class="img-content">
+                                    <img id="contact-pdp-info" class="thumb-lg rounded-circle bx-s" src="" alt="">
+                                    <i id="contact-status-info" class="fa fa-circle"></i>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-9">
+                                <div class="user-info" style="padding-left: 20px;">
+                                    <h4 id="contact-name-info"></h4>
+                                    <p id="contact-profession-info" class="text-muted"></p>
+                                    <hr>
+                                    <p id="contact-pseudo-info"></p>
+                                    <p id="contact-mail-info"></p>
+                                    <p id="contact-age-info"></p>
+                                    <p id="contact-departement-name-info"></p>
+                                    <p id="contact-departement-chef-info"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+<div id="leaveChannelModal" class="modal fade">
+	<div class="modal-dialog modal-confirm">
+		<div class="modal-content">
+			<div class="modal-header flex-column">
+				<h4 class="modal-title w-100">Quitter le channel</h4>	
+			</div>
+			<div class="modal-body">
+				<p>Etes-vous sûr(e) de vouloir quitter ce channel ?</p>
+			</div>
+			<div class="modal-footer justify-content-end">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+				<button id="confirm-leave-channel" type="button" class="btn btn-danger">Quitter</button>
+			</div>
+		</div>
+	</div>
+</div>

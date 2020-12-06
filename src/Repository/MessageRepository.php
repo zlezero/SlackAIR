@@ -47,5 +47,17 @@ class MessageRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function getPinnedMessages(int $channelId, int $userId, int $messageMin = NULL, int $messageMax = NULL)
+    {
+        return $this->createQueryBuilder('message')
+            ->andWhere('message.GroupeId = :channelId')
+            ->andWhere('message.EstEfface = 0')
+            ->andWhere('message.EstEpingle = 1')
+            ->setParameter('channelId', $channelId)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     
 }

@@ -77,6 +77,7 @@ class GroupeController extends AbstractController
 
             $groupe->setDateCreation(new DateTime());
             $groupe->setIdProprietaire($this->getUser());
+            $groupe->setIsDeleted(false);
 
             $this->entityManager->persist($groupe);
             $this->entityManager->flush();
@@ -147,6 +148,7 @@ class GroupeController extends AbstractController
                     $groupe->setNom("DM_" . $this->getUser()->getPseudo() . "_" . $userDM->getPseudo());
                     $groupe->setIdProprietaire($this->getUser());
                     $groupe->setDateCreation(new DateTime());
+                    $groupe->setIsDeleted(false);
     
                     $this->entityManager->persist($groupe);
                     $this->entityManager->flush();

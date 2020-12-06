@@ -11,6 +11,7 @@ $blue: #74b9ff;
   &--right {
     float: right;
     padding-left: 4%;
+    display: flex;
     
     i {
       margin-top: 10px;
@@ -20,7 +21,7 @@ $blue: #74b9ff;
       transition: .3s;
       
       &:hover {
-        color: $blue;
+        color: #000080;
         cursor: pointer;
       }
     }
@@ -88,6 +89,7 @@ input {
 
     p {
       margin: 0;
+      white-space: normal;
     }
   }
 
@@ -114,65 +116,66 @@ input {
 }
 
 #chat{
-    overflow-y: scroll;
-    overflow-x: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 #chat-messages{
-    display: flex;
+  display: flex;
 }
 
 .chat-bubble {
-    padding: 10px 14px;
-    display: flex;
-    vertical-align: baseline;
-    transition: .3s ease;
-    position: relative;
-    animation: fadeIn 1s ease-in;
+  padding: 10px 14px;
+  display: flex;
+  vertical-align: baseline;
+  transition: .3s ease;
+  position: relative;
+  animation: fadeIn 0.2s ease-in;
+  
+  .text {
+    margin-left: 12px;
+    width: 90%;
     
-    .text {
-      margin-left: 12px;
-      width: 70%;
-      
-     h6 {
-        margin-top: 6px;
-        margin-bottom: 0;
-     }
-      
-     p {
-        margin: 0;
-     }
+    h6 {
+      margin-top: 6px;
+      margin-bottom: 0;
     }
     
-    &:after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      width: 0;
-      height: 0;
-      border: 20px solid transparent;
-      border-bottom: 0;
-      margin-top: -10px;
-    }    
+    p {
+      margin: 0;
+      white-space: normal;
+    }
+  }
+  
+  &:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-bottom: 0;
+    margin-top: -10px;
+  }    
 }
 
 @keyframes fadeIn {
     0% {
-        opacity: 0;
+      opacity: 0;
     }
     100% {
-        opacity: 1;
+      opacity: 1;
     }
 }
 
 .sticky-footer{
-    position: absolute;
-    bottom: 0;
+  position: absolute;
+  bottom: 0;
 }
 
 .chat-box-col{
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .chat-box-tray {
@@ -202,16 +205,30 @@ input {
   }
 
   .btn{
-        justify-content: center;
-        padding: 0;
-        i {
-            margin-left: 0 !important;
-        }
+    justify-content: center;
+    padding: 0;
+    i {
+        margin-left: 0 !important;
+    }
+  }
+}
+
+.scroll-message-animation{
+  animation: changeBackgroundColor 3s;
+}
+
+@keyframes changeBackgroundColor {
+  0% {
+    background-color: #7A7676;
   }
 }
 
 .p-t-10 {
   padding-top: 10px !important;
+}
+
+.p-t-2 {
+  padding-top: 2% !important;
 }
 
 .p-b-10{
@@ -223,7 +240,13 @@ input {
 }
 
 .media-text{
-  width: 80%;
+  margin-left: 12px;
+  width: 90%;
+
+  h6 {
+    margin-top: 6px;
+    margin-bottom: 0;
+  }
 }
 
 .media-message-row{
@@ -245,6 +268,10 @@ input {
   display: inline-block;
   border-radius: 60% !important;
   color: #7A7676;
+}
+
+.download-button a i{
+  display: inline-block !important;
 }
 
 audio {
@@ -271,13 +298,16 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
       border:0px;
     }
   }
+
   .card{
     background-color: #202225;
     color: lightgray;
   }
+
   .card-title{
     color: #74b9ff;
   }
+
   .chat-box-tray{
     background-color: #202225;
     color: #74b9ff;
@@ -299,23 +329,23 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
   background: #5cb85c !important;
 }
 
-.offline-background{
+.offline-background {
   background: grey !important;
 }
 
-.busy-background{
+.busy-background {
   background: red !important;
 }
 
-.absent-background{
+.absent-background {
   background: yellow !important;
 }
 
-.writting-background{
+.writting-background {
   background: black !important;
 }
 
-#listeMembres p, .is-typing-wrapper p{
+#listeMembres p, .is-typing-wrapper p {
   .dot {
     display: inline-block;
     width: 8px;
@@ -333,7 +363,6 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
     }
   }
 }
-
 
 @keyframes wave {
 
@@ -362,4 +391,130 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
   align-content: center;
   justify-items: center;
   height: 30px;
+}
+
+#mediaImageModal {
+  display: none; 
+  padding-top: 100px; 
+  overflow: auto; 
+  background-color: rgba(0,0,0,0.9) !important; 
+}
+
+#mediaImageModal .modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: fit-content;
+  -webkit-animation-name: zoom;
+  -webkit-animation-duration: 0.6s;
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+#mediaImageModal .close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+#mediaImageModal .close:hover, #mediaImageModal .close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 700px){
+  #mediaImageModal .modal-content {
+    width: 100%;
+  }
+}
+
+.infos-card{
+ 
+  padding: 10px 32px;
+  border-radius: 20px !important;
+  transition: all ease-in-out .3s;
+  background-color:#ffffff;
+  
+  &__title{
+    margin:0;
+    font-size: 2em;
+    line-height:1.8;
+    white-space: normal;
+    color: black;
+  }
+  
+  &__description{
+    margin:0;
+    font-size: 1.1em;
+    line-height:1.6;
+    white-space: normal;
+    color: black;
+  }
+  
+}
+
+#channel-infos-modal .card p i, #contact-infos-modal .card p i{
+  font-size: 16px;
+  margin-right: 0;
+}
+
+#channel-infos-modal .modal-header, #contact-infos-modal .modal-header {
+    background: linear-gradient(#01012c, #004280);
+    color: white;
+}
+
+#channel-infos-modal .modal-dialog-aside .modal-content .modal-body{ overflow-y: auto }
+
+#contact-infos-modal .modal-dialog-aside .modal-content .modal-body{ overflow-y: auto }
+
+.channel-description .nav-tabs{
+  margin-bottom:5%;
+  padding-top: 10px;
+}
+
+.channel-description .nav-tabs .nav-link{
+  font-weight: 600;
+  font-size: 16px;
+  border: none;
+  color: #000080;
+}
+
+.channel-description .nav-tabs .nav-link.active{
+  border: none;
+  border-bottom:2px solid #000080;
+}
+
+#channel-infos-modal label{
+  font-weight: 600;
+  font-size: 14px;
+  color: black;
+}
+
+#contact-infos-loader, #channel-infos-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20vh;
+}
+
+@keyframes arrows {
+  0%,
+  100% {
+    color: #000080;
+    transform: translateY(0);
+  }
+  50% {
+    color: #1212a0cb;
+    transform: translateY(20px);
+  }
+}
+
+.arrow-span {
+  --delay: 0s;
+  animation: arrows 1s var(--delay) infinite ease-in;
 }

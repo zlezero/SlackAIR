@@ -1,0 +1,35 @@
+<div id="deleteMessageModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header flex-column">
+                <h4 class="modal-title w-100">Supprimer le message</h4>	
+            </div>
+            <div class="modal-body">
+                <p>Etes-vous sûr(e) de vouloir supprimer ce message ?</p>
+            </div>
+            <div class="modal-footer justify-content-end">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button id="confirm-delete-message" type="button" class="btn btn-danger">Supprimer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modifyMessageModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header flex-column">
+                <h4 class="modal-title w-100">Modifier le message</h4>	
+            </div>
+            {{ form_start(updateMessageForm, {'attr': {'id': 'message-update-form'}}) }}
+            <div class="modal-body">
+                {{ form_widget(updateMessageForm.message, {'attr': {'cols': 62, 'rows': 5 }}) }}
+            </div>
+            <div class="modal-footer justify-content-end">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                {{ form_widget(updateMessageForm.confirmer, {'label': "Modifier", 'attr': {'class': "btn modify-btn"}}) }}
+            </div>
+            {{ form_end(updateMessageForm) }}
+        </div>
+    </div>
+</div>

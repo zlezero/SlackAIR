@@ -58,6 +58,11 @@ class Groupe
      */
     private $Description;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isDeleted;
+
     public function __construct(EntityManager $entityManager=null)
     {
             $this->invitations = new ArrayCollection();
@@ -200,6 +205,18 @@ class Groupe
             "description" => $this->getDescription(),
             "type_groupe" => $this->getTypeGroupeId()->getFormattedTypeGroupe()
         ];
+    }
+
+    public function getIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
+
+        return $this;
     }
 
 }
