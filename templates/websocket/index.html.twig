@@ -276,7 +276,15 @@
                                     <div class="row w-100 mr-0 ml-0">
                                         <div id="emojis" style="display: none"></div>
                                         <div class="col-12 w-100 chat-box-col">
-                                            <div class="chat-box-tray form-group w-100">
+                                            <div class="is-typing-wrapper" style="display: none">
+                                                <p>
+                                                    <em id="isTypingText"></em>
+                                                    <span class="dot writting-background"></span>
+                                                    <span class="dot writting-background"></span>
+                                                    <span class="dot writting-background"></span>
+                                                </p>
+                                            </div>
+                                            <div class="chat-box-tray form-group w-100 message_is_writing_selector">
                                                 <div class="d-flex flex-grow-1 justify-content-around">
                                                     <button type="button" class="btn" id="btnEmojis"><i class="fas fa-smile-beam"></i></button>
                                                     <button type="button" class="btn btn-file">
