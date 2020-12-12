@@ -35,6 +35,49 @@ $(function() {
 
     });
 
+    //Gestion des utilisateurs en train d'écrire
+
+    var isWriting = [];
+
+    function gestionIsWriting(isWriting) {
+
+        let data = {
+            event: {type: isWriting ? 'startWriting' : 'stopWriting'},
+            channel: current_channel_id,
+        };
+
+        session_glob.publish("channelEvent/" + current_channel_id, {data: JSON.stringify(data)});
+
+    }
+
+    function stopWriting(idUser) {
+        clearTimeout(isWriting[idUser].func);
+        delete isWriting[idUser];
+        updateWritingCSS();
+    }
+
+    function startWriting(idUser, pseudo) {
+        isWriting[idUser] = {func: setTimeout(stopWriting, 5000, idUser), pseudo: pseudo}
+        updateWritingCSS();
+    }
+
+    function updateWritingCSS() {
+
+        if (Object.keys(isWriting).length == 0) {
+            $('.is-typing-wrapper').hide();
+        } else if (Object.keys(isWriting).length == 1) {
+            $('.is-typing-wrapper').show();
+            $('#isTypingText').text(Object.values(isWriting)[0].pseudo + " est en train d'écrire");
+        } else if (Object.keys(isWriting).length == 2) {
+            $('.is-typing-wrapper').show();
+            $('#isTypingText').text(Object.values(isWriting)[0].pseudo + " et " + Object.values(isWriting)[1].pseudo + " sont en train d'écrire");
+        } else if (Object.keys(isWriting).length > 2) {
+            $('.is-typing-wrapper').show();
+            $('#isTypingText').text("Plusieurs personnes sont en train d'écrire");
+        }
+
+    }
+
     //Gestion des messages
 
     const socket = WS.connect(_WS_URI);
@@ -109,12 +152,40 @@ $(function() {
     }
 
     window.subscribeToChannel = function subscribeToChannel(idChannel) {
+
         session_glob.subscribe("message/channel/" + idChannel, function (uri, payload) {
             console.log("Message reçu : ", payload);
             if (payload.message.channel == current_channel_id) {
                 addMessage(payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.messageId, payload.message.photo_de_profile, payload.message.media);
             }
         });
+
+        session_glob.subscribe("channelEvent/" + idChannel, function(uri, payload) {
+
+            console.log("(Channel event) Message reçu", payload);
+
+            switch (payload.data.event.type) {
+
+                case 'startWriting':
+                    
+                    if (payload.data.channel == current_channel_id && payload.data.event.valeur != id_user) {
+                        startWriting(payload.data.event.valeur, payload.data.event.pseudo);
+                    }
+
+                    break;
+
+                case 'stopWriting':
+
+                    if (payload.data.channel == current_channel_id && payload.data.event.valeur != id_user && payload.data.event.valeur in isWriting) {
+                        stopWriting(payload.data.event.valeur);
+                    }
+
+                    break;
+
+            }
+
+        });
+
     }
 
     socket.on("socket/disconnect", function (error) {
@@ -129,8 +200,14 @@ $(function() {
             type: "texte"
         };
 
+        const dataStopWriting = {
+            event: {type: 'stopWriting'},
+            channel: current_channel_id,
+        }
+
         if ($("#message").val() != "" && current_channel_id != -1 && !$('#message').val().includes('<script>')) {
             session_glob.publish("message/channel/" + current_channel_id, {data: JSON.stringify(data)});
+            session_glob.publish("channelEvent/" + current_channel_id, {data: JSON.stringify(dataStopWriting)});
             $('#message').val('');
         }
 
@@ -209,8 +286,47 @@ $(function() {
                 $("#loading").remove();
                 $('#message').prop('disabled', false);
                 enableEmojis();
+                
+                $('#message').off('input');
+                $('.message_is_writing_selector').off('keyup', '#message');
+
+                $('#message').on('input', throttle( () => {
+                    gestionIsWriting(true);
+                }, 5000));
+
+                $('.message_is_writing_selector').on('keyup', '#message', debounce( () => {
+                    gestionIsWriting(false);
+                }, 1000));
+
             }
         });
+
+        //Source : https://stackoverflow.com/questions/4220126/run-javascript-function-when-user-finishes-typing-instead-of-on-key-up
+        function debounce(callback, wait) {
+
+            let timeout;
+
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(function () { callback.apply(this, args) }, wait);
+            };
+
+        }
+
+        //Source : https://programmingwithmosh.com/javascript/javascript-throttle-and-debounce-patterns/
+        function throttle(callback, interval) {
+
+            let enableCall = true;
+
+            return function(...args) {
+                if (!enableCall) return;
+
+                enableCall = false;
+                callback.apply(this, args);
+                setTimeout(() => enableCall = true, interval);
+            }
+
+        }
 
         $.post({
             url: '/api/channel/getInfos',
@@ -591,7 +707,7 @@ $(function() {
         e.returnValue = '';
     })
 
-    window.addEventListener('beforeunload', (event) => {
+    $(window).on('beforeunload', (event) => {
 
         event.preventDefault();
 

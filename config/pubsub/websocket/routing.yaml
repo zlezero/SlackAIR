@@ -9,3 +9,7 @@ userevent_topic:
 privateevent_topic:
     channel: privateUserEvent/{idUser}
     handler: 'privateevent.topic'
+
+channelevent_topic:
+    channel: channelEvent/{idChennel}
+    handler: 'channelevent.topic'
