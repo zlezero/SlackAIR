@@ -331,4 +331,46 @@ class UserController extends AbstractController
 
     }
 
+    /**
+     * @Route("/generateApiKey", name="generateApiKey")
+     */
+    public function generateApiKey(Request $request) {
+
+        if ($this->getUser()) {
+            
+            try {
+                
+                $erreur = false;
+
+                $user = $this->getUser();
+
+                do {
+                    
+                    $erreur = false;
+
+                    $user->generateApiToken();
+    
+                    $entityManager = $this->getDoctrine()->getManager();
+    
+                    try {
+                        $entityManager->persist($user);
+                        $entityManager->flush();
+                    } catch (Exception $e) {
+                        $erreur = true;
+                    }
+
+                } while ($erreur);
+
+                return new JsonResponse(["statut" => "ok",
+                                         "message" => ["user" => ["apiKey" => $this->getUser()->getApiToken()]]]);
+
+            } catch (Exception $error) {
+                return new JsonResponse(["statut" => "nok",
+                                         "message"=> "Erreur lors de la génération de la clé de l'api"]);
+            }
+
+        }
+
+    }
+
 }

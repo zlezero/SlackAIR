@@ -57,6 +57,9 @@
                                         <li class="nav-item">
                                             <a class="nav-link" id="edit-password" data-toggle="tab" href="#change" role="tab" aria-controls="change" aria-selected="false">Modifier Mot de passe</a>
                                         </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="edit-api" data-toggle="tab" href="#api" role="tab" aria-controls="api" aria-selected="false">API</a>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="col">
@@ -172,6 +175,12 @@
                                                     </div>
                                                 </div>
                                             {{ form_end(passwordForm) }}
+                                        </div>
+                                        <div class="tab-pane fade" id="api" role="tabpanel" aria-labelledby="edit-api">
+                                            {{ form_start(apiForm, {'attr': {'id': 'api-update-form'}}) }}
+                                                <div class="form-group row">
+                                                </div>
+                                            {{ form_end(apiForm) }}
                                         </div>
                                     </div>
                                 </div>

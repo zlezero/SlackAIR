@@ -72,6 +72,24 @@ $(function() {
 
         });
 
+        $('#api-update-form').on('submit', function(e) {
+
+            e.preventDefault();
+
+            $.post({
+                url: '/api/user/generateApiKey',
+                data: $("#api-update-form").serialize(),
+                success: function(data) {
+                    if (data.statut == "ok") {
+                        $('#api_form_apikey').val(data.message.user.apiKey);
+                    } else {
+                        modals.openErrorModal(data.message);
+                    }
+                }
+            });
+
+        });
+
         $('#password_form_password_first, #password_form_password_second').on('change', function(e) {
             if ($('#password_form_password_first').val() != $('#password_form_password_second').val()) {
                 $('#password_form_password_first')[0].setCustomValidity("Les deux mots de passe doivent correspondre");
@@ -108,6 +126,7 @@ $(function() {
         $("#user-update-form").off('submit');
         $("#pdp-fileUpload-form").off('submit');
         $("#upload_pdp_pdp").off("change");
+        $('#api_form').off('submit');
     });
 
 
