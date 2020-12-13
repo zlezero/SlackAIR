@@ -51,14 +51,49 @@ $(function() {
     }
 
     function stopWriting(idUser) {
+
         clearTimeout(isWriting[idUser].func);
         delete isWriting[idUser];
+
+        $('*[data-userid="' + idUser + '"] span').remove();
+        $('*[data-userid="' + idUser + '"] i').show();
+
         updateWritingCSS();
+
     }
 
     function startWriting(idUser, pseudo) {
-        isWriting[idUser] = {func: setTimeout(stopWriting, 5000, idUser), pseudo: pseudo}
+
+        isWriting[idUser] = {func: setTimeout(stopWriting, 5000, idUser), pseudo: pseudo};
+
+        let statutUser = $('*[data-userid="' + idUser + '"]').data('userstatut');
+
+        $('*[data-userid="' + idUser + '"] i').hide();
+
+        for (let i = 0; i < 3; i++) {
+            $('*[data-userid="' + idUser + '"]').prepend('<span class="dot ' + statutUser + '-background"></span>')
+        }
+
         updateWritingCSS();
+
+    }
+
+    function startWritingDM(idUser) {
+
+        let statutUser = $('*[data-useriddm="' + idUser + '"]').data('userstatut');
+
+        $('*[data-useriddm="' + idUser + '"] i').hide();
+        $('*[data-useriddm="' + idUser + '"] span').remove();
+
+        for (let i = 0; i < 3; i++) {
+            $('*[data-useriddm="' + idUser + '"]').prepend('<span class="dot ' + statutUser + '-background"></span>')
+        }
+
+    }
+
+    function stopWritingDM(idUser) {
+        $('*[data-useriddm="' + idUser + '"] span').remove();
+        $('*[data-useriddm="' + idUser + '"] i').show();
     }
 
     function updateWritingCSS() {
@@ -84,10 +119,7 @@ $(function() {
     var session_glob;
     var current_channel_id = -1;
     var id_user = $('#id_current_user').data('id-current-user');;
-    var notif_channel_general = false;
-    var notif_channel_prive = 0;
     var id_user = $('#id_current_user').data('id-current-user');
-    var cache_messages = {};
 
     socket.on("socket/connect", function (session) {
 
@@ -142,7 +174,7 @@ $(function() {
                 }
                 break;
             case 3:
-                $("#collapse-message-private").append('<a href="" data-idchannel="' + idGroupe + '" data-userIdDM='+ idUtilisateur +' class="channel user_channel"><i class="fa fa-circle '+ statusColorUser +'"></i>' + pseudoUser + '</a>');
+                $("#collapse-message-private").append('<a href="" data-idchannel="' + idGroupe + '" data-userIdDM='+ idUtilisateur +' data-userstatut="' + statusColorUser + '" class="channel user_channel"><i class="fa fa-circle '+ statusColorUser +'"></i>' + pseudoUser + '</a>');
                 if ($("#collapse-message-private").hasClass("hide") && openGroupe) {
                     $('.dropdown-btn', $('#collapse-message-private').parent())[0].click();
                 }
@@ -160,12 +192,30 @@ $(function() {
 
             console.log("Message reçu : ", payload);
 
-            if (payload.message.channel == current_channel_id) {
-                addMessage(payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.messageId, payload.message.photo_de_profile, payload.message.media, payload.message.is_updated);
-                gestionMessage();
-            } else{
-                addMsgNotification(payload.message.channel, payload.message.pseudo, payload.message.message, payload.message.messageTime);
+            switch (payload.type) {
+                
+                case 'newMessage':
+                    
+                    if (payload.message.channel == current_channel_id) {
+                        addMessage(payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.messageId, payload.message.photo_de_profile, payload.message.media, payload.message.is_updated);
+                        gestionMessage();
+                    } else {
+                        addMsgNotification(payload.message.channel, payload.message.pseudo, payload.message.message, payload.message.messageTime);
+                    }
+
+                    break;
+
+                case 'messageSupprime':
+                    $('p[data-idmessage=' + payload.message.id + ']').closest('.col-12').remove();
+                    break;
+
+                case 'messageModifie':
+                    $('p[data-idmessage=' + payload.message.id + ']').text(payload.message.texte).append('<small> (modifié)</small>');
+                    break;
+
             }
+
+            
 
         });
 
@@ -177,6 +227,10 @@ $(function() {
 
                 case 'startWriting':
                     
+                    if (payload.data.channelType == 3 && payload.data.event.valeur != id_user) {
+                        startWritingDM(payload.data.event.valeur);
+                    }
+
                     if (payload.data.channel == current_channel_id && payload.data.event.valeur != id_user) {
                         startWriting(payload.data.event.valeur, payload.data.event.pseudo);
                     }
@@ -185,10 +239,22 @@ $(function() {
 
                 case 'stopWriting':
 
-                    if (payload.data.channel == current_channel_id && payload.data.event.valeur != id_user && payload.data.event.valeur in isWriting) {
-                        stopWriting(payload.data.event.valeur);
+                    if (payload.data.channelType == 3 && payload.data.event.valeur != id_user) {
+                        stopWritingDM(payload.data.event.valeur);
                     }
 
+                    if (payload.data.channel == current_channel_id && payload.data.event.valeur != id_user && payload.data.event.valeur in isWriting) {
+                        stopWriting(payload.data.event.valeur, payload.data.channelType == 3);
+                    }
+
+                    break;
+
+                case 'channelTitleUpdate':
+                    updateChannelTitle(payload.data.channel, payload.data.event.valeur);
+                    break;
+
+                case 'channelDescriptionUpdate':
+                    updateChannelDescription(payload.data.channel, payload.data.event.valeur);
                     break;
 
             }
@@ -201,12 +267,30 @@ $(function() {
         console.log("Déconnecté : " + error.reason + " / Code : " + error.code);
     });
 
+
+    function updateChannelTitle(idChannel, newTitle) {
+
+        if (current_channel_id == idChannel) {
+            $('#titre_channel').text(newTitle);
+        }
+
+        $('*[data-idchannel="' + idChannel + '"]').contents().last().replaceWith(newTitle);
+
+    }
+
+    function updateChannelDescription(idChannel, newDescription) {
+        if (current_channel_id == idChannel) {
+            $('#description_channel').text(newDescription);
+        }
+    }
+
     $("#sendBtn").on("click", function() {
     
         const data = {
             message: $("#message").val(),
             channel: current_channel_id,
-            type: "texte"
+            type: "texte",
+            event: {"type": "message"}
         };
 
         const dataStopWriting = {
@@ -535,7 +619,7 @@ $(function() {
                 $('#listeMembres').html("");
                 result.message.utilisateurs.forEach((utilisateur) => {
                     subscribeToUserEvent(utilisateur.id);
-                    $('#listeMembres').append('<p class="card-text user_channel" data-userid="' + utilisateur.id + '" ><i class="fa fa-circle ' + utilisateur.statut.status_color + ' "></i> ' + utilisateur.pseudo + ' </p>')
+                    $('#listeMembres').append('<p class="card-text user_channel" data-userid="' + utilisateur.id + '" data-userstatut="' + utilisateur.statut.status_color + '" ><i class="fa fa-circle ' + utilisateur.statut.status_color + ' "></i> ' + utilisateur.pseudo + ' </p>')
                 });
 
             }
@@ -553,6 +637,7 @@ $(function() {
             switch (data.typeEvent) {
                 case "statutChange":
                     $('.user_channel[data-userid=' + data.data.user.id + '] i, .user_channel[data-useridDM=' + data.data.user.id + '] i').removeClass().addClass("fa fa-circle " + data.data.statut.status_color);
+                    $('.user_channel[data-userid=' + data.data.user.id + '], .user_channel[data-useridDM=' + data.data.user.id + ']').attr('data-userstatut', data.data.statut.status_color).data('userstatut', data.data.statut.status_color);
                     break;
                 case "pseudoChange":
                     let statutHTML = $('.user_channel[data-userid=' + data.data.user.id + '] i, .user_channel[data-useridDM=' + data.data.user.id + '] i').prop("outerHTML");
@@ -1333,7 +1418,7 @@ $(function() {
                             }
     
                         } else {
-                            $("#collapse-favoris").append('<a href="" data-idchannel="' + data.message.id + '" data-userIdDM='+ data.message.user.id +' class="channel user_channel"><i class="fa fa-circle '+ data.message.user.statut.status_color +'"></i>' + data.message.user.pseudo + '</a>');
+                            $("#collapse-favoris").append('<a href="" data-idchannel="' + data.message.id + '" data-userIdDM='+ data.message.user.id +' data-userstatut="' + data.message.user.statut.status_color + '" class="channel user_channel"><i class="fa fa-circle '+ data.message.user.statut.status_color +'"></i>' + data.message.user.pseudo + '</a>');
                         }
     
                         if ($("#collapse-favoris").hasClass("hide")) {

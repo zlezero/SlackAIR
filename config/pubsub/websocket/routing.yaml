@@ -15,5 +15,5 @@ privateevent_topic:
     handler: 'privateevent.topic'
 
 channelevent_topic:
-    channel: channelEvent/{idChennel}
+    channel: channelEvent/{idChannel}
     handler: 'channelevent.topic'

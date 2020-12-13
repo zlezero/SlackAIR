@@ -5,6 +5,7 @@ namespace App\Controller\API;
 use App\Entity\Media;
 use App\Entity\Message;
 use App\Entity\Groupe;
+use App\Entity\Notification;
 use App\Entity\User;
 use App\Entity\Invitation;
 use App\Entity\TypeMIME;
@@ -84,6 +85,8 @@ class MessageController extends AbstractController
                 $em->persist($message);
                 $em->flush();
 
+                $this->pusher->push(["data" => ["event" => ["type" => "messageSupprime"], "message" => ["id" => $message->getId()], "type" => "message" ]], "message_topic", ["idChannel" => $message->getGroupeId()->getId()], []);
+
                 return new JsonResponse(["statut" => "ok",
                                          "message" => "Le message a bien été effacé."]);
 
@@ -97,7 +100,7 @@ class MessageController extends AbstractController
     /**
      * @Route("/setMessage", name="setMessage")
      */
-    public function setMessage(Request $request){
+    public function setMessage(Request $request) {
 
         $messageId = $request->get('message_id');
         $newText = $request->get('new_message');
@@ -114,6 +117,8 @@ class MessageController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($message);
                 $em->flush();
+
+                $this->pusher->push(["data" => ["event" => ["type" => "messageModifie"], "message" => ["id" => $message->getId(), "texte" => $newText], "type" => "message" ]], "message_topic", ["idChannel" => $message->getGroupeId()->getId()], []);
 
                 return new JsonResponse(["statut" => "ok",
                                          "message" => ["text" => $newText],
@@ -249,10 +254,10 @@ class MessageController extends AbstractController
                 $em->persist($message);
                 $em->flush();
 
-                $this->getDoctrine()->getRepository(Invitation::class)->addNotification($user_entity->getId(), $groupe->getId());
+                $this->getDoctrine()->getRepository(Notification::class)->addNotification($user_entity->getId(), $groupe->getId());
                 $em->refresh($user_entity);
 
-                $this->pusher->push(["data" => ["message" => ["id" => $message->getId()], "type" => "media" ]], "message_topic", ["idChannel" => $groupeId], []);
+                $this->pusher->push(["data" => ["event" => ["type" => "media"], "message" => ["id" => $message->getId()], "type" => "media" ]], "message_topic", ["idChannel" => $groupeId], []);
 
                 return new JsonResponse(["statut" => "ok",
                                         "message" => "Le fichier a bien été ajouté dans la base."]);

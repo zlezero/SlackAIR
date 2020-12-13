@@ -13,6 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Gos\Bundle\WebSocketBundle\Pusher\PusherInterface;
+use Gos\Bundle\WebSocketBundle\Pusher\Wamp\WampPusher;
 
 /**
  * @Route("/channel", name="user")
@@ -20,13 +22,15 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class ChannelController extends AbstractController
 {
     private $passwordEncoder;
+    private $pusher;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, PusherInterface $wampPusher)
     {
         $this->passwordEncoder = $passwordEncoder;
+        $this->pusher = $wampPusher;
     }
 
-    public function getChannelInfos(){
+    public function getChannelInfos() {
 
         $form = $this->createForm(UpdateChannelType::class, null);
         return $this->render('websocket/_channel_infos.html.twig', [
@@ -189,7 +193,7 @@ class ChannelController extends AbstractController
      /**
      * @Route("/setChannelInfos", name="channel_setInfos")
      */
-    public function setChannelInfos(Request $request){
+    public function setChannelInfos(Request $request) {
 
         $channelId = $request->request->get('channel_id');
         $userId = $this->getUser()->getId();
@@ -200,13 +204,16 @@ class ChannelController extends AbstractController
 
         $form->submit($request->request->get($form->getName()));
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $channel = $this->getDoctrine()->getManager()->getRepository(Groupe::class)->findOneBy(['id' => $channelId]);
             $channelAdmin = $channel->getIdProprietaire()->getId();
 
-            if($channelAdmin == $userId){
+            if($channelAdmin == $userId) {
 
+                $channelChangementNom = $channel->getNom() != $new_channel->getNom();
+                $channelChangementDescription = $channel->getDescription() != $new_channel->getDescription();
+    
                 $channel->setNom($new_channel->getNom());
                 $channel->setDescription($new_channel->getDescription());
                 
@@ -214,6 +221,14 @@ class ChannelController extends AbstractController
                 $em->persist($channel);
                 $em->flush();
                 
+                if ($channelChangementNom) {
+                    $this->pusher->push(["data" => ["event" => ["type" => "channelTitleUpdate"], "channel" => $channelId, "channelTitre" => $channel->getNom()]], "channelevent_topic", ["idChannel" => $channelId], []);
+                }
+    
+                if ($channelChangementDescription) {
+                    $this->pusher->push(["data" => ["event" => ["type" => "channelDescriptionUpdate"], "channel" => $channelId, "channelDescription" => $channel->getDescription()]], "channelevent_topic", ["idChannel" => $channelId], []);
+                }
+    
                 return new JsonResponse(["statut" => "ok",
                     "message" => "Les infos du channel ont été mis à jour avec succès !",
                     "channel" => [
@@ -223,6 +238,7 @@ class ChannelController extends AbstractController
                 ]);
 
             }
+
         }
 
         return new JsonResponse(["statut" => "nok",
