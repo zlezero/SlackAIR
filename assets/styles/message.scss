@@ -473,7 +473,6 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
 #contact-infos-modal .modal-dialog-aside .modal-content .modal-body{ overflow-y: auto }
 
 .channel-description .nav-tabs{
-  margin-bottom:5%;
   padding-top: 10px;
 }
 
@@ -493,6 +492,10 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
   font-weight: 600;
   font-size: 14px;
   color: black;
+}
+
+#edit-channel{
+  margin-top:2%;
 }
 
 #contact-infos-loader, #channel-infos-loader {

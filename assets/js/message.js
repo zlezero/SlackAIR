@@ -161,7 +161,7 @@ $(function() {
             console.log("Message reçu : ", payload);
 
             if (payload.message.channel == current_channel_id) {
-                addMessage(payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.messageId, payload.message.photo_de_profile, payload.message.media);
+                addMessage(payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.messageId, payload.message.photo_de_profile, payload.message.media, payload.message.is_updated);
                 gestionMessage();
             } else{
                 addMsgNotification(payload.message.channel, payload.message.pseudo, payload.message.message, payload.message.messageTime);
@@ -294,7 +294,7 @@ $(function() {
             data: {"channelId": current_channel_id},
             success: function (result) {
                 result.message.messages.forEach((message) => {
-                    addMessage(message.pseudo, message.message, message.date.date, message.messageId, message.photo_de_profile, message.media);
+                    addMessage(message.pseudo, message.message, message.date.date, message.messageId, message.photo_de_profile, message.media, message.is_updated);
                 });
                 scrollMessageToEnd();
                 $("#loading").remove();
@@ -471,6 +471,9 @@ $(function() {
                             }
 
                             $("#channel-infos-loader").hide();
+                            if(res.message.channel.proprietaire.id != id_user){
+                                $('#edit-infos-tab').parent().hide();
+                            }
                             $("#channel-infos-modal-body").show();
 
                         }
@@ -580,7 +583,7 @@ $(function() {
         } catch(error) {}
     }
 
-    function addMessage(name, message, messageTime, id, url_photo_de_profile, media) {
+    function addMessage(name, message, messageTime, id, url_photo_de_profile, media, is_updated) {
         
         let scrollAtEnd = isScrollMessageAtEnd();
         let messageHTML = "";
@@ -788,6 +791,9 @@ $(function() {
         }
         
         $('#chat-messages').append(messageHTML);
+        if(is_updated){
+            $('[data-idmessage="' + id +'"]').html( $('[data-idmessage="' + id +'"]').html() + "<small> (modifié)</small>");
+        }
         popUpMedia();
 
         //cache_messages[current_channel_id][id] = {"id": id, "pseudo": name, "message": message, "date": formatDate(messageTime)}
@@ -1084,7 +1090,7 @@ $(function() {
 
                     $("#pinnedMessagesLoader").hide();
                     result.message.messages.forEach((message) => {
-                        window.addPinnedMessage(message.pseudo, message.message, message.date.date, message.messageId, message.photo_de_profile, message.media);
+                        window.addPinnedMessage(message.pseudo, message.message, message.date.date, message.messageId, message.photo_de_profile, message.media, message.is_updated);
                     });
 
                 } else {

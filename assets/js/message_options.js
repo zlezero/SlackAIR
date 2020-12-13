@@ -1,7 +1,7 @@
 import * as modals from './modals';
 import {formatDate, bytesToSize} from './app';
 
-window.addPinnedMessage = function(name, message, messageTime, id, url_photo_de_profile, media) {
+window.addPinnedMessage = function(name, message, messageTime, id, url_photo_de_profile, media, is_updated) {
     
     let messageHTML = "";
     if(media) {
@@ -244,6 +244,10 @@ window.addPinnedMessage = function(name, message, messageTime, id, url_photo_de_
     }
 
     $('#pinnedMessagesContainer').append(messageHTML);
+    if(is_updated){
+        $('[data-id-message="' + id +'"]').html( $('[data-id-message="' + id +'"]').html() + "<small> (modifié)</small>");
+    }
+
 }
 
 window.gestionOptionsMessage = function(current_message_id, current_user_id, current_channel_id) {
@@ -301,7 +305,7 @@ window.gestionOptionsMessage = function(current_message_id, current_user_id, cur
                     success: function(data){
                         if (data.statut == "ok") {
                             $("#modifyMessageModal").modal('hide');
-                            $('[data-idmessage="' + current_message_id +'"]').text(data.message.text);
+                            $('[data-idmessage="' + current_message_id +'"]').html(data.message.text + '<small> (modifié)</small>');
                         } else {
                             modals.openErrorModal(data.message);
                             $("#modifyMessageModal").modal('hide');

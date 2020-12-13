@@ -57,6 +57,7 @@ class ChannelController extends AbstractController
                                     "photo_de_profile" => $message->getUserId()->getFileName(),
                                     "date" => $message->getDateEnvoi(),
                                     "media" => $message->getMedia() ? $message->getMedia()->getFormattedMedia() : null,
+                                    "is_updated" => $message->getEstModifie()
                                 ];
             }
 
@@ -91,6 +92,7 @@ class ChannelController extends AbstractController
                                     "photo_de_profile" => $message->getUserId()->getFileName(),
                                     "date" => $message->getDateEnvoi(),
                                     "media" => $message->getMedia() ? $message->getMedia()->getFormattedMedia() : null,
+                                    "is_updated" => $message->getEstModifie()
                                 ];
             }
 
@@ -190,6 +192,7 @@ class ChannelController extends AbstractController
     public function setChannelInfos(Request $request){
 
         $channelId = $request->request->get('channel_id');
+        $userId = $this->getUser()->getId();
 
         $new_channel = new Groupe();
 
@@ -200,20 +203,26 @@ class ChannelController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()){
 
             $channel = $this->getDoctrine()->getManager()->getRepository(Groupe::class)->findOneBy(['id' => $channelId]);
-            $channel->setNom($new_channel->getNom());
-            $channel->setDescription($new_channel->getDescription());
-            
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($channel);
-            $em->flush();
-            
-            return new JsonResponse(["statut" => "ok",
-                "message" => "Les infos du channel ont été mis à jour avec succès !",
-                "channel" => [
-                    "titre" => $channel->getNom(),
-                    "description" => $channel->getDescription()
-                ]
-            ]);
+            $channelAdmin = $channel->getIdProprietaire()->getId();
+
+            if($channelAdmin == $userId){
+
+                $channel->setNom($new_channel->getNom());
+                $channel->setDescription($new_channel->getDescription());
+                
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($channel);
+                $em->flush();
+                
+                return new JsonResponse(["statut" => "ok",
+                    "message" => "Les infos du channel ont été mis à jour avec succès !",
+                    "channel" => [
+                        "titre" => $channel->getNom(),
+                        "description" => $channel->getDescription()
+                    ]
+                ]);
+
+            }
         }
 
         return new JsonResponse(["statut" => "nok",

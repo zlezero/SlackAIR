@@ -56,6 +56,11 @@ class Message
      */
     private $EstEpingle;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $EstModifie;
+
     public function __construct()
     {
         $this->Medias = new ArrayCollection();
@@ -147,8 +152,8 @@ class Message
             'pseudo' => $this->getUserId()->getPseudo(),
             'clientId' => $this->getUserId()->getId(),
             'channel' => $this->getGroupeId()->getId(),
-            'photo_de_profile' => $this->getUserId()->getFileName()
-
+            'photo_de_profile' => $this->getUserId()->getFileName(),
+            'is_updated' => $this->getEstModifie()
         ];
     }
 
@@ -160,6 +165,18 @@ class Message
     public function setEstEpingle(bool $EstEpingle): self
     {
         $this->EstEpingle = $EstEpingle;
+
+        return $this;
+    }
+
+    public function getEstModifie(): ?bool
+    {
+        return $this->EstModifie;
+    }
+
+    public function setEstModifie(bool $EstModifie): self
+    {
+        $this->EstModifie = $EstModifie;
 
         return $this;
     }
