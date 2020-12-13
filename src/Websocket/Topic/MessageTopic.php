@@ -112,6 +112,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
             $message->setGroupeId($groupe);
             $message->setEstEfface(false);
             $message->setEstEpingle(false);
+            $message->setEstModifie(false);
 
             $this->entityManager->persist($message);
             $this->entityManager->flush();

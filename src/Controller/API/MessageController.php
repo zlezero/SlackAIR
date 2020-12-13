@@ -110,6 +110,7 @@ class MessageController extends AbstractController
             if($message->getUserId()->getId() == $userId){
 
                 $message->setTexte($newText);
+                $message->setEstModifie(true);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($message);
                 $em->flush();
@@ -242,6 +243,7 @@ class MessageController extends AbstractController
                 $message->setGroupeId($groupe);
                 $message->setEstEfface(false);
                 $message->setEstEpingle(false);
+                $message->setEstModifie(false);
                 $message->setMedia($newMedia);
 
                 $em->persist($message);
