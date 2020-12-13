@@ -22,7 +22,6 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
     private ClientManipulatorInterface $clientManipulator;
     private EntityManager $entityManager;
 
-
     public function __construct(ClientManipulatorInterface $clientManipulator, EntityManagerInterface $entityManager)
     {
         $this->clientManipulator = $clientManipulator;
@@ -78,52 +77,68 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
      * @return mixed
      */
     public function onPublish(ConnectionInterface $connection, Topic $topic, WampRequest $request, $event, array $exclude, array $eligible) {
-            
-        $user = $this->clientManipulator->getClient($connection)->getUser();
 
-        $user_entity = $this->entityManager
-                        ->getRepository(User::class)
-                        ->find($user->getId());
-                        
-        if(gettype($event) == 'string') { //Si il s'agit d'un message avec media
-
-            $data = json_decode($event);
-
-            $message = $this->entityManager
-                            ->getRepository(Message::class)
-                            ->find($data->data->message->id);
-
-            $this->entityManager->getRepository(Notification::class)->addNotification($user_entity->getId(), $message->getGroupeId()->getId());
-
-            $this->broadcastMessage($topic, $message, false);
-
-        } else { //Si il s'agit d'un message textuel
-            
+        if (is_array($event)) {
             $data = json_decode($event["data"]);
+        } else {
+            $data = json_decode($event);
+            $data = $data->data;
+        }
 
-            $groupe = $this->entityManager
-                            ->getRepository(Groupe::class)
-                            ->find($data->channel);
+        switch ($data->event->type) {
 
-            $message = new Message();
-            $message->setTexte($data->message);
-            $message->setDateEnvoi(date_create());
-            $message->setUserId($user_entity);
-            $message->setGroupeId($groupe);
-            $message->setEstEfface(false);
-            $message->setEstEpingle(false);
-            $message->setEstModifie(false);
+            case 'media':
 
-            $this->entityManager->persist($message);
-            $this->entityManager->flush();
+                $message = $this->entityManager
+                                ->getRepository(Message::class)
+                                ->find($data->message->id);
 
-            $this->entityManager->getRepository(Notification::class)->addNotification($user_entity->getId(), $groupe->getId());
+                //$this->entityManager->getRepository(Notification::class)->addNotification($user_entity->getId(), $message->getGroupeId()->getId());
 
-            $this->entityManager->refresh($user_entity);
-            $this->broadcastMessage($topic, $message, false);
+                $this->broadcastMessage($topic, $message, false);
+                break;
+
+            case 'message':
+
+                $user = $this->clientManipulator->getClient($connection)->getUser();
+
+                $user_entity = $this->entityManager
+                                ->getRepository(User::class)
+                                ->find($user->getId());
+
+                $groupe = $this->entityManager
+                               ->getRepository(Groupe::class)
+                               ->find($data->channel);
+
+                $message = new Message();
+                $message->setTexte($data->message);
+                $message->setDateEnvoi(date_create());
+                $message->setUserId($user_entity);
+                $message->setGroupeId($groupe);
+                $message->setEstEfface(false);
+                $message->setEstEpingle(false);
+                $message->setEstModifie(false);
+
+                $this->entityManager->persist($message);
+                $this->entityManager->flush();
+
+                $this->entityManager->getRepository(Notification::class)->addNotification($user_entity->getId(), $groupe->getId());
+
+                $this->entityManager->refresh($user_entity);
+                $this->broadcastMessage($topic, $message, false);
+
+                break;
+
+            case 'messageSupprime':
+                $topic->broadcast(['type' => 'messageSupprime', 'message' => ['id' => $data->message->id]]);
+                break;
+
+            case 'messageModifie':
+                $topic->broadcast(['type' => 'messageModifie', 'message' => ['id' => $data->message->id, 'texte' => $data->message->texte]]);
+                break;
 
         }
-          
+
     }
 
     /**
@@ -157,7 +172,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
     }
 
     private function broadcastMessage(Topic $topic, Message $message, bool $system) {
-        $topic->broadcast(['system' => $system, 'message' => $message->getFormattedMessage()]);
+        $topic->broadcast(['type' => 'newMessage', 'system' => $system, 'message' => $message->getFormattedMessage()]);
     }
 
 }

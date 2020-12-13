@@ -149,7 +149,7 @@
                                 {% endfor %}
                                 {% for groupeDM in channels.dm %}
                                     {% if groupeDM.channel.isFavorite and not groupeDM.channel.isDeleted %}
-                                       <a href="" data-idChannel={{groupeDM.channel.id}} data-userIdDM={{groupeDM.user.id}} class="channel user_channel"><i class="fa fa-circle {{groupeDM.user.statut.status_color}}"></i>{{groupeDM.user.pseudo}}</a>
+                                       <a href="" data-idChannel={{groupeDM.channel.id}} data-userIdDM={{groupeDM.user.id}} data-userstatut={{groupeDM.user.statut.status_color}} class="channel user_channel"><i class="fa fa-circle {{groupeDM.user.statut.status_color}}"></i>{{groupeDM.user.pseudo}}</a>
                                     {% endif %}
                                 {% endfor %}
                             </div>
@@ -204,7 +204,7 @@
                             <div class="collapse show hide collapse-container" id="collapse-message-private">
                                 {% for groupeDM in channels.dm %}
                                     {% if not groupeDM.channel.isDeleted %}
-                                        <a href="" data-idChannel={{groupeDM.channel.id}} data-userIdDM={{groupeDM.user.id}} class="channel user_channel"><i class="fa fa-circle {{groupeDM.user.statut.status_color}}"></i>{{groupeDM.user.pseudo}}</a>
+                                        <a href="" data-idChannel={{groupeDM.channel.id}} data-userIdDM={{groupeDM.user.id}} data-userstatut={{groupeDM.user.statut.status_color}} class="channel user_channel"><i class="fa fa-circle {{groupeDM.user.statut.status_color}}"></i>{{groupeDM.user.pseudo}}</a>
                                     {% endif %}
                                 {% endfor %}
                             </div>

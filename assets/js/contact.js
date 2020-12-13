@@ -104,7 +104,7 @@ $(function () {
         
                                         if(data.statut == "ok") {
         
-                                            $("#collapse-message-private").append('<a href="" data-idchannel="' + data.message.id + '" data-userIdDM='+ data.message.user.id +' class="channel user_channel"><i class="fa fa-circle '+ data.message.user.statut.status_color +'"></i>' + data.message.user.pseudo + '</a>');
+                                            $("#collapse-message-private").append('<a href="" data-idchannel="' + data.message.id + '" data-userIdDM='+ data.message.user.id +' data-userstatut="' + data.message.user.statut.status_color + '" class="channel user_channel"><i class="fa fa-circle '+ data.message.user.statut.status_color +'"></i>' + data.message.user.pseudo + '</a>');
                                             
                                             if ($("#collapse-message-private").hasClass("hide")) {
                                                 $('.dropdown-btn', $('#collapse-message-private').parent())[0].click();

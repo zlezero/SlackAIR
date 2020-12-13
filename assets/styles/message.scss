@@ -345,7 +345,7 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
   background: black !important;
 }
 
-#listeMembres p, .is-typing-wrapper p {
+#listeMembres p, .is-typing-wrapper p, a {
   .dot {
     display: inline-block;
     width: 8px;

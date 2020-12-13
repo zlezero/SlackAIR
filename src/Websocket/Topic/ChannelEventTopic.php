@@ -69,11 +69,20 @@ class ChannelEventTopic implements TopicInterface
     public function onPublish(ConnectionInterface $connection, Topic $topic, WampRequest $request, $event, array $exclude, array $eligible) {
 
         $user = $this->clientManipulator->getClient($connection)->getUser();
-        $data = json_decode($event["data"]);
+
+        if (is_array($event)) {
+            $data = json_decode($event["data"]);
+        } else {
+            $data = json_decode($event);
+            $data = $data->data;
+        }
+
+        $channel = $this->entityManager->getRepository(Groupe::class)->findOneBy(['id' => $data->channel]);
 
         $sendData = array();
 
         $sendData["channel"] = $data->channel;
+        $sendData["channelType"] = $channel->getTypeGroupeId()->getId();
 
         switch ($data->event->type) {
             case 'startWriting':
@@ -85,6 +94,14 @@ class ChannelEventTopic implements TopicInterface
                 $sendData["event"]["type"] = 'stopWriting';
                 $sendData["event"]["valeur"] = $user->getId();
                 $sendData["event"]["pseudo"] = $user->getPseudo();
+                break;
+            case 'channelTitleUpdate':
+                $sendData["event"]["type"] = 'channelTitleUpdate';
+                $sendData["event"]["valeur"] = $data->channelTitre;
+                break;
+            case 'channelDescriptionUpdate':
+                $sendData["event"]["type"] = 'channelDescriptionUpdate';
+                $sendData["event"]["valeur"] = $data->channelDescription;
                 break;
             default:
                 return;
