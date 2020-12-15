@@ -143,12 +143,13 @@ $(function () {
                         
                         let html = "";
                         groupes.forEach((groupe) => {
-                            html += '<div class=" card-col col-sm-12"><div class="card shadow user-card w-100"><div class="card-body row"><div class="col-12 col-sm-3 mb-3 mb-sm-0 text-center"><div class="img-content"><img class="thumb-lg rounded-circle bx-s"'
-                            + '<div class="col-12 col-sm-9"><div class="send-message-grp p-t-10 btn-group-sm contact-options">'
-                            + '<a href="#" class="float-right" data-toggle="tooltip" title="Envoyer un message" data-groupe-id="' + groupe.id + '" ><i class="far fa-envelope"></i></a></div>'
-                            + '<div class="user-info"><h4>' 
-                            + groupe.nom
-                            +'</h4>' +  '<p class="text-muted">' + groupe.description + '</p>' + '</div></div></div></div></div>';
+                            html += 
+                            '<div class=" card-col col-sm-12"><div class="card shadow user-card w-100">'
+                            +'<div class="card-body row"><div class="user-info"><h4>'+ groupe.nom +'</h4>'
+                            +'<p class="text-muted">'+groupe.description+'</p></div><div class="col-12 col-sm-3 mb-3 mb-sm-0 text-center">'
+                            +'<div class="img-content"><div class="send-message-grp p-t-10 btn-group-sm contact-options">'
+                            +'<a href="#" class="float-right" data-toggle="tooltip" title="" data-groupe-id="'+groupe.id+'" data-original-title="Envoyer un message">'
+                            +'<i class="far fa-envelope"></i></a></div></div></div></div></div></div>'
                         });
                         return html;
                     }

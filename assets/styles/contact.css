@@ -8,9 +8,7 @@
 }
 
 #annuaire-modal .search-button {
-    background-color: #000080;
     color: white;
-    border-radius: 0;
 }
 
 #annuaire-modal .p-t-10 {
@@ -86,4 +84,7 @@
         bottom: 0.2em;
         right: 0.4em;
         border:1.5px solid white;
+}
+.user-info>h4{
+    color:black;
 }
