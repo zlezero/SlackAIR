@@ -213,6 +213,23 @@ $(function() {
                     $('p[data-idmessage=' + payload.message.id + ']').text(payload.message.texte).append('<small> (modifié)</small>');
                     break;
 
+                case 'userLeave':
+                    
+                    $('[data-userid="' + payload.user.id + '"').remove();
+                    
+                    if (payload.channel.type == 3) {
+                        $('[data-useriddm="' + payload.user.id + '"').remove();
+                        if (payload.channel.id == current_channel_id) {
+                            window.location.reload();
+                        }
+                    }
+
+                    if ($('[data-useriddm="' + payload.user.id + '"').length == 0) {
+                        unsubscribeToUserEvent(payload.user.id);
+                    }
+
+                    break;
+
             }
 
             
@@ -983,7 +1000,7 @@ $(function() {
         +'<div class="message-content"><div class="message-title">'
         +'<strong>'+$(".channel[data-idchannel='" + channel + "']").text()+'</strong>'
         +'</div><div class="message-detail">Nouveau(x) message(x)</div>'
-        +'<a class="channel" data-idchannel="channelId">Consulter la discussion</a>'
+        +'<a class="channel" data-idchannel="' + channel + '">Consulter la discussion</a>'
         +'</div><span class="time text-muted small">' + formatDate(messageTime) + '</span></div>';
 
         if($("#notif" + channel).length < 1) {
@@ -1241,7 +1258,6 @@ $(function() {
                 success: function(data){
                     if (data.statut == "ok"){
                         $("#leaveChannelModal").modal('hide');
-                        modals.openSuccessModal(data.message);
                         location.reload();
                     }else{
                         modals.openErrorModal(data.message);

@@ -49,7 +49,7 @@
                                     <div class="message-detail">
                                         Vous avez été invité à {{notif.groupe.TypeGroupeId.id == "3" ? "discuter avec #{notif.groupe.IdProprietaire.pseudo}"  : "rejoindre le groupe #{notif.groupe.nom}"}}
                                     </div>
-                                    <a class="channel" data-idchannel="channelId">Consulter la discussion</a>
+                                    <a data-idchannel="{{notif.groupe.id}}">Consulter la discussion</a>
                                 </div>
                                 <span class="time text-muted small">
                                     {{notif.DateNotification|date("d-M-20y h:m")}}
@@ -81,7 +81,7 @@
                                     <div class="message-detail">
                                         Nouveau(x) message(x) 
                                     </div>
-                                    <a class="channel" data-idchannel="channelId">Consulter la discussion</a>
+                                    <a class="channel" data-idchannel="{{notif.groupe.id}}">Consulter la discussion</a>
                                 </div>
                                 <span class="time text-muted small">
                                     {{notif.DateNotification|date("d-M-20y h:m")}}
