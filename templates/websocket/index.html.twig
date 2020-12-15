@@ -32,7 +32,7 @@
                 <div class="dropdown dropleft">
                     <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-bell"></i>
-                        <sup><span class="badge badge-pill badge-danger notification" id="notif-count">{{notifications.nbgroupes < 9 ? notifications.nbgroupes  : "9+"}}</span></sup>
+                        <sup><span class="badge badge-pill badge-danger" id="notif-count">{{notifications.nbgroupes < 9 ? notifications.nbgroupes  : "9+"}}</span></sup>
                     </a>
                     <div class="dropdown-menu notifications" aria-labelledby="dropdownMenuMessage" >
                         <div class="notifications-header">
@@ -63,7 +63,7 @@
                 <div class="dropdown dropleft">
                     <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-envelope"></i>
-                        <sup><span class="badge badge-pill badge-success notification" id="notif-msg-count">{{notifications.nbmessages < 9 ? notifications.nbmessages  : "9+"}}</span></sup>
+                        <sup><span class="badge badge-pill badge-success" id="notif-msg-count">{{notifications.nbmessages < 9 ? notifications.nbmessages  : "9+"}}</span></sup>
                     </a>
                     <div class="dropdown-menu messages" aria-labelledby="dropdownMenuMessage">
                         <div class="messages-header">
@@ -273,13 +273,14 @@
                                             <div class="chat-box-tray form-group w-100 message_is_writing_selector">
                                                 <div class="d-flex flex-grow-1 justify-content-around">
                                                     <button type="button" class="btn" id="btnEmojis"><i class="fas fa-smile-beam"></i></button>
-                                                    <button type="button" class="btn btn-file">
+                                                    <button type="button" class="btn btn-file" id="btnUpload">
                                                         <span><i class="fas fa-paperclip" id="btn_upload"></i></span>
+
+                                                    </button>
                                                         {{ form_start(fileForm, {'attr': {'id': 'media-fileUpload-form'}}) }}
                                                         {{ form_widget(fileForm.file, {'attr': {'id': "mediaFileUpload",'class':''}}) }}
                                                         {{ form_widget(fileForm.confirmer, {'label_attr ':{'class':'hidden'}}) }}
                                                         {{form_end(fileForm)}}
-                                                    </button>
                                                 </div>
                                                 <input type="text" id="message" placeholder="Envoyer un message à nom_user_channel" disabled>
                                                 <div class="d-flex flex-grow-1 justify-content-around">

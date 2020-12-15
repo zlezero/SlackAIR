@@ -469,9 +469,9 @@ button {
   cursor: inherit;
   display: block;
 }
-
-.custom-file {
-    height: inherit;
+.custom-file, .custom-file-input{
+    height: 0%;
+    width: 0%;
 }
 
 #media-fileUpload-form{

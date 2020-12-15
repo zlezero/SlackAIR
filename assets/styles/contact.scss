@@ -49,3 +49,36 @@ $OceanBlue_bgColor_buttonHover: #2d2dc2 ;
       }
     }
   }
+
+.dark{
+  
+  .paginationjs.custom-paginationjs .paginationjs-pages li>a{
+    color: lightgrey;
+    
+  }
+  .search-button{
+    background: #272773;
+  }
+  .paginationjs.custom-paginationjs .paginationjs-pages li{
+    border-color: lightgrey;
+  }
+  .paginationjs.custom-paginationjs .paginationjs-pages li{
+    >a{
+      background-color:#3b4044;
+      
+    }
+    &.active{
+      > a{
+        background: #272773;
+        color: #fff;    
+        border-color: lightgrey;
+
+      }
+    }
+  }
+
+  .fa-search{
+    background: inherit;
+    border-color: #505255;
+  }
+}

@@ -34,7 +34,9 @@ $(function() {
         }
 
     });
-
+    $("#btnUpload").on("click",function(){
+        $("#upload_file_file").trigger("click");
+    })
     //Gestion des utilisateurs en train d'écrire
 
     var isWriting = [];

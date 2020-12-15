@@ -169,6 +169,10 @@
 .dark .form-control{
     border: 1px solid black;
 }
+.dark .form-control:disabled, .dark .form-control[readonly]{
+    background-color: #18191a;
+}
+
 
 .dark .form-control:focus{
     background-color: #202225;
