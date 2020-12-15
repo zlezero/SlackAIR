@@ -137,6 +137,10 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
                 $topic->broadcast(['type' => 'messageModifie', 'message' => ['id' => $data->message->id, 'texte' => $data->message->texte]]);
                 break;
 
+            case 'userLeave':
+                $topic->broadcast(['type' => 'userLeave', 'user' => ['id' => $data->user->id], 'channel' => ['id' => $data->channel->id, 'type' => $data->channel->type]]);
+                break;
+
         }
 
     }

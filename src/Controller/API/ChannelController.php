@@ -262,7 +262,7 @@ class ChannelController extends AbstractController
 
             if($channelInvitation->getUserId()->getId() == $userId) {
 
-                if($channelAdmin == $userId) {
+                if($channelAdmin == $userId && count($channel->getInvitations()) != 1) {
 
                     // Nommer un nouvel admin
                     $newAdminInvitation = $em->getRepository(Invitation::class)->getNewChannelAdmin($channelId, $userId)[0];
@@ -286,6 +286,8 @@ class ChannelController extends AbstractController
                     $em->persist($channel);
                     $em->flush();
                 }
+
+                $this->pusher->push(["data" => ["event" => ["type" => "userLeave"], "user" => ["id" => $userId], "channel" => ["id" => $channel->getId(), "type" => $channel->getTypeGroupeId()->getId()] ]], "message_topic", ["idChannel" => $channelId], []);
 
                 return new JsonResponse(["statut" => "ok",
                     "message" => "Vous avez bien quitté le channel !"]);
