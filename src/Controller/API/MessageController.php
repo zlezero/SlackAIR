@@ -33,14 +33,15 @@ class MessageController extends AbstractController
         $this->pusher = $wampPusher;
     }
 
-    public function getMessageOptions(){
-        $updateMessageForm= $this->createForm(UpdateMessageType::class,null);
+    public function getMessageOptions() {
+        $updateMessageForm = $this->createForm(UpdateMessageType::class,null);
         return $this->render('websocket/_message_options.html.twig', [
             'updateMessageForm' => $updateMessageForm->createView()
         ]);
     }
 
     /**
+     * Permet de récupérer les options de gestion d'un message
      * @Route("/checkMessageOptions", name="checkMessageOptions")
      */
 
@@ -67,6 +68,7 @@ class MessageController extends AbstractController
     }
 
     /**
+     * Permet de supprimer un message
      * @Route("/deleteMessage", name="deleteMessage")
      */
     public function deleteMessage(Request $request) {
@@ -98,6 +100,7 @@ class MessageController extends AbstractController
     }
 
     /**
+     * Permet de modifier un message
      * @Route("/setMessage", name="setMessage")
      */
     public function setMessage(Request $request) {
@@ -132,8 +135,9 @@ class MessageController extends AbstractController
     }
 
      /**
-     * @Route("/pinMessage", name="pinMessage")
-     */
+      * Permet d'épingler un message
+      * @Route("/pinMessage", name="pinMessage")
+      */
     public function pinMessage(Request $request) {
         
         $messageId = $request->get('message_id');
@@ -157,8 +161,9 @@ class MessageController extends AbstractController
     }
 
      /**
-     * @Route("/unpinMessage", name="unpinMessage")
-     */
+      * Permet de désépingler un message
+      * @Route("/unpinMessage", name="unpinMessage")
+      */
     public function unpinMessage(Request $request) {
         
         $messageId = $request->get('message_id');
@@ -182,6 +187,7 @@ class MessageController extends AbstractController
     }
 
     /**
+     * Permet d'envoyer un message contenant un média
      * @Route("/sendMediaMessage", name="sendMediaMessage")
      */
     public function sendMediaMessage(Request $request, FileUploader $fileUploader)

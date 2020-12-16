@@ -35,6 +35,7 @@ class GroupeController extends AbstractController
     }
     
     /**
+     * Permet de créer un channel
      * @Route("/create/{typeGroupeId}",requirements={"typeGroupeId"="\d+"}, name="create",methods={"GET"})
      */
     public function create(int $typeGroupeId, Request $request)
@@ -75,7 +76,8 @@ class GroupeController extends AbstractController
 
     
     /**
-     * @Route("/getGroupes", name="getAllUsers")
+     * Permet d'obtenir tout les channels
+     * @Route("/getGroupes", name="getGroupes")
      */
     public function getGroupes(Request $request) {
 
@@ -95,6 +97,7 @@ class GroupeController extends AbstractController
     }
 
     /**
+     * Permet de créer une invitation pour un channel
      * @Route("/createInvit", name="getInvit")
      */
     public function createInvit(Request $request) {
@@ -150,6 +153,7 @@ class GroupeController extends AbstractController
     }
 
     /**
+     * Permet de créer un channel
      * @Route("/createGrp", name="create-groupe-post", methods={"POST"})
      */
     public function createGrp(Request $request){
@@ -254,6 +258,7 @@ class GroupeController extends AbstractController
     
 
     /**
+     * Permet de créer un channel privé entre 2 utilisteurs
      * @Route("/createDM", name="create-groupe-DM", methods={"POST"})
      */
     public function createDM(Request $request) {
@@ -292,8 +297,9 @@ class GroupeController extends AbstractController
                     $notification=new Notification();
                     $notification->setUtilisateur($userDM);
                     $notification->setTypeNotification($this->entityManager
-                    ->getRepository(TypeNotification::class)
-                    ->find(1));
+                                 ->getRepository(TypeNotification::class)
+                                 ->find(1));
+
                     $notification->setGroupe($groupe);
                     $notification->setEstLue(false);
                     $notification->setNbMsg(0);
@@ -332,8 +338,9 @@ class GroupeController extends AbstractController
                     $notification=new Notification();
                     $notification->setUtilisateur($this->getUser());
                     $notification->setTypeNotification($this->entityManager
-                    ->getRepository(TypeNotification::class)
-                    ->find(2));
+                                 ->getRepository(TypeNotification::class)
+                                 ->find(2));
+
                     $notification->setGroupe($groupe);
                     $notification->setEstLue(true);
                     $notification->setNbMsg(0);

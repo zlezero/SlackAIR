@@ -42,6 +42,7 @@ class ChannelController extends AbstractController
     }
 
     /**
+     * Renvoie tous les messages d'un channel
      * @Route("/getMessages", name="channel_getMessages")
      */
     public function getMessages(Request $request)
@@ -49,6 +50,7 @@ class ChannelController extends AbstractController
 
         $channelId = $request->get("channelId");
 
+        //Si l'utilisateur est bien présent dans le channel et que l'id du channel est correct
         if ($channelId && is_numeric($channelId) && $this->getDoctrine()->getManager()->getRepository(Invitation::class)->isUserInChannel($channelId, $this->getUser()->getId())) {
 
             $messages = $this->getDoctrine()->getManager()->getRepository(Message::class)->getMessages($channelId, $this->getUser()->getId(), $request->get("min") ?? null, $request->get("max") ?? null);
@@ -78,6 +80,7 @@ class ChannelController extends AbstractController
     }
 
     /**
+     * Retourne les messages épinglés d'un channel
      * @Route("/getPinnedMessages", name="channel_getPinnedMessages")
      */
     public function getPinnedMessages(Request $request){
@@ -112,6 +115,7 @@ class ChannelController extends AbstractController
     }
 
     /**
+     * Retourne les informations d'un channel
      * @Route("/getInfos", name="channel_getInfos")
      */
     public function getInfos(Request $request)
@@ -129,7 +133,7 @@ class ChannelController extends AbstractController
                 
                 $channelInvitation = $this->getDoctrine()->getManager()->getRepository(Invitation::class)->getUserChannelInvitation($channelId, $this->getUser()->getId()); 
                 
-                if ($channel->getTypeGroupeId()->getId() == 3) {
+                if ($channel->getTypeGroupeId()->getId() == 3) { //Si il s'agit d'un DM
                     $dataReponse["message"] = ["channel" => $this->getDoctrine()->getManager()->getRepository(Invitation::class)->getDMChannel($this->getUser()->getId(), $channel->getId())];
                     $dataReponse["message"]["channel"]["isFavorite"] = $channelInvitation->getIsFavorite();
                     $dataReponse["message"]["channel"]["other_contact"] =  $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['id' => $dataReponse["message"]["channel"]["user"]["id"]])->getFormattedUser();
@@ -161,6 +165,7 @@ class ChannelController extends AbstractController
     }
 
     /**
+     * Retourne tous les utilisateurs d'un channel
      * @Route("/getAllUsers", name="channel_getAllUsers")
      */
     public function getAllUsers(Request $request)
@@ -193,8 +198,9 @@ class ChannelController extends AbstractController
     }
 
      /**
-     * @Route("/setChannelInfos", name="channel_setInfos")
-     */
+      * Met à jour les informations d'un channel (Nom et description)
+      * @Route("/setChannelInfos", name="channel_setInfos")
+      */
     public function setChannelInfos(Request $request) {
 
         $channelId = $request->request->get('channel_id');
@@ -249,6 +255,7 @@ class ChannelController extends AbstractController
     }
 
     /**
+     * Permet de faire quitter un utilisateur d'un channel
      * @Route("/leaveChannel", name="channel_leave")
      */
     public function leaveChannel(Request $request){
