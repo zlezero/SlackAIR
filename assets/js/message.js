@@ -158,6 +158,7 @@ $(function() {
                 subscribeToUserEvent($(this).data("useriddm"));
             }
         });
+        subscribeToNotif(id_user);
     }
 
     function addGroupe(typeGroupe, idGroupe, nomGroupe, openGroupe, idUtilisateur, statusColorUser, pseudoUser) {
@@ -391,6 +392,8 @@ $(function() {
                 unsubscribeToUserEvent($(this).data('userid'));
             }
         });
+
+        $('[data-toggle="tooltip"]').tooltip();
 
         $.post({
             url: '/api/channel/getMessages',
@@ -675,7 +678,16 @@ $(function() {
             
             let data = JSON.parse(payload.data);
             console.log("Notification reçue : ", data);
-            addGrpNotification(data.data.notif.typeGroupeId, data.data.notif.groupeId, data.data.notif.groupe, data.data.notif.dateNotif, data.data.notif.propGrp);
+
+            switch (data.typeEvent){
+                case "notifGrp":
+                    addGrpNotification(data.data.notif.typeGroupeId, data.data.notif.groupeId, data.data.notif.groupe, data.data.notif.dateNotif, data.data.notif.propGrp);
+                    break;
+                case "notifAdmin":
+                    addAdminNotification(data.data.notif.groupeId, data.data.notif.groupe, data.data.notif.dateNotif);
+                    break;
+            }
+            
 
         });
 
@@ -995,6 +1007,48 @@ $(function() {
 
     }
 
+    // Gestion des notifications
+    $(".notification").off('click');
+    $(".notification").on("click", function() {
+
+        let id = this.id;
+
+        let channid = $("#" + id).data("idchannel");
+        let chann = $(".channel[data-idchannel='" + channid + "']");
+        let select = chann.parent();
+
+        if (select.hasClass("hide")) {
+            $('.dropdown-btn', select.parent())[0].click();
+        }
+
+        $(".channel[data-idchannel='" + channid + "']").trigger("click");
+
+        if($("#" + id).parent().hasClass("messages")) {
+            
+            $.post({
+                url: '/api/notification/readNotifMsg',
+                data: {"groupeId": channid},
+                success: function(result){
+                    changeNotifNb("notif-msg-count",result.nbNotifs);
+                }
+            });
+
+        } else {
+
+            $.post({
+                url: '/api/notification/readNotifGrp',
+                data: {"groupeId": channid},
+                success: function(result){
+                    changeNotifNb("notif-count",result.nbNotifs);
+                }
+            });
+
+        }
+
+        $("#" + id).remove();
+
+    });
+
     function addMsgNotification(channel, pseudo, message, messageTime) {
 
         const messageHTML = 
@@ -1043,46 +1097,6 @@ $(function() {
 
     }
 
-    $(".notification").on("click", function() {
-
-        let id = this.id;
-
-        let channid = $("#" + id).data("idchannel");
-        let chann = $(".channel[data-idchannel='" + channid + "']");
-        let select = chann.parent();
-
-        if (select.hasClass("hide")) {
-            $('.dropdown-btn', select.parent())[0].click();
-        }
-
-        $(".channel[data-idchannel='" + channid + "']").trigger("click");
-
-        if($("#" + id).parent().hasClass("messages")) {
-            
-            $.post({
-                url: '/api/notification/readNotifMsg',
-                data: {"groupeId": channid},
-                success: function(result){
-                    changeNotifNb("notif-msg-count",result.nbNotifs);
-                }
-            });
-
-        } else {
-
-            $.post({
-                url: '/api/notification/readNotifGrp',
-                data: {"groupeId": channid},
-                success: function(result){
-                    changeNotifNb("notif-count",result.nbNotifs);
-                }
-            });
-
-        }
-
-        $("#" + id).remove();
-
-    });
-
     function addGrpNotification(typeChannelId, channelId, channel, messageTime, pseudo) {
 
         const notifHTML = 
@@ -1100,9 +1114,9 @@ $(function() {
 
         increaseNotifNb("notif-count");
 
-        $("#notif" + channel).on("click", (e) => {
+        $("#notif" + channelId).on("click", (e) => {
 
-            let channid = $("#notif"+channel).data("idchannel");
+            let channid = $("#notif"+channelId).data("idchannel");
             let chann = $(".channel[data-idchannel='"+channid+"']");
             let select = chann.parent();
 
@@ -1112,7 +1126,7 @@ $(function() {
 
             $(".channel[data-idchannel='"+channid+"']").trigger("click");
 
-            $("#notif" + channel).remove();
+            $("#notif" + channelId).remove();
             
             $.post({
                 url: '/api/notification/readNotifGrp',
@@ -1126,6 +1140,51 @@ $(function() {
 
         playsound();
     
+    }
+
+    function addAdminNotification(channelId, channelName, messageTime) {
+
+        const notifHTML = 
+
+        '<div class="dropdown-item btn notification" data-idchannel="' + channelId + '" id="notif' + channelId + '">'
+        +'<div class="message-content"><div class="message-title"><strong>'+channelName+'</strong>'
+        +'</div><div class="message-detail">'
+        +"Vous êtes désormais l'administrateur du channel " + channelName
+        +'</div><a class="channel" data-idchannel="' + channelId + '">Consulter la discussion</a>'
+        +'</div><span class="time text-muted small">'
+        + formatDate(messageTime)
+        +'</span></div>';
+
+        $("#notif-ddlist").after(notifHTML);
+
+        increaseNotifNb("notif-count");
+
+        $("#notif" + channelId).on("click", (e) => {
+
+            let channid = $("#notif"+channelId).data("idchannel");
+            let chann = $(".channel[data-idchannel='"+channid+"']");
+            let select = chann.parent();
+
+            if (select.hasClass("hide")){
+                $('.dropdown-btn', select.parent())[0].click();
+            }
+
+            $(".channel[data-idchannel='"+channid+"']").trigger("click");
+
+            $("#notif" + channelId).remove();
+            
+            $.post({
+                url: '/api/notification/readNotifGrp',
+                data: {"groupeId": channid},
+                success: function(result){
+                    changeNotifNb("notif-count", result.nbNotifs);
+                }
+            });
+
+        });
+
+        playsound();
+
     }
 
     function increaseNotifNb(typeNotif) {

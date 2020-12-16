@@ -1,4 +1,4 @@
-#annuaire-modal ::placeholder {
+#print-channel-public ::placeholder, #annuaire-modal ::placeholder {
     opacity: 30% !important
 }
 
@@ -7,36 +7,37 @@
     color: white;
 }
 
-#annuaire-modal .search-button {
+#print-channel-public .search-button, #annuaire-modal .search-button {
+    background-color: #000080;
     color: white;
 }
 
-#annuaire-modal .p-t-10 {
+#annuaire-modal .p-t-10, #print-channel-public {
     padding-top: 10px !important;
 }
 
-#annuaire-modal .card {
+#print-channel-public .card, #annuaire-modal .card {
     transition-property: box-shadow;
     transition-duration: 0.5s;
     background-color: white;
 }
 
-#annuaire-modal .card:hover {
+#print-channel-public .card:hover, #annuaire-modal .card:hover {
     box-shadow: 0px 0px 12px #aaa;
 }
 
-#annuaire-modal #listUsers .card-col, #contact-infos-modal .card-col {
+#annuaire-modal #listUsers .card-col, #contact-infos-modal .card-col, #print-channel-public #listGrps .card-col, #print-channel-public .card-col {
     padding-bottom: 10px;
 }
 
-#annuaire-modal #listUsers .card, #contact-infos-modal .user-card {
+#annuaire-modal #listUsers .card, #print-channel-public #listGrps .card, #contact-infos-modal .user-card, #print-channel-public .groupe-public-card {
     position: relative;
     top:0;
     transition: all 0.3s;
     overflow:hidden;
 }
 
-#annuaire-modal #listUsers .card:hover {
+#annuaire-modal #listUsers .card:hover, #print-channel-public #listGrps .card:hover {
     background-color: var(--light);
     box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15) !important;
     top: 0.25rem !important;
@@ -50,17 +51,17 @@
     object-fit: cover;
 }
 
-#annuaire-modal .user-card .user-info, #contact-infos-modal .user-card .user-info {
+#annuaire-modal .user-card .user-info, #contact-infos-modal .user-card .user-info, #print-channel-public .groupe-public-card .groupe-public-info {
     overflow: hidden;
     color: #000;
 }
 
-#annuaire-modal .user-card .user-info h4, #contact-infos-modal .user-card .user-info h4 {
+#annuaire-modal .user-card .user-info h4, #contact-infos-modal .user-card .user-info h4, #print-channel-public .groupe-public-card .groupe-public-info h4{
     padding-top: 10px;
     margin-bottom: 5px;
 }
 
-#annuaire-modal .contact-options a {
+#annuaire-modal .contact-options a,  #print-channel-public .contact-options a{
     background: #EFF0F4;
     width: 30px;
     height: 30px;

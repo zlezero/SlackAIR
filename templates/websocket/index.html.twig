@@ -47,7 +47,11 @@
                                         <strong>{{notif.groupe.nom}}</strong>
                                     </div>
                                     <div class="message-detail">
-                                        Vous avez été invité à {{notif.groupe.TypeGroupeId.id == "3" ? "discuter avec #{notif.groupe.IdProprietaire.pseudo}"  : "rejoindre le groupe #{notif.groupe.nom}"}}
+                                        {% if  notif.typeNotification.id == 1 %}
+                                            Vous avez été invité à {{notif.groupe.TypeGroupeId.id == "3" ? "discuter avec #{notif.groupe.IdProprietaire.pseudo}"  : "rejoindre le groupe #{notif.groupe.nom}"}}
+                                        {% else %}
+                                            Vous êtes désormais l'administrateur du channel {{notif.groupe.nom}} !
+                                        {% endif %}
                                     </div>
                                     <a data-idchannel="{{notif.groupe.id}}">Consulter la discussion</a>
                                 </div>
@@ -236,8 +240,8 @@
                                                 </div>
                                             </div>
                                             <span class="chat-title--right">
-                                                <i id="set-favorite" class="fas fa-star"></i>
-                                                <div class="dropdown" id="pinnedMessagesDropdown">
+                                                <i id="set-favorite" data-toggle="tooltip" title="Mettre en favori" class="fas fa-star"></i>
+                                                <span data-toggle="tooltip" title="Messages épinglés"><div class="dropdown" id="pinnedMessagesDropdown">
                                                     <i class="fas fa-thumbtack" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                                                     <div class="dropdown-menu pinned-messages-dropdown-menu">
                                                         <h6 class="dropdown-header">Messages épinglés</h6>
@@ -250,9 +254,9 @@
                                                             <p class="pinned-message-solo text-center">Aucune message épinglé !</p>
                                                         </li>
                                                     </div>
-                                                </div>
-                                                <i id="leave-channel-icon" class="fas fa-sign-out-alt" data-toggle="modal" href="#leaveChannelModal"></i>
-                                                <i id="channel-infos-icon" class="channel-infos-icon fas fa-info-circle"></i>
+                                                </div></span>
+                                                <span data-toggle="tooltip" title="Quitter le channel"><i id="leave-channel-icon" class="fas fa-sign-out-alt" data-toggle="modal" href="#leaveChannelModal"></i></span>
+                                                <i id="channel-infos-icon" data-toggle="tooltip" title="Voir les informations" class="channel-infos-icon fas fa-info-circle"></i>
                                             </span>
                                         </div>
                                     </div>

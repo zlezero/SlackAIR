@@ -58,13 +58,14 @@ class NotificationRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('notifications')
             ->where('notifications.EstLue = false')
             ->andWhere('notifications.Utilisateur = :idUtilisateur')
-            ->andWhere('notifications.typeNotification = 1')
+            ->andWhere('notifications.typeNotification != 2')
             ->setParameter('idUtilisateur', $idUtilisateur)
             ->addOrderBy('notifications.DateNotification', 'DESC')
             ->getQuery()
             ->getResult()
         ;
     }
+
     public function getNotificationsMessages(int $idUtilisateur)
     {
         return $this->createQueryBuilder('notifications')

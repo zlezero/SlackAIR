@@ -4,10 +4,12 @@ namespace App\Controller\API;
 
 use App\Form\UpdateChannelType;
 use App\Entity\User;
-use App\Entity\Statut;
+use App\Entity\Notification;
+use App\Entity\TypeNotification;
 use App\Entity\Message;
 use App\Entity\Invitation;
 use App\Entity\Groupe;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -271,7 +273,29 @@ class ChannelController extends AbstractController
                     $em->persist($channel);
                     $em->flush();
                     
-                    //Envoyer une notif au nouvel admin
+                    // Envoyer une notif au nouvel admin
+                    $notification=new Notification();
+                    $notification->setUtilisateur($newAdmin);
+                    $notification->setTypeNotification($em->getRepository(TypeNotification::class)->find(3));
+                    $notification->setGroupe($channel);
+                    $notification->setEstLue(false);
+                    $notification->setNbMsg(0);
+                    $notification->setDateNotification(new Datetime());
+                    $em->persist($notification);
+                    $em->flush();
+                    $this->pusher->push(
+                        ["typeEvent" => "notifAdmin", 
+                            "data" => ["user" => [
+                                "id" => $newAdmin->getId()], 
+                                "notif"=>[
+                                    "id" => $notification->getId(), 
+                                    "groupe" => $channel->getNom(),
+                                    "groupeId" => $channel->getId(),
+                                    "dateNotif" => $notification->getDateNotification()
+                                ],
+                            ],
+                        ],
+                        "notif_topic", ["idUser" => $newAdmin->getId()], []);
 
                 }
 
