@@ -36,6 +36,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * Retourne les informations d'un utilisateur
      * @Route("/getInfos", name="userGetInfos")
      */
     public function getInfos()
@@ -60,6 +61,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * Permet de modifier les informations d'un utilisateur
      * @Route("/setInfos", name="userSetInfos")
      */
     public function setInfos(Request $request){
@@ -107,6 +109,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * Permet de modifier le mot de passe d'un utilisateur
      * @Route("/setPassword", name="userSetPassword")
      */
     public function setPassword(Request $request) {
@@ -137,6 +140,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * Permet de modifier le statut d'un utilisateur
      * @Route("/setStatut", name="userSetStatut")
      */
     public function setStatut(Request $request) {
@@ -167,7 +171,11 @@ class UserController extends AbstractController
 
     }
 
+    /**
+     * Retourne les messages d'erreurs d'un formulaire
+     */
     public function getErrorMessages($form) {
+
         $errors = array();
 
         foreach ($form->getErrors(true, true) as $error) {
@@ -180,6 +188,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * Retourne tout les contacts d'un utilisateur
      * @Route("/getContacts", name="getAllUsers")
      */
     public function getContacts(Request $request) {
@@ -200,6 +209,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * Permet de changer la photo de profile d'un utilisateur
      * @Route("/setPdp", name="userSetPdp", methods={"POST"})
      */
     public function setPdp(Request $request, FileUploader $fileUploader) {
@@ -332,6 +342,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * Permet de générer une clé d'API
+     * @author VATHONNE Thomas
      * @Route("/generateApiKey", name="generateApiKey")
      */
     public function generateApiKey(Request $request) {
@@ -359,7 +371,7 @@ class UserController extends AbstractController
                         $erreur = true;
                     }
 
-                } while ($erreur);
+                } while ($erreur); //Tant que l'on a pas une clé API valide
 
                 return new JsonResponse(["statut" => "ok",
                                          "message" => ["user" => ["apiKey" => $this->getUser()->getApiToken()]]]);

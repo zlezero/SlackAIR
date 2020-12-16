@@ -15,6 +15,9 @@ use Symfony\Component\Mime\Email;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * @author VATHONNE Thomas
+ **/
 class ImportUserCommand extends Command
 {
 
@@ -64,9 +67,9 @@ class ImportUserCommand extends Command
         $now = new \DateTime();
         $output->writeln('<comment>Début : ' . $now->format('d-m-Y G:i:s') . ' ---</comment>');
 
+        while(($ligne = fgetcsv($fichier, 0, ";")) !== FALSE) { //Pour chaque utilisateur dans le csv
 
-        while(($ligne = fgetcsv($fichier, 0, ";")) !== FALSE) {
-
+            //On construit un nouvel utilisateur
             $user = new User();
 
             $plainPassword = base64_encode(random_bytes(10));
@@ -80,7 +83,7 @@ class ImportUserCommand extends Command
             $user->setFirstConnection(true);
             $user->setStatut($this->entityManager->getRepository(Statut::class)->findOneBy( array('id' => 2)));
 
-            if (count($this->validator->validate($user)) > 0) {
+            if (count($this->validator->validate($user)) > 0) { //Si l'utilisateur est déjà présent dans la base de données
                 $output->writeln("L'utilisateur " . $ligne[1] . " " . $ligne[2] . " existe déjà");
             } else {
 
@@ -88,7 +91,8 @@ class ImportUserCommand extends Command
 
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
-    
+                
+                //On envoi l'email de bienvenue
                 $this->sendEmail($ligne[0], $user, $plainPassword);
 
             }
