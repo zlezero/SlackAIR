@@ -504,13 +504,13 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
   border-bottom:2px solid #000080;
 }
 
-#channel-infos-modal label{
+#edit-channel-public label,#channel-infos-modal label{
   font-weight: 600;
   font-size: 14px;
   color: black;
 }
 
-#edit-channel{
+#edit-channel, #edit-channel-public{
   margin-top:2%;
 }
 

@@ -67,6 +67,7 @@ class NotifTopic implements TopicInterface
      * @return mixed
      */
     public function onPublish(ConnectionInterface $connection, Topic $topic, WampRequest $request, $event, array $exclude, array $eligible) {
+        echo('ya');
         $topic->broadcast(["data" => $event]);
     }
 
