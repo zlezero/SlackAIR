@@ -210,7 +210,7 @@ class GroupeController extends AbstractController
                             "groupe" => $groupe->getNom(),
                             "groupeId" => $groupe->getId(),
                             "dateNotif"=>$notification->getDateNotification(),
-                            "propGrp"=>$groupe->getIdProprietaire()->getPseudo()
+                            "propGrp"=>$groupe->getIdProprietaire()->getFormattedUser()
                         ],
                     ],
                     ],
@@ -320,7 +320,7 @@ class GroupeController extends AbstractController
                                 "groupeId" => $groupe->getId(),
                                 "typeGroupeId" => $groupe->getTypeGroupeId()->getId(),
                                 "dateNotif"=>$notification->getDateNotification(),
-                                "propGrp"=>$groupe->getIdProprietaire()->getPseudo()
+                                "propGrp"=>$groupe->getIdProprietaire()->getFormattedUser()
                             ],
                         ],
                         ],
