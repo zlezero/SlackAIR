@@ -28,7 +28,7 @@ class NotificationController extends AbstractController
     
     public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger)
     {
-        $this->entityManager = $entityManager;        
+        $this->entityManager = $entityManager;
         $this->logger = $logger;
 
     }

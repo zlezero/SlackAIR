@@ -323,92 +323,72 @@ button {
     font-size: .9rem; 
 }
 
-.navbar-elements .messages .dropdown-item {
+.navbar-elements .messages .dropdown-item, .navbar-elements .notifications .dropdown-item {
     padding: .25rem 1rem;
+    width: 100%;
+    background-color: white;
+    cursor: pointer;
 }
 
-.navbar-elements .messages .messages-header {
+.navbar-elements .messages .messages-header, .navbar-elements .notifications .notifications-header {
     padding: 0 1rem;
 }
 
-.navbar-elements .messages .message-content {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
+.notifications__item__avatar img {
+   display: inline-block;
+   width: 4em;
+   height: 3.8em;
+   margin-right: 12px;
+   margin-left: 8px;
+   border-radius: 50%;
+   margin-top: 2px;
+   object-fit: cover;
 }
 
-.navbar-elements .messages .message-content .pic {
-  width: 40px;
-  height: 40px;
-  overflow: hidden;
+.cheers-icon-background{
+  color: #ffe4b5d8;  
 }
 
-.navbar-elements .messages .message-content .pic img {
-    -o-object-fit: cover;
-    object-fit: cover;
-    height: 100%;
+.admin-icon-background{
+    color: #c61117d8;
 }
 
-.navbar-elements .messages .message-content .content {
-  line-height: 1.6;
-  padding-left: 5px;
-  width: 180px;
+.icon-background{
+    color: #ac2bac;
 }
 
-.navbar-elements .messages .message-content .content .message-title {
-    font-size: 13px; 
+.navbar-elements .messages .message-content, .navbar-elements .notifications .message-content {
+    width: 100%;
+    line-height: 1.6;
+    padding-left: 5px;
 }
 
-.navbar-elements .messages .message-content .content .message-detail {
-    font-size: 12px;
+.navbar-elements .messages .message-content .message-title, .navbar-elements .notifications .message-content .message-title {
+    display: block;
+    font-family: sans-serif;
+    font-size: 17px;
+}
+
+.navbar-elements .messages .message-content .message-detail, .navbar-elements .notifications .message-content .message-detail {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; 
+    display: block;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    color: #929292;
 }
 
-.navbar-elements .notifications .dropdown-item {
-    padding: .25rem 1rem; 
+.message-content a {
+  color: #000080;
+  font-weight: bold;
+  font-size: 14px;
 }
 
-.navbar-elements .notifications .notifications-header {
-    padding: 0 1rem; 
+.message-content a:hover{
+  text-decoration: none;
 }
 
-.navbar-elements .notifications .notification-content {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex; 
-}
-
-.navbar-elements .notifications .notification-content .icon {
-  width: 40px;
-  height: 40px;
-}
-
-.navbar-elements .notifications .notification-content .icon i {
-    width: 35px;
-    height: 35px;
-    text-align: center;
-    line-height: 35px;
-}
-
-.navbar-elements .notifications .notification-content .content {
-  line-height: 1.6;
-  padding-left: 5px;
-  width: 180px; 
-}
-
-.navbar-elements .notifications .notification-content .content .notification-time {
-    font-size: .7rem;
-    color: #828282; 
-}
-
-.navbar-elements .notifications .notification-content .content .notification-detail {
-    font-size: 12px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 #btn-theme{
     color:white;
     padding-left: 0px;
@@ -508,9 +488,11 @@ button {
     width:67.5%;
     white-space: nowrap;
 }
+
 .hide{
     height: 0px;
 }
+
 .hide .channel,.hide .user_channel{
     height:0px;
 }

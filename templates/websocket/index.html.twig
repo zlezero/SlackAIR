@@ -42,9 +42,29 @@
                         <div class="dropdown-divider"  id="notif-ddlist" ></div>
                         {% for notif in notifications.groupes %}
                             <div class="dropdown-item btn notification" data-idchannel="{{notif.groupe.id}}" id="notif{{notif.groupe.id}}">
+                                <div class="d-flex">
+                                {% if notif.groupe.TypeGroupeId.id == "3" %}
+                                    <div class="notifications__item__avatar">
+                                        <img src="{{ asset(notif.groupe.IdProprietaire.FileName)}}" />
+                                    </div>
+                                {% elseif notif.typeNotification.id == 1 %}
+                                    <div>
+                                        <span class="fa-stack fa-2x">
+                                            <i class="fa fa-circle fa-stack-2x cheers-icon-background"></i>
+                                            <i class="fas fa-glass-cheers fa-stack-1x"></i>
+                                        </span>
+                                    </div>
+                                {% else %}
+                                    <div>
+                                        <span class="fa-stack fa-2x">
+                                            <i class="fa fa-circle fa-stack-2x admin-icon-background"></i>
+                                            <i class="fas fa-user-shield fa-stack-1x"></i>
+                                        </span>
+                                    </div>
+                                {% endif %}
                                 <div class="message-content">
                                     <div class="message-title">
-                                        <strong>{{notif.groupe.nom}}</strong>
+                                        <strong>{{notif.groupe.TypeGroupeId.id == "3" ? "#{notif.groupe.IdProprietaire.pseudo}"  : "#{notif.groupe.nom}"}}</strong>
                                     </div>
                                     <div class="message-detail">
                                         {% if  notif.typeNotification.id == 1 %}
@@ -53,11 +73,12 @@
                                             Vous êtes désormais l'administrateur du channel {{notif.groupe.nom}} !
                                         {% endif %}
                                     </div>
-                                    <a data-idchannel="{{notif.groupe.id}}">Consulter la discussion</a>
+                                    <a data-idchannel="{{notif.groupe.id}}">Consulter le channel</a>
                                 </div>
-                                <span class="time text-muted small">
+                                <span class="text-muted small">
                                     {{notif.DateNotification|date("d-M-20y h:m")}}
                                 </span>
+                                </div>
                             </div>
                         {% endfor %}
                         <div class="dropdown-divider"></div>
@@ -78,6 +99,19 @@
                         </div>
                         {% for notif in notifications.messages %}
                             <div class="dropdown-item btn notification" data-idchannel="{{notif.groupe.id}}" id="notif{{notif.groupe.id}}">
+                                <div class="d-flex">
+                                {% if notif.groupe.TypeGroupeId.id == "3" %}
+                                    <div class="notifications__item__avatar">
+                                        <img src="{{ asset(notif.groupe.IdProprietaire.FileName)}}" />
+                                    </div>
+                                {% else %}
+                                    <div>
+                                        <span class="fa-stack fa-2x">
+                                            <i class="fa fa-circle fa-stack-2x icon-background"></i>
+                                            <i class="fas fa-comments fa-stack-1x"></i>
+                                        </span>
+                                    </div>
+                                {% endif %}
                                 <div class="message-content">
                                     <div class="message-title">
                                         <strong>{{notif.groupe.TypeGroupeId.id == "3" ? "#{notif.groupe.IdProprietaire.pseudo}"  : "#{notif.groupe.nom}"}}</strong>
@@ -85,11 +119,12 @@
                                     <div class="message-detail">
                                         Nouveau(x) message(x) 
                                     </div>
-                                    <a class="channel" data-idchannel="{{notif.groupe.id}}">Consulter la discussion</a>
+                                    <a data-idchannel="{{notif.groupe.id}}">Consulter la discussion</a>
                                 </div>
-                                <span class="time text-muted small">
+                                <span class="text-muted small">
                                     {{notif.DateNotification|date("d-M-20y h:m")}}
                                 </span>
+                                </div>
                             </div>
                         {% endfor %}
                         <div class="dropdown-divider"></div>
