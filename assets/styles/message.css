@@ -354,7 +354,7 @@ button {
 }
 
 .icon-background{
-    color: #ac2bac;
+    color: #55acee;
 }
 
 .navbar-elements .messages .message-content, .navbar-elements .notifications .message-content {
@@ -380,13 +380,22 @@ button {
 }
 
 .message-content a {
-  color: #000080;
+  color: #000080 !important;
   font-weight: bold;
   font-size: 14px;
 }
 
+.dark .message-content a{
+    color:#a5a5a5 !important;
+
+}
 .message-content a:hover{
   text-decoration: none;
+}
+
+.notification-container{
+    overflow: auto;
+    height: 400px;
 }
 
 #btn-theme{
@@ -479,6 +488,14 @@ button {
     background-color: #202225;
     color: lightgray;
 }
+
+.dark .navbar-elements .messages .dropdown-item,.dark .navbar-elements .notifications .dropdown-item{
+    background-color:#272b2e;
+    color:lightgrey;
+}
+
+
+
 
 .h-80{
     height: 80%;

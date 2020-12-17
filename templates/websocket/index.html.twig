@@ -34,7 +34,7 @@
                         <i class="fa fa-bell"></i>
                         <sup><span class="badge badge-pill badge-danger" id="notif-count">{{notifications.nbgroupes < 9 ? notifications.nbgroupes  : "9+"}}</span></sup>
                     </a>
-                    <div class="dropdown-menu notifications" aria-labelledby="dropdownMenuMessage" >
+                    <div class="dropdown-menu notification-container notifications" aria-labelledby="dropdownMenuMessage" >
                         <div class="notifications-header">
                             <i class="fa fa-bell"></i>
                             Notifications
@@ -90,7 +90,7 @@
                         <i class="fa fa-envelope"></i>
                         <sup><span class="badge badge-pill badge-success" id="notif-msg-count">{{notifications.nbmessages < 9 ? notifications.nbmessages  : "9+"}}</span></sup>
                     </a>
-                    <div class="dropdown-menu messages" aria-labelledby="dropdownMenuMessage">
+                    <div class="dropdown-menu notification-container messages" aria-labelledby="dropdownMenuMessage">
                         <div class="messages-header">
                             <i class="fa fa-envelope"></i>
                             Messages
@@ -117,7 +117,7 @@
                                         <strong>{{notif.groupe.TypeGroupeId.id == "3" ? "#{notif.groupe.IdProprietaire.pseudo}"  : "#{notif.groupe.nom}"}}</strong>
                                     </div>
                                     <div class="message-detail">
-                                        Nouveau(x) message(x) 
+                                        {{notif.nbMsg <= 1 ? "Nouveau message"  : "Nouveaux messages"}}
                                     </div>
                                     <a data-idchannel="{{notif.groupe.id}}">Consulter la discussion</a>
                                 </div>

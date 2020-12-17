@@ -95,7 +95,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
 
                 //$this->entityManager->getRepository(Notification::class)->addNotification($user_entity->getId(), $message->getGroupeId()->getId());
 
-                $this->broadcastMessage($topic, $message, false);
+                $this->broadcastMessage($topic, $message, false, $message->getGroupeId()->getTypeGroupeId()->getId());
                 break;
 
             case 'message':
@@ -125,7 +125,7 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
                 $this->entityManager->getRepository(Notification::class)->addNotification($user_entity->getId(), $groupe->getId());
 
                 $this->entityManager->refresh($user_entity);
-                $this->broadcastMessage($topic, $message, false);
+                $this->broadcastMessage($topic, $message, false, $message->getGroupeId()->getTypeGroupeId()->getId());
 
                 break;
 
@@ -175,8 +175,8 @@ class MessageTopic implements TopicInterface, SecuredTopicInterface
         return 'message.topic';
     }
 
-    private function broadcastMessage(Topic $topic, Message $message, bool $system) {
-        $topic->broadcast(['type' => 'newMessage', 'system' => $system, 'message' => $message->getFormattedMessage()]);
+    private function broadcastMessage(Topic $topic, Message $message, bool $system, int $grpType) {
+        $topic->broadcast(['type' => 'newMessage', 'system' => $system, 'message' => $message->getFormattedMessage(), 'grpType' => $grpType]);
     }
 
 }

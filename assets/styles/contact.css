@@ -81,10 +81,8 @@
         position: absolute;
         height: 15px;
         width:15px;
-        border-radius: 50%;
         bottom: 0.2em;
         right: 0.4em;
-        border:1.5px solid white;
 }
 .user-info>h4{
     color:black;
