@@ -331,13 +331,15 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
       color:#007bff;
       
     }
-    
-    .download-button a{
-      background-color:#272b2e;
-      .fa-arrow-circle-down::before{
-        color: grey;
-      }
+    .fa-arrow-circle-down{
+        color:black;
+       background-color: inherit;
     }
+  }
+  .dropdown-menu{
+    
+    background-color:#272b2e;
+    color:lightgrey;
   }
 }
 

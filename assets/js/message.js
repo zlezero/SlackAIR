@@ -203,7 +203,7 @@ $(function() {
                         addMessage(payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.messageId, payload.message.photo_de_profile, payload.message.media, payload.message.is_updated);
                         gestionMessage();
                     } else {
-                        addMsgNotification(payload.message.channel, payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.photo_de_profile);
+                        addMsgNotification(payload.message.channel, payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.photo_de_profile, payload.grpType);
                     }
 
                     break;
@@ -1048,22 +1048,23 @@ $(function() {
 
     });
 
-    function addMsgNotification(channel, pseudo, message, messageTime, pdp) {
+    function addMsgNotification(channel, pseudo, message, messageTime, pdp, grpTypeId) {
 
         let iconHTML = '';
 
-        if(pdp){
+        if(grpTypeId == 3){
             iconHTML = `<div class="notifications__item__avatar"><img src="${pdp}" /></div>`;
         } else{
             iconHTML = '<div><span class="fa-stack fa-2x"><i class="fa fa-circle fa-stack-2x icon-background"></i><i class="fas fa-comments fa-stack-1x"></i></span></div>';
         }
-
+        
+        
         let messageHTML = 
         '<div class="dropdown-item btn notification" data-idchannel="' + channel + '" id="notif' + channel + '"><div class="d-flex">'
         + iconHTML + '<div class="message-content"><div class="message-title">'
         +'<strong>'+$(".channel[data-idchannel='" + channel + "']").text()+'</strong>'
-        +'</div><div class="message-detail">Nouveau(x) message(x)</div>'
-        +'<a class="channel" data-idchannel="' + channel + '">Consulter la discussion</a>'
+        +'</div><div class="message-detail">' + $("#notif" + channel).length<1 ? 'Nouveau message' : 'Nouveaux messages' + '</div>'
+        +'<a data-idchannel="' + channel + '">Consulter la discussion</a>'
         +'</div><span class="text-muted small">' + formatDate(messageTime) + '</span></div></div>';
 
         if($("#notif" + channel).length < 1) {
@@ -1119,7 +1120,7 @@ $(function() {
         + iconHTML +'<div class="message-content"><div class="message-title"><strong>'+$(".channel[data-idchannel='" + channelId + "']").text()+'</strong>'
         +'</div><div class="message-detail">'
         +'Vous avez été invité à '+ typeChannelId == 3 ? 'discuter avec ' : 'rejoindre le groupe ' + channel
-        +'</div><a class="channel" data-idchannel="' + channelId + '">Consulter le channel</a>'
+        +'</div><a data-idchannel="' + channelId + '">Consulter le channel</a>'
         +'</div><span class="text-muted small">'
         + formatDate(messageTime)
         +'</span></div></div>';
@@ -1164,7 +1165,7 @@ $(function() {
         +'<div class="message-content"><div class="message-title"><strong>'+channelName+'</strong>'
         +'</div><div class="message-detail">'
         +"Vous êtes désormais l'administrateur du channel " + channelName
-        +'</div><a class="channel" data-idchannel="' + channelId + '">Consulter la discussion</a>'
+        +'</div><a data-idchannel="' + channelId + '">Consulter la discussion</a>'
         +'</div><span class="text-muted small">'
         + formatDate(messageTime)
         +'</span></div></div>';
