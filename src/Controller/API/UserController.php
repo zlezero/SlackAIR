@@ -36,6 +36,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * @author VATHONNE Thomas
      * Retourne les informations d'un utilisateur
      * @Route("/getInfos", name="userGetInfos")
      */
@@ -61,6 +62,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * @author CORREA Aminata
      * Permet de modifier les informations d'un utilisateur
      * @Route("/setInfos", name="userSetInfos")
      */
@@ -109,6 +111,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * @author CORREA Aminata
      * Permet de modifier le mot de passe d'un utilisateur
      * @Route("/setPassword", name="userSetPassword")
      */
@@ -140,6 +143,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * @author CORREA Aminata
      * Permet de modifier le statut d'un utilisateur
      * @Route("/setStatut", name="userSetStatut")
      */
@@ -172,6 +176,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * @author VATHONNE Thomas
      * Retourne les messages d'erreurs d'un formulaire
      */
     public function getErrorMessages($form) {
@@ -188,6 +193,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * @author BABA-AISSA Riad
      * Retourne tout les contacts d'un utilisateur
      * @Route("/getContacts", name="getAllUsers")
      */
@@ -209,7 +215,8 @@ class UserController extends AbstractController
     }
 
     /**
-     * Permet de changer la photo de profile d'un utilisateur
+     * @author ZONCHELLO Sébastien et VATHONNE Thomas
+     * Permet de changer la photo de profil d'un utilisateur
      * @Route("/setPdp", name="userSetPdp", methods={"POST"})
      */
     public function setPdp(Request $request, FileUploader $fileUploader) {
@@ -250,6 +257,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * @author CORREA Aminata
+     * Permet de mettre un channel en favori
      * @Route("/setInvitationShortcut", name="setInvitationShortcut")
      */
     public function setInvitationShortcut(Request $request) {
@@ -296,6 +305,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * @author CORREA Aminata
+     * Permet de retirer un channel des favoris
      * @Route("/removeInvitationShortcut", name="removeInvitationShortcut")
      */
     public function removeInvitationShortcut(Request $request) {

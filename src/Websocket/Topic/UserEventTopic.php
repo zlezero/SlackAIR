@@ -15,6 +15,11 @@ use Ratchet\Wamp\Topic;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @author VATHONNE Thomas
+ * Ce websocket permet de diffuser le statut d'un utilisateur
+ */
+
 class UserEventTopic implements TopicInterface
 {
 

@@ -24,6 +24,10 @@ class LogoutListener{
         $this->pusher = $wampPusher;
     }
 
+    /**
+     * @author CORREA Aminata
+     * Permet de changer le statut de l'utilisateur en "Déconnecté" lorsque ce dernier se déconnecte de l'appli
+     */
     public function __invoke(LogoutEvent $event) {
 
         if($this->tokenStorage->getToken()->getUser() != null){

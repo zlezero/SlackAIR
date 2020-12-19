@@ -395,7 +395,7 @@ button {
 
 .notification-container{
     overflow: auto;
-    height: 400px;
+    max-height: 400px;
 }
 
 #btn-theme{

@@ -42,6 +42,7 @@ class ChannelController extends AbstractController
     }
 
     /**
+     * @author VATHONNE Thomas
      * Renvoie tous les messages d'un channel
      * @Route("/getMessages", name="channel_getMessages")
      */
@@ -80,6 +81,7 @@ class ChannelController extends AbstractController
     }
 
     /**
+     * @author CORREA Aminata
      * Retourne les messages épinglés d'un channel
      * @Route("/getPinnedMessages", name="channel_getPinnedMessages")
      */
@@ -115,6 +117,7 @@ class ChannelController extends AbstractController
     }
 
     /**
+     * @author VATHONNE Thomas
      * Retourne les informations d'un channel
      * @Route("/getInfos", name="channel_getInfos")
      */
@@ -165,6 +168,7 @@ class ChannelController extends AbstractController
     }
 
     /**
+     * @author VATHONNE Thomas
      * Retourne tous les utilisateurs d'un channel
      * @Route("/getAllUsers", name="channel_getAllUsers")
      */
@@ -198,6 +202,7 @@ class ChannelController extends AbstractController
     }
 
      /**
+      * @author CORREA Aminata
       * Met à jour les informations d'un channel (Nom et description)
       * @Route("/setChannelInfos", name="channel_setInfos")
       */
@@ -217,6 +222,7 @@ class ChannelController extends AbstractController
             $channel = $this->getDoctrine()->getManager()->getRepository(Groupe::class)->findOneBy(['id' => $channelId]);
             $channelAdmin = $channel->getIdProprietaire()->getId();
 
+            // Si l'utilisateur est bien le propriétaire du channel
             if($channelAdmin == $userId) {
 
                 $channelChangementNom = $channel->getNom() != $new_channel->getNom();
@@ -255,6 +261,7 @@ class ChannelController extends AbstractController
     }
 
     /**
+     * @author CORREA Aminata
      * Permet de faire quitter un utilisateur d'un channel
      * @Route("/leaveChannel", name="channel_leave")
      */
@@ -271,6 +278,7 @@ class ChannelController extends AbstractController
 
             if($channelInvitation->getUserId()->getId() == $userId) {
 
+                // Si l'utilisateur est le propriétaire du groupe
                 if($channelAdmin == $userId && count($channel->getInvitations()) != 1) {
 
                     // Nommer un nouvel admin

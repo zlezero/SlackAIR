@@ -11,6 +11,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * @author CORREA Aminata
+ * Ce formulaire permet de changer son mot de passe lorsqu'il a été oublié
+ */
+
 class ChangePasswordFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void

@@ -22,6 +22,8 @@ class LoginController extends AbstractController
     }
 
     /**
+     * @author VATHONNE Thomas
+     * Permet d'authentifier un utilisateur et de générer le formulaire de connexion
      * @Route("/", name="app_login")
      */
     public function login(Request $request, AuthenticationUtils $authenticationUtils)
@@ -60,6 +62,8 @@ class LoginController extends AbstractController
     }
 
     /**
+     * @author VATHONNE Thomas
+     * Déconnexion d'un utilisateur
      * @Route("/logout", name="app_logout")
      */
     public function logout(){}

@@ -15,6 +15,11 @@ use Ratchet\Wamp\Topic;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @author VATHONNE Thomas
+ * Ce websocket permet de diffuser tous les événements relatifs à un channel
+ */
+
 class ChannelEventTopic implements TopicInterface
 {
 

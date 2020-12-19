@@ -15,9 +15,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-/**
- * @author VATHONNE Thomas
- **/
+
 class ImportUserCommand extends Command
 {
 
@@ -36,6 +34,10 @@ class ImportUserCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * @author VATHONNE Thomas
+     * Configure la commande qui permet d'importer un fichier CSV
+     */
     protected function configure() {
 
         $this
@@ -46,6 +48,11 @@ class ImportUserCommand extends Command
 
     }
  
+    /**
+     * @author VATHONNE Thomas
+     * Execute la commande qui permet d'importer un fichier CSV et ajoute chaque utilisateur dans la base de données
+     * Envoie un email de bienvenue à chaque nouvel utilisateur
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         
@@ -108,6 +115,10 @@ class ImportUserCommand extends Command
 
     }
 
+    /**
+     * @author VATHONNE Thomas
+     * Envoie un email de bienvenue à un utilisateur
+     */
     private function sendEmail(string $email, User $user, string $password) {
         
         $email = (new TemplatedEmail())

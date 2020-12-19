@@ -11,6 +11,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Error404Listener
 {
 
+    /**
+     * @author VATHONNE Thomas
+     * Redirige vers la page d'accueil lorsque l'URL n'a pas été trouvé
+     */
     public function onKernelException(ExceptionEvent $event)
     {
         if (!$event->getException() instanceof NotFoundHttpException) {

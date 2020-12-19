@@ -10,6 +10,11 @@ use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @author CORREA Aminata
+ * Ce formulaire permet de mettre à jour les informations d'un channel
+ */
+
 class UpdateChannelType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

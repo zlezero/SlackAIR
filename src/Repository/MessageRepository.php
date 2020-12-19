@@ -19,24 +19,10 @@ class MessageRepository extends ServiceEntityRepository
         parent::__construct($registry, Message::class);
     }
 
-    // /**
-    //  * @return Message[] Returns an array of Message objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    
+    /**
+     * @author VATHONNE Thomas
+     * Permet de récupérer tous les messages d'un channel
+     */    
     public function getMessages(int $channelId, int $userId, int $messageMin = NULL, int $messageMax = NULL)
     {
         return $this->createQueryBuilder('message')
@@ -48,6 +34,10 @@ class MessageRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @author CORREA Aminata
+     * Permet de récupérer tous les messages épinglés d'un channel
+     */
     public function getPinnedMessages(int $channelId, int $userId, int $messageMin = NULL, int $messageMax = NULL)
     {
         return $this->createQueryBuilder('message')

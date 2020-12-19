@@ -20,6 +20,8 @@ class FirstConnectionController extends AbstractController{
     }
     
     /**
+     * @author CORREA Aminata
+     * Permet à l'utilisateur de modifier son mot de passe lors de sa première connexion
      * @Route("/changePassword", name="userChangePassword")
      */
     public function index(Request $request){

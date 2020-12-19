@@ -8,6 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @author ZONCHELLO Sébastien
+ * Cette classe représente un message d'un groupe
+ */
+
+/**
  * @ORM\Entity(repositoryClass=MessageRepository::class)
  */
 class Message

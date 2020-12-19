@@ -4,7 +4,10 @@ import * as modals from './modals';
 
 $(function() {
 
-    //Gestion des emojis
+    /**
+     * @author VATHONNE Thomas
+     * Gestion des émojis
+     */
 
     $("#emojis").disMojiPicker();
     $('#emojis').css('display', 'none');
@@ -37,7 +40,11 @@ $(function() {
     $("#btnUpload").on("click",function(){
         $("#upload_file_file").trigger("click");
     })
-    //Gestion des utilisateurs en train d'écrire
+
+    /**
+     * @author VATHONNE Thomas
+     * Gestion des utilisateurs en train d'écrire
+     */
 
     var isWriting = [];
 
@@ -136,7 +143,11 @@ $(function() {
 
         subscribeToUserEvents();
 
-        //Gestion des event sur l'utilisateur
+        /**
+         * @author VATHONNE Thomas
+         * Gestion des events sur l'utilisateur
+         */        
+
         session.subscribe("privateUserEvent/" + id_user, function (uri, payload) {
 
             let data = JSON.parse(payload.data);
@@ -161,6 +172,10 @@ $(function() {
         subscribeToNotif(id_user);
     }
 
+    /**
+     * @author VATHONNE Thomas et ZONCHELLO Sébastien
+     * Ajout du nouveau groupe au niveau du collapse correspondant
+     */ 
     function addGroupe(typeGroupe, idGroupe, nomGroupe, openGroupe, idUtilisateur, statusColorUser, pseudoUser) {
         
         switch(typeGroupe) {
@@ -189,6 +204,10 @@ $(function() {
 
     }
 
+    /**
+     * @author VATHONNE Thomas
+     * Gestion des events d'un channel
+     */ 
     window.subscribeToChannel = function subscribeToChannel(idChannel) {
 
         session_glob.subscribe("message/channel/" + idChannel, function (uri, payload) {
@@ -287,7 +306,10 @@ $(function() {
         console.log("Déconnecté : " + error.reason + " / Code : " + error.code);
     });
 
-
+    /**
+     * @author VATHONNE Thomas
+     * Modifie le titre d'un channel 
+     */ 
     function updateChannelTitle(idChannel, newTitle) {
 
         if (current_channel_id == idChannel) {
@@ -298,12 +320,20 @@ $(function() {
 
     }
 
+    /**
+     * @author VATHONNE Thomas
+     * Modifie la description d'un channel 
+     */ 
     function updateChannelDescription(idChannel, newDescription) {
         if (current_channel_id == idChannel) {
             $('#description_channel').text(newDescription);
         }
     }
 
+    /**
+     * @author VATHONNE Thomas
+     * Diffusion d'un message au moment de l'envoie
+     */ 
     $("#sendBtn").on("click", function() {
     
         const data = {
@@ -326,6 +356,10 @@ $(function() {
 
     });
 
+    /**
+     * @author VATHONNE Thomas
+     * Envoyer d'un message lorsqu'on appuie sur Enter
+     */ 
     $('#message').on('keyup', (e) => {
 
         if (e.defaultPrevented) {
@@ -341,6 +375,10 @@ $(function() {
 
     });
 
+    /**
+     * @author VATHONNE Thomas
+     * Chargement d'un channel
+     */ 
     window.subscribeChannel = function subscribeChannel() {
 
         $(".channel").off("click");
@@ -362,6 +400,10 @@ $(function() {
     window.subscribeChannel();
     disableChannelInteraction();
 
+    /**
+     * @author VATHONNE Thomas
+     * Désactive certains fonctionnalités d'un channel
+     */ 
     function disableChannelInteraction() {
         $('#titre_channel').hide();
         $('#description_channel').hide();
@@ -376,6 +418,10 @@ $(function() {
         disableEmojis();
     }
 
+    /**
+     * @author VATHONNE Thomas et CORREA Aminata
+     * Gestion des fonctionnalités lors du chargement de la page
+     */ 
     function loadChannel(idChannel, target) {
 
         disableChannelInteraction();
@@ -395,6 +441,10 @@ $(function() {
 
         $('[data-toggle="tooltip"]').tooltip();
 
+        /**
+         * @author VATHONNE Thomas
+         * Récupère les messages du channel et les affiche
+         */ 
         $.post({
             url: '/api/channel/getMessages',
             data: {"channelId": current_channel_id},
@@ -457,6 +507,10 @@ $(function() {
 
         }
 
+        /**
+         * @author VATHONNE Thomas
+         * Récupère les infos du channel
+         */ 
         $.post({
             url: '/api/channel/getInfos',
             data: {"channelId": current_channel_id},
@@ -490,7 +544,10 @@ $(function() {
                 $('#titre_channel_right').show();
                 $('#label_membres_du_groupe').show();
 
-                // Gestion des infos du channel
+                /**
+                 * @author CORREA Aminata
+                 * Gestion des infos du channel à savoir leur affichage et la modification
+                 */ 
                 $('#channel-infos-icon').off('click');
                 $("#contact-infos-modal").off('show.bs.modal');
                 $("#contact-infos-modal").off('hidden.bs.modal');
@@ -511,7 +568,10 @@ $(function() {
             
                 });
 
-                // Gestion affichage des infos du contact
+                /**
+                 * @author CORREA Aminata
+                 * Gestion affichage des infos du contact
+                 */ 
                 $("#contact-infos-modal").on('show.bs.modal', function(e){
                            
                     $.post({
@@ -556,7 +616,10 @@ $(function() {
 
                 });
 
-                 // Gestion affichage des infos du channel
+                /**
+                 * @author CORREA Aminata
+                 * Gestion affichage des infos du channel
+                 */ 
                  $("#channel-infos-modal").on("show.bs.modal", function(e){
 
                     $.post({
@@ -634,6 +697,10 @@ $(function() {
             
         });
         
+        /**
+         * @author VATHONNE Thomas
+         * Récupère les membres du channel
+         */ 
         $.post({
             url: '/api/channel/getAllUsers',
             data: {"channelId": current_channel_id},
@@ -648,6 +715,11 @@ $(function() {
         });
 
     }
+
+    /**
+     * @author VATHONNE Thomas
+     * Diffuse le statut et le pseudo d'un utilisateur lorsqu'ils sont changés 
+     */ 
 
     function subscribeToUserEvent(userId) {
 
@@ -671,6 +743,10 @@ $(function() {
 
     }
 
+     /**
+     * @author ZONCHELLO Sébastien et CORREA Aminata
+     * Diffuse une notification à l'utilisateur concerné (ajout à un groupe ou nouvel admin d'un groupe)
+     */ 
     function subscribeToNotif(userId) {
 
         session_glob.subscribe("notif/" + userId, function (uri, payload) {
@@ -698,6 +774,10 @@ $(function() {
         } catch(error) {}
     }
 
+    /**
+     * @author CORREA Aminata et VATHONNE Thomas
+     * Ajoute un message à l'écran en fonction de son type
+     */ 
     function addMessage(name, message, messageTime, id, url_photo_de_profile, media, is_updated) {
         
         let scrollAtEnd = isScrollMessageAtEnd();
@@ -918,6 +998,10 @@ $(function() {
         
     }
 
+     /**
+     * @author CORREA Aminata
+     * Affiche une image en modal lorsqu'on clique dessus
+     */ 
     function popUpMedia() {
 
         let modal = $('#mediaImageModal');
@@ -937,6 +1021,10 @@ $(function() {
         });
     }
 
+     /**
+     * @author CORREA Aminata
+     * Ajoute à un message ses différentes options en fonction de son auteur et de son type
+     */ 
     function gestionMessage() {
 
         $('.dropleft-message').off('show.bs.dropdown');
@@ -1006,7 +1094,10 @@ $(function() {
 
     }
 
-    // Gestion des notifications
+    /**
+     * @author ZONCHELLO Sébastien
+     * Gestion des notifications
+     */ 
     $(".notification").off('click');
     $(".notification").on("click", function() {
 
@@ -1048,6 +1139,10 @@ $(function() {
 
     });
 
+    /**
+     * @author ZONCHELLO Sébastien
+     * Ajoute une notification d'un nouveau message reçu
+     */ 
     function addMsgNotification(channel, pseudo, message, messageTime, pdp, grpTypeId) {
 
         let iconHTML = '';
@@ -1105,6 +1200,10 @@ $(function() {
 
     }
 
+    /**
+     * @author ZONCHELLO Sébastien
+     * Ajoute une notification d'une invitation à un groupe
+     */ 
     function addGrpNotification(typeChannelId, channelId, channel, messageTime, propGrp) {
 
         let iconHTML = '';
@@ -1157,6 +1256,10 @@ $(function() {
     
     }
 
+    /**
+     * @author CORREA Aminata
+     * Ajoute une notification d'un groupe dont on est le nouvel administrateur
+     */ 
     function addAdminNotification(channelId, channelName, messageTime) {
 
         let notifHTML = 
@@ -1202,6 +1305,10 @@ $(function() {
 
     }
 
+    /**
+     * @author ZONCHELLO Sébastien
+     * Incrémente le nombre de notifications à l'écran
+     */ 
     function increaseNotifNb(typeNotif) {
     
         let notifnb = $("#" + typeNotif).text();
@@ -1212,6 +1319,10 @@ $(function() {
     
     }
 
+    /**
+     * @author ZONCHELLO Sébastien
+     * Change le nombre de notifications à l'écran
+     */ 
     function changeNotifNb(typeNotif, nbnotif){
 
         if(parseInt(nbnotif) <= 9){
@@ -1223,10 +1334,18 @@ $(function() {
 
     }
 
+    /**
+     * @author VATHONNE Thomas
+     * Scroll vers le bas du cadre des messages
+     */ 
     function scrollMessageToEnd() {
         $('#chat').scrollTop($('#chat').prop("scrollHeight"));
     }
 
+    /**
+     * @author VATHONNE Thomas
+     * Vérifie si la barre de scroll est bien en bas
+     */ 
     function isScrollMessageAtEnd() {
         return $('#chat').scrollTop() + $('#chat').innerHeight() >= $('#chat')[0].scrollHeight;
     }
@@ -1250,15 +1369,20 @@ $(function() {
 
     });
 
-
-    // Gestion des messages épinglés
-
+    /**
+     * @author CORREA Aminata
+     * Gestion des messages épinglés
+     */ 
     $('#pinnedMessagesDropdown').on('show.bs.dropdown', function(e) {
 
         $("#pinnedMessagesLoader").show();
         $("#noPinnedMessages").hide();
         $('#pinnedMessagesContainer').empty();
 
+        /**
+         * @author CORREA Aminata
+         * Récupère les messages épinglés d'un channel
+         */
         $.post({
             url: '/api/channel/getPinnedMessages',
             data: {"channelId": current_channel_id},
@@ -1276,7 +1400,10 @@ $(function() {
                     $("#noPinnedMessages").show();
                 }
 
-                //Gestion détachement d'un message
+                /**
+                 * @author CORREA Aminata
+                 * Gestion détachement d'un message
+                 */ 
                 $('.unpin-message-icon').on('click', function(e) {
                     
                     e.preventDefault();
@@ -1295,7 +1422,10 @@ $(function() {
                     }); 
                 });
 
-                //Gestion redirection vers un message
+                /**
+                 * @author CORREA Aminata
+                 * Gestion redirection vers un message
+                 */
                 $('.redirect-message-icon').on('click', function(e) {
                     
                     e.preventDefault();
@@ -1319,7 +1449,10 @@ $(function() {
         $('.redirect-message-icon').off('click');
     });
 
-    // Gestion de la sortie d'un channel
+    /**
+     * @author CORREA Aminata
+     * Gestion de la sortie d'un channel
+     */
     $('#leaveChannelModal').off('show.bs.modal');
     $("#confirm-leave-channel").off('click');
     $('#leaveChannelModal').off('hidden.bs.modal');
@@ -1350,13 +1483,19 @@ $(function() {
         $('#confirm-leave-channel').off('click');
     });
     
-    // Gestion du statut
-    
+    /**
+     * @author VATHONNE Thomas et CORREA Aminata
+     * Gestion du statut
+     */
     var idleTime = 0;
     var statutId = 1;
     
     var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
 
+    /**
+     * @author CORREA Aminata
+     * Met le statut de l'utilisateur "En ligne" lorsque ce dernier était "Absent" et qu'il bouge la souris
+     */
     $(this).on('mousemove', function (e) {
 
         idleTime = 0;
@@ -1368,6 +1507,10 @@ $(function() {
         
     });
 
+    /**
+     * @author CORREA Aminata
+     * Met le statut de l'utilisateur en "En ligne" lorsque ce dernier était "Absent" et qu'il appuie sur une touche du clavier
+     */
     $(this).on('keypress', function (e) {
 
         idleTime = 0;
@@ -1379,6 +1522,10 @@ $(function() {
 
     });
 
+    /**
+     * @author CORREA Aminata
+     * Gère le changement de statut d'un utilisateur
+     */
     $("#statusDropright").on('show.bs.dropdown', function() {
 
         $('#statusDroprightMenu :not(.dropdown-header)').on("click", function(v) {
@@ -1399,6 +1546,10 @@ $(function() {
         $('#statusDroprightMenu').off('click');
     });
 
+    /**
+     * @author CORREA Aminata
+     * Met le statut de l'utilisateur en "Absent" au bout de 15 minutes d'inactivité
+     */
     function timerIncrement() {
         idleTime = idleTime + 1;
         if (idleTime > 14 && statutId == 1) { //15 minutes
@@ -1407,11 +1558,19 @@ $(function() {
         }
     }
 
+    /**
+     * @author CORREA Aminata
+     * Affiche le statut de l'utilisateur
+     */
     function setStatusPrint(name, color){
         $('#user-profile-statut').html('<i class="fa fa-circle ' + color +'"></i><span> ' + name + '</span>');
         $('#user-status').html('<i class="fa fa-circle ' + color +'"></i><span> ' + name + '</span>');
     }
 
+    /**
+     * @author CORREA Aminata
+     * Modifie le statut de l'utilisateur et le met à jour à l'écran
+     */
     function setStatutAjax(idStatut) {
         $.post({
             url: '/api/user/setStatut',
@@ -1422,6 +1581,10 @@ $(function() {
         });
     }
 
+    /**
+     * @author VATHONNE Thomas
+     * Met le statut de l'utilisateur en "Hors ligne" lorsqu'il se déconnecte
+     */
     $(window).on('beforeunload', (e) => {
         e.preventDefault();
         e.returnValue = '';
@@ -1441,7 +1604,10 @@ $(function() {
 
     });
 
-    //Gestion du dark theme
+    /**
+     * @author ZONCHELLO Sébastien
+     * Gestion du dark theme
+     */
     $('#btn-theme, #switch_theme').on('click', (e) => {
 
         e.preventDefault();
@@ -1454,7 +1620,10 @@ $(function() {
 
     });
 
-    //Gestion des discussions favorites
+    /**
+     * @author CORREA Aminata
+     * Gestion des discussions favorites à savoir l'ajout d'un channel aux favoris et la suppression d'un channel des favoris
+     */
     $("#set-favorite").on('click', (e) => {
 
         if($("#set-favorite").hasClass("saved-channel")) {
@@ -1530,7 +1699,10 @@ $(function() {
         
     });
 
-    //Gestion de l'envoi de fichiers
+    /**
+     * @author CORREA Aminata et VATHONNE Thomas
+     * Gestion de l'envoi d'un média
+     */
     $("#upload_file_file").on("change", function(e) {
 
         e.preventDefault();
@@ -1566,8 +1738,12 @@ $(function() {
 
     });
 
+    /**
+     * @author ZONCHELLO Sébastien
+     * Joue le son d'une notification
+     */
     function playsound() {
-        if(statutId != 4){
+        if(statutId != 4) {
             var audio = $("#notif-sound")[0];
             audio.play();
         }

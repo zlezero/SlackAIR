@@ -6,6 +6,11 @@ use App\Repository\InvitationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @author ZONCHELLO Sébastien
+ * Cette classe représente une invitation pour intégrer un channel
+ */
+
+/**
  * @ORM\Entity(repositoryClass=InvitationRepository::class)
  */
 class Invitation

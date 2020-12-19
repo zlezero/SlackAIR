@@ -8,6 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @author ZONCHELLO Sébastien
+ * Cette classe représente le type d'une notification
+ */
+
+/**
  * @ORM\Entity(repositoryClass=TypeNotificationRepository::class)
  */
 class TypeNotification

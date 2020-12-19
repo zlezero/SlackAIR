@@ -14,6 +14,11 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Core\Security;
 
+/**
+ * @author VATHONNE Thomas
+ * Les méthodes de cette classe permettent d'authentifier un utilisateur à partir d'un token
+ */
+
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
     private $em;

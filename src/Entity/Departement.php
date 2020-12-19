@@ -8,6 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @author ZONCHELLO Sébastien
+ * Cette classe représente le département d'un utilisateur (employé)
+ */
+
+/**
  * @ORM\Entity(repositoryClass=DepartementRepository::class)
  */
 class Departement

@@ -14,6 +14,11 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 
+/**
+ * @author VATHONNE Thomas
+ * Ce formulaire permet de générer une clé API
+ */
+
 class APIFormType extends AbstractType
 {
 

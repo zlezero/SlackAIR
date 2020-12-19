@@ -8,6 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @author ZONCHELLO Sébastien
+ * Cette classe représente le type mime d'un média
+ */
+
+/**
  * @ORM\Entity(repositoryClass=TypeMIMERepository::class)
  */
 class TypeMIME

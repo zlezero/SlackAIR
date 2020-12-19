@@ -35,7 +35,8 @@ class GroupeController extends AbstractController
     }
     
     /**
-     * Permet de créer un channel
+     * @author ZONCHELLO Sébastien
+     * Permet de générer les formulaires pour créer un channel et de les soumettre
      * @Route("/create/{typeGroupeId}",requirements={"typeGroupeId"="\d+"}, name="create",methods={"GET"})
      */
     public function create(int $typeGroupeId, Request $request)
@@ -76,6 +77,7 @@ class GroupeController extends AbstractController
 
     
     /**
+     * @author ZONCHELLO Sébastien
      * Permet d'obtenir tout les channels
      * @Route("/getGroupes", name="getGroupes")
      */
@@ -97,6 +99,7 @@ class GroupeController extends AbstractController
     }
 
     /**
+     * @author ZONCHELLO Sébastien et VATHONNE Thomas
      * Permet de créer une invitation pour un channel
      * @Route("/createInvit", name="getInvit")
      */
@@ -153,6 +156,7 @@ class GroupeController extends AbstractController
     }
 
     /**
+     * @author ZONCHELLO Sébastien
      * Permet de créer un channel
      * @Route("/createGrp", name="create-groupe-post", methods={"POST"})
      */
@@ -258,6 +262,7 @@ class GroupeController extends AbstractController
     
 
     /**
+     * @author ZONCHELLO Sébastien et VATHONNE Thomas
      * Permet de créer un channel privé entre 2 utilisteurs
      * @Route("/createDM", name="create-groupe-DM", methods={"POST"})
      */

@@ -6,6 +6,11 @@ use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @author ZONCHELLO Sébastien
+ * Cette classe représente un média qui peut être envoyé en tant que message
+ */
+
+/**
  * @ORM\Entity(repositoryClass=MediaRepository::class)
  */
 class Media

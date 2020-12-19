@@ -15,6 +15,11 @@ use Ratchet\Wamp\Topic;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @author ZONCHELLO Sébastien
+ * Ce websocket permet de diffuser une notification
+ */
+
 class NotifTopic implements TopicInterface
 {
 
