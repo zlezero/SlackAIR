@@ -13,6 +13,11 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @author CORREA Aminata
+ * Ce formulaire permet de changer son mot de passe lors de sa première connexion et dans sa page de profil
+ */
+
 class PasswordFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

@@ -21,23 +21,10 @@ class InvitationRepository extends ServiceEntityRepository
         parent::__construct($registry, Invitation::class);
     }
 
-    // /**
-    //  * @return Invitation[] Returns an array of Invitation objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-    
+    /**
+     * @author VATHONNE Thomas
+     * Permet d'avoir tous les utilisateurs d'un channel
+     */
     public function getAllUtilisateurChannel(int $idChannel) {
 
         $entityManager = $this->getEntityManager();
@@ -52,6 +39,10 @@ class InvitationRepository extends ServiceEntityRepository
 
     }
 
+    /**
+     * @author VATHONNE Thomas
+     * Permet de récupérer les channels de l'utilisateur ayant le type qui a été défini
+     */
     public function getChannelUtilisateur(int $typeChannel, int $idUtilisateur)
     {
         return $this->createQueryBuilder('i')
@@ -65,6 +56,10 @@ class InvitationRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @author VATHONNE Thomas
+     * Permet de récupérer l'invitation ayant l'id du groupe et l'id de l'utilisateur spécisifiés
+     */
     public function getUserChannelInvitation(int $idChannel, int $idUtilisateur)
     {
         return $this->createQueryBuilder('i')
@@ -77,6 +72,10 @@ class InvitationRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @author CORREA Aminata
+     * Permet de récupérer un utilisateur d'un groupe au hasard pour le nommer comme nouveau administrateur
+     */
     public function getNewChannelAdmin(int $idChannel, int $idCurrentAdmin)
     {
         return $this->createQueryBuilder('i')
@@ -89,6 +88,10 @@ class InvitationRepository extends ServiceEntityRepository
         ;   
     }
 
+    /**
+     * @author VATHONNE Thomas
+     * Permet de vérifier si un utilisateur est dans un channel
+     */
     public function isUserInChannel(int $idChannel, int $idUtilisateur) {
         return ($this->createQueryBuilder('i')
                     ->andWhere('i.UserId = :idUtilisateur')
@@ -100,6 +103,10 @@ class InvitationRepository extends ServiceEntityRepository
                 ) != NULL;
     }
 
+    /**
+     * @author VATHONNE Thomas
+     * Permet de récupérer tous les DMs d'un utilisateur
+     */
     public function getDMChannels(int $idUtilisateur) {
         
         $entityManager = $this->getEntityManager();
@@ -130,6 +137,10 @@ class InvitationRepository extends ServiceEntityRepository
 
     }
 
+    /**
+     * @author VATHONNE Thomas
+     * Permet de récupérer l'invitation du DM ayant l'id du groupe et celui de l'utilisateur spécifiés
+     */
     public function getDMChannel(int $idUtilisateur, int $idChannel) {
 
         $entityManager = $this->getEntityManager();
@@ -151,6 +162,10 @@ class InvitationRepository extends ServiceEntityRepository
 
     }
 
+    /**
+     * @author VATHONNE Thomas
+     * Permet de vérifier si un DM entre deux utilisateurs existe
+     */
     public function isDMChannelExist(int $idUtilisateur1, int $idUtilisateur2) {
 
         $entityManager = $this->getEntityManager();
@@ -173,6 +188,4 @@ class InvitationRepository extends ServiceEntityRepository
 
     }
 
-
-    
 }

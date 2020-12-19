@@ -10,6 +10,11 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
+ * @author ZONCHELLO Sébastien
+ * Cette classe représente un channel qui peut être soit public, privé ou un DM
+ */
+
+/**
  * @ORM\Entity(repositoryClass=GroupeRepository::class)
  */
 class Groupe

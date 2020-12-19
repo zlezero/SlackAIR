@@ -6,7 +6,10 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-
+/**
+ * @author ZONCHELLO Sébastien
+ * Cette classe permet de télécharger un fichier
+ */
 class FileUploader
 {
     private $targetDirectory;

@@ -34,12 +34,13 @@
                         <i class="fa fa-bell"></i>
                         <sup><span class="badge badge-pill badge-danger" id="notif-count">{{notifications.nbgroupes < 9 ? notifications.nbgroupes  : "9+"}}</span></sup>
                     </a>
-                    <div class="dropdown-menu notification-container notifications" aria-labelledby="dropdownMenuMessage" >
+                    <div class="dropdown-menu notifications" aria-labelledby="dropdownMenuMessage" >
                         <div class="notifications-header">
                             <i class="fa fa-bell"></i>
                             Notifications
                         </div>
                         <div class="dropdown-divider"  id="notif-ddlist" ></div>
+                        <div class="notification-container">
                         {% for notif in notifications.groupes %}
                             <div class="dropdown-item btn notification" data-idchannel="{{notif.groupe.id}}" id="notif{{notif.groupe.id}}">
                                 <div class="d-flex">
@@ -81,6 +82,7 @@
                                 </div>
                             </div>
                         {% endfor %}
+                        </div>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item text-center" href="#">Voir toutes les notifications</a>
                     </div>
@@ -90,13 +92,14 @@
                         <i class="fa fa-envelope"></i>
                         <sup><span class="badge badge-pill badge-success" id="notif-msg-count">{{notifications.nbmessages < 9 ? notifications.nbmessages  : "9+"}}</span></sup>
                     </a>
-                    <div class="dropdown-menu notification-container messages" aria-labelledby="dropdownMenuMessage">
+                    <div class="dropdown-menu messages" aria-labelledby="dropdownMenuMessage">
                         <div class="messages-header">
                             <i class="fa fa-envelope"></i>
                             Messages
                         </div>
                         <div class="dropdown-divider" id="notif-msg-ddlist">
                         </div>
+                        <div class="notification-container">
                         {% for notif in notifications.messages %}
                             <div class="dropdown-item btn notification" data-idchannel="{{notif.groupe.id}}" id="notif{{notif.groupe.id}}">
                                 <div class="d-flex">
@@ -127,6 +130,7 @@
                                 </div>
                             </div>
                         {% endfor %}
+                        </div>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item text-center" href="#">Voir tous les messages</a>
                     </div>

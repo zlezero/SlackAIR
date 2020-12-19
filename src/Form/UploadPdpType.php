@@ -9,6 +9,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Image;
 
+/**
+ * @author ZONCHELLO Sébastien
+ * Ce formulaire permet de télécharger sa photo de profil
+ */
+
 class UploadPdpType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

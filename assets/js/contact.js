@@ -1,6 +1,11 @@
 import * as modals from './modals';
 import 'paginationjs';
 
+/**
+ * @author VATHONNE Thomas et CORREA Aminata
+ * Ce fichier permet de gérer l'annuaire à savoir l'affichage des contacts, la pagination et l'envoie d'un message en privé
+ */
+
 $(function () {
 
     $('#annuaire-modal').on('show.bs.modal', function (e) {
@@ -69,6 +74,7 @@ $(function () {
                         })
                     }
 
+                    // Affichage de chaque carte utilisateur
                     function userCardTemplate(users){
                         
                         let html = "";

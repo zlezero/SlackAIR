@@ -1,6 +1,10 @@
 import * as modals from './modals';
 import {formatDate, bytesToSize} from './app';
 
+/**
+ * @author CORREA Aminata
+ * Ajoute un message au container des messages épinglés en fonction de son type
+ */
 window.addPinnedMessage = function(name, message, messageTime, id, url_photo_de_profile, media, is_updated) {
     
     let messageHTML = "";
@@ -250,6 +254,10 @@ window.addPinnedMessage = function(name, message, messageTime, id, url_photo_de_
 
 }
 
+/**
+ * @author CORREA Aminata
+ * Gère les options d'un message à savoir la suppression, la modification et l'épinglage
+ */
 window.gestionOptionsMessage = function(current_message_id, current_user_id, current_channel_id) {
 
         $("#deleteMessageModal").off('show.bs.modal');

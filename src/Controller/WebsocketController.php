@@ -30,6 +30,8 @@ class WebsocketController extends AbstractController
     }
 
     /**
+     * @author VATHONNE Thomas
+     * Permet de récupérer toutes les informations reliées à l'utilisateur et de générer le formulaire d'envoie de médias
      * @Route("/app", name="app")
      */
     public function index()

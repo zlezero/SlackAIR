@@ -16,6 +16,11 @@ use Ratchet\Wamp\Topic;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @author VATHONNE Thomas
+ * Ce websocket permet de diffuser un message
+ */
+
 class MessageTopic implements TopicInterface, SecuredTopicInterface
 {
 

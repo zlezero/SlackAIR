@@ -3,7 +3,14 @@
 import * as modals from './modals';
 import 'paginationjs';
 
+/**
+ * @author ZONCHELLO Sébastien
+ * Ce fichier permet de gérer la création d'un channel, d'afficher la liste des groupes publics et leur pagination et de rejoindre un groupe public
+ */
+
 $(function() {
+
+    // Création d'un channel public ou d'un channel privé
 
     $('.create-grp-modale').on('show.bs.modal', function (e) {
 
@@ -85,10 +92,10 @@ $(function () {
 
                 if (data.statut == "ok") {
 
-                    // Récupération et pagination de la liste des utilisateurs
+                    // Récupération et pagination de la liste des groupes publics
                     annuairePagination(data.message.groupes);
 
-                    // Recherche d'un utilisateur par son nom,prenom
+                    // Recherche d'un groupe public par son nom
                     $('#annuaire-input-group2').on('keyup', function (){
                         let filter = $(this).val().toUpperCase();
                         let name = "";
@@ -105,7 +112,7 @@ $(function () {
                         annuairePagination(dataFilter);
                     })
 
-                    // Pagination de l'annuaire
+                    // Pagination de la liste des groupes publics
                     function annuairePagination(dataToPaginate){
                         $("#listGrpsPagination").pagination({
                             dataSource: dataToPaginate,
@@ -139,6 +146,7 @@ $(function () {
                         })
                     }
 
+                    // Affichage de chaque carte groupe
                     function userCardTemplate(groupes){
                         
                         let html = "";
@@ -153,7 +161,7 @@ $(function () {
                         return html;
                     }
 
-                    //Gestion envoi d'un DM
+                    // Gestion de la redirection vers le groupe public qu'on a rejoint
                     function pageGestion(){
                         
                         $('[data-toggle="tooltip"]').tooltip();

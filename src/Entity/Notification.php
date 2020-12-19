@@ -6,6 +6,11 @@ use App\Repository\NotificationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @author ZONCHELLO Sébastien
+ * Cette classe représente une notification
+ */
+
+/**
  * @ORM\Entity(repositoryClass=NotificationRepository::class)
  */
 class Notification

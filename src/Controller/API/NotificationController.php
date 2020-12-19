@@ -34,6 +34,8 @@ class NotificationController extends AbstractController
     }
 
     /**
+     * @author ZONCHELLO Sébastien
+     * Permet de marquer une notification d'un message comme lue
      * @Route("/readNotifMsg", name="notification_readNotifMsg")
      */
     public function readNotifMsg(Request $request)
@@ -61,6 +63,8 @@ class NotificationController extends AbstractController
     }
 
     /**
+     * @author ZONCHELLO Sébastien
+     * Permet de marquer une notification d'un groupe comme lue
      * @Route("/readNotifGrp", name="notification_readNotifGrp")
      */
     public function readNotifGrp(Request $request)

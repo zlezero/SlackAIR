@@ -12,6 +12,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UserProfileController extends AbstractController
 {
+     /**
+     * @author CORREA Aminata
+     * Permet de récupérer les infos de l'utilisateur et de génerer les différents formulaires du profil
+     */
     public function getUserInfos(Request $request)
     {
         $form = $this->createForm(UserType::class, null);

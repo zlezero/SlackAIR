@@ -19,35 +19,10 @@ class TypeGroupeRepository extends ServiceEntityRepository
         parent::__construct($registry, TypeGroupe::class);
     }
 
-    // /**
-    //  * @return TypeGroupe[] Returns an array of TypeGroupe objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?TypeGroupe
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-
+    /**
+     * @author ZONCHELLO Sébastien
+     * Permet de récupérer la liste de types de groupe hormis le DM
+     */
     public function getTypeGroupeExceptDM() {
 
         $entityManager = $this->getEntityManager();

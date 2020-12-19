@@ -8,6 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @author ZONCHELLO Sébastien
+ * Cette classe représente le label associé à un type mime d'un média
+ */
+
+/**
  * @ORM\Entity(repositoryClass=MimeLabelsRepository::class)
  */
 class MimeLabels

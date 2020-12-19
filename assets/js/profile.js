@@ -1,10 +1,19 @@
 import * as modals from './modals';
 import { openErrorModal } from './modals';
 
+/**
+ * @author CORREA Aminata, ZONCHELLO Sébastien et VATHONNE Thomas
+ * Gère la page de profil d'un utilisateur à savoir la modification de ses infos, la modification de son mot de passe et la génération d'une clé API
+ */
+
 $(function() {
 
     $('#user-profile-modal').on('show.bs.modal', function (e) {
-        
+
+        /**
+         * @author ZONCHELLO Sébastien
+         * Modifie la photo de profil d'un utilisateur
+         */
         $("#upload_pdp_pdp").on("change", function(e) {
 
             e.preventDefault();
@@ -43,6 +52,11 @@ $(function() {
 
         });
 
+        
+        /**
+         * @author CORREA Aminata
+         * Met à jour les informations d'un utilisateur
+         */
         $("#user-update-form").on('submit', function (e) {
 
             e.preventDefault();
@@ -72,6 +86,10 @@ $(function() {
 
         });
 
+        /**
+         * @author VATHONNE Thomas
+         * Génère une clé API
+         */
         $('#api-update-form').on('submit', function(e) {
 
             e.preventDefault();
@@ -90,6 +108,10 @@ $(function() {
 
         });
 
+        /**
+         * @author VATHONNE Thomas
+         * Affiche un message lorsque les deux mots de passe ne correspondent pas
+         */
         $('#password_form_password_first, #password_form_password_second').on('change', function(e) {
             if ($('#password_form_password_first').val() != $('#password_form_password_second').val()) {
                 $('#password_form_password_first')[0].setCustomValidity("Les deux mots de passe doivent correspondre");
@@ -98,6 +120,10 @@ $(function() {
             }
         });
 
+        /**
+         * @author CORREA Aminata
+         * Met à jour le mot de passe d'un utilisateur
+         */
         $('#password-update-form').on('submit', function(e) {
 
             e.preventDefault();

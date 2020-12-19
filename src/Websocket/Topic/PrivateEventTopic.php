@@ -16,6 +16,11 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Gos\Bundle\WebSocketBundle\Topic\PushableTopicInterface;
 
+/**
+ * @author VATHONNE Thomas
+ * Ce websocket permet de diffuser le channel auquel un utilisateur a été ajouté
+ */
+
 class PrivateEventTopic implements TopicInterface, PushableTopicInterface
 {
 

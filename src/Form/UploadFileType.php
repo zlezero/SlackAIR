@@ -10,6 +10,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 
+/**
+ * @author CORREA Aminata
+ * Ce formulaire permet de télécharger un fichier
+ */
+
 class UploadFileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

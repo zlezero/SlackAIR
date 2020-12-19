@@ -21,38 +21,10 @@ class NotificationRepository extends ServiceEntityRepository
 
     }
 
-    // /**
-    //  * @return Notification[] Returns an array of Notification objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('n')
-            ->andWhere('n.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('n.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Notification
-    {
-        return $this->createQueryBuilder('n')
-            ->andWhere('n.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-
-    
-
-    
+    /**
+     * @author ZONCHELLO Sébastien
+     * Permet de récupérer toutes les notifications de groupe d'un utilisateur
+     */
     public function getNotificationsGroupes(int $idUtilisateur)
     {
         return $this->createQueryBuilder('notifications')
@@ -66,6 +38,10 @@ class NotificationRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @author ZONCHELLO Sébastien
+     * Permet de récupérer toutes les notifications de nouveaux messages d'un utilisateur
+     */
     public function getNotificationsMessages(int $idUtilisateur)
     {
         return $this->createQueryBuilder('notifications')
@@ -79,6 +55,10 @@ class NotificationRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @author ZONCHELLO Sébastien
+     * Permet d'ajouter une notification d'un nouveau message non lu par un utilisateur
+     */
     function addNotification(int $idUtilisateur, int $idChannel) {
 
         $entityManager = $this->getEntityManager();
@@ -107,7 +87,10 @@ class NotificationRepository extends ServiceEntityRepository
     }
 
 
-    
+    /**
+     * @author ZONCHELLO Sébastien
+     * Permet de compter le nombre de notifications de messages non lus par un utilisateur
+     */
     public function countMsgNotRead(int $idUtilisateur)
     {
         return $this->createQueryBuilder('notifications')
@@ -121,7 +104,10 @@ class NotificationRepository extends ServiceEntityRepository
         ;
     }
 
-    
+    /**
+     * @author ZONCHELLO Sébastien
+     * Permet de compter le nombre de notifications de groupes non lus par un utilisateur
+     */
     public function countGrpNotRead(int $idUtilisateur)
     {
         return $this->createQueryBuilder('notifications')
@@ -135,6 +121,10 @@ class NotificationRepository extends ServiceEntityRepository
         ;
     }
     
+    /**
+     * @author ZONCHELLO Sébastien
+     * Permet de vérifier si une notification est lue ou pas
+     */
     public function IsNotRead(int $idGrp,int $idUser)
     {
         try{
@@ -152,6 +142,10 @@ class NotificationRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @author ZONCHELLO Sébastien
+     * Permet de récupérer les notifications d'un groupe d'un utilisateur
+     */
     public function getNotification(int $idGrp,int $idUser)
     {
         return $this->createQueryBuilder('notifications')

@@ -11,6 +11,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * @author CORREA Aminata
+ * Ce formulaire permet de se connecter
+ */
+
 class LoginType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

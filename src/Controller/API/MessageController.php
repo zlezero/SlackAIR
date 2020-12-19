@@ -41,6 +41,7 @@ class MessageController extends AbstractController
     }
 
     /**
+     * @author CORREA Aminata
      * Permet de récupérer les options de gestion d'un message
      * @Route("/checkMessageOptions", name="checkMessageOptions")
      */
@@ -68,6 +69,7 @@ class MessageController extends AbstractController
     }
 
     /**
+     * @author CORREA Aminata
      * Permet de supprimer un message
      * @Route("/deleteMessage", name="deleteMessage")
      */
@@ -80,6 +82,7 @@ class MessageController extends AbstractController
             
             $message = $this->getDoctrine()->getRepository(Message::class)->findOneBy(array('id' => $messageId));
             
+            // Si c'est bien l'auteur du message
             if($message->getUserId()->getId() == $userId){
 
                 $message->setEstEfface(true);
@@ -100,6 +103,7 @@ class MessageController extends AbstractController
     }
 
     /**
+     * @author CORREA Aminata
      * Permet de modifier un message
      * @Route("/setMessage", name="setMessage")
      */
@@ -113,6 +117,7 @@ class MessageController extends AbstractController
             
             $message = $this->getDoctrine()->getRepository(Message::class)->findOneBy(array('id' => $messageId));
            
+            // Si c'est bien l'auteur du message
             if($message->getUserId()->getId() == $userId){
 
                 $message->setTexte($newText);
@@ -135,6 +140,7 @@ class MessageController extends AbstractController
     }
 
      /**
+      * @author CORREA Aminata
       * Permet d'épingler un message
       * @Route("/pinMessage", name="pinMessage")
       */
@@ -161,6 +167,7 @@ class MessageController extends AbstractController
     }
 
      /**
+      * @author CORREA Aminata
       * Permet de désépingler un message
       * @Route("/unpinMessage", name="unpinMessage")
       */
@@ -187,6 +194,7 @@ class MessageController extends AbstractController
     }
 
     /**
+     * @author CORREA Aminata
      * Permet d'envoyer un message contenant un média
      * @Route("/sendMediaMessage", name="sendMediaMessage")
      */

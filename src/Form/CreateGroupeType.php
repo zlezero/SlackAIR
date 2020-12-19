@@ -15,6 +15,11 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @author ZONCHELLO Sébastien
+ * Ce formulaire permet de créer un groupe privé ou un groupe public
+ */
+
 class CreateGroupeType extends AbstractType
 {
     

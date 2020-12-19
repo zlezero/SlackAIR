@@ -8,6 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @author ZONCHELLO Sébastien
+ * Cette classe représente le statut d'un utilisateur (employé)
+ */
+
+/**
  * @ORM\Entity(repositoryClass=StatutRepository::class)
  */
 class Statut

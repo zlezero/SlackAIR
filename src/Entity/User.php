@@ -11,6 +11,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
+ * @author ZONCHELLO Sébastien et VATHONNE Thomas
+ * Cette classe représente un utilisateur à savoir un employé de l'entreprise
+ */
+
+/**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity("email")
  */

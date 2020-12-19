@@ -8,6 +8,11 @@ use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordRequestInterface;
 use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordRequestTrait;
 
 /**
+ * @author CORREA Aminata
+ * Cette classe permet de conserver l'utilisateur qui demande une requête de réinitialisation de son mot de passe
+ */
+
+/**
  * @ORM\Entity(repositoryClass=ResetPasswordRequestRepository::class)
  */
 class ResetPasswordRequest implements ResetPasswordRequestInterface
