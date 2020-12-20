@@ -70,8 +70,8 @@ $(function() {
 
                     if (data.statut == "ok") {
                         $("#profile-user-pseudo").text(data["user"]["pseudo"]);
-                        $("#sidebar-user-pseudo").text(data["user"]["pseudo"]);
-                        $("#sidebar-user-pseudo").append('  <a href="#"><i class="fa fa-power-off"></i></a>');
+                        $("#sidebar-user-pseudo").html('<a href="/logout"><i class="fa fa-power-off"></i></a> ');
+                        $("#sidebar-user-pseudo").append(data["user"]["pseudo"]);
                         $("#profile-user-age").text(data["user"]["age"]);
                         $("#profile-user-profession").text(data["user"]["profession"]);
                         $("#profile-user-department").text(data["user"]["departement"]["nom"]);
@@ -152,6 +152,7 @@ $(function() {
         $("#pdp-fileUpload-form").off('submit');
         $("#upload_pdp_pdp").off("change");
         $('#api_form').off('submit');
+        $('#api-update-form').off('submit');
     });
 
 
