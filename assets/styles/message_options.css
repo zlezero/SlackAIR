@@ -145,3 +145,17 @@
     padding-left: inherit;
     float: right;
 }
+
+
+
+.dark .is-typing-wrapper{
+    background-color: #202225;
+}
+
+.dark .messageActionsDropdown a{
+    color:lightgrey;
+}
+
+.dark .dropleft-message a:hover {
+    background-color: #202225;
+}
