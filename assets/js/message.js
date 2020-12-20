@@ -1165,7 +1165,7 @@ $(function() {
         let titreChannel = '';
 
         if(grpTypeId == 3) {
-            titreChannel = $(".channel[data-idchanneldm='" + channel + "']")[0].innerText;
+            titreChannel = pseudo;
             iconHTML = `<div class="notifications__item__avatar"><img src="${pdp}" /></div>`;
         } else {
             titreChannel = $(".channel[data-idchannel='" + channel + "']")[0].innerText;
