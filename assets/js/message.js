@@ -588,10 +588,8 @@ $(function() {
                             
                             if(res.message.channel.other_contact.departement){
                                 $("#contact-departement-name-info").html('<strong style="color: #000080">Département:</strong> ' + res.message.channel.other_contact.departement.nom);
-                                $("#contact-departement-chef-info").html('<strong style="color: #000080">Chef de Département:</strong> ' + res.message.channel.other_contact.departement.chef.prenom + ' '+ res.message.channel.other_contact.departement.chef.nom);
                             }else{
                                 $("#contact-departement-name-info").hide();
-                                $("#contact-departement-chef-info").hide();
                             }
 
                             $("#contact-infos-loader").hide();
@@ -611,7 +609,6 @@ $(function() {
                    $("#contact-mail-info").html('');
                    $("#contact-age-info").html('');
                    $("#contact-departement-name-info").html('');
-                   $("#contact-departement-chef-info").html('');
 
                 });
 
@@ -1481,6 +1478,7 @@ $(function() {
         $('#confirm-leave-channel').off('click');
     });
     
+
     /**
      * @author VATHONNE Thomas et CORREA Aminata
      * Gestion du statut

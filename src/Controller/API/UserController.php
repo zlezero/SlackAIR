@@ -52,11 +52,7 @@ class UserController extends AbstractController
             "statut_color" => $this->getUser()->getStatut()->getStatusColor(),
             "profession" => $this->getUser()->getProfession(),
             "departement" => [
-                "nom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getNom(): null,
-                "chef" => [
-                    "nom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getIdResponsable()->getNom() : null,
-                    "prenom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getIdResponsable()->getPrenom() : null
-                ]
+                "nom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getNom(): null
             ]
         ]);
     }
@@ -96,11 +92,7 @@ class UserController extends AbstractController
                 "pseudo" => $user->getPseudo(),
                 "profession" => $user->getProfession(),
                 "departement" => [
-                    "nom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getNom(): null,
-                    "chef" => [
-                        "nom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getIdResponsable()->getNom() : null,
-                        "prenom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getIdResponsable()->getPrenom() : null
-                    ]
+                    "nom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getNom(): null
                 ]
                     ]
             ]);
@@ -351,6 +343,7 @@ class UserController extends AbstractController
         }
 
     }
+
 
     /**
      * Permet de générer une clé d'API
