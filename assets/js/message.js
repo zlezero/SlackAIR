@@ -1213,7 +1213,7 @@ $(function() {
         '<div class="dropdown-item btn notification" data-idchannel="' + channelId + '" id="notif' + channelId + '"><div class="d-flex">'
         + iconHTML +'<div class="message-content"><div class="message-title"><strong>'+$(".channel[data-idchannel='" + channelId + "']").text()+'</strong>'
         +'</div><div class="message-detail">'
-        +'Vous avez été invité à '+ typeChannelId == 3 ? 'discuter avec ' : 'rejoindre le groupe ' + channel
+        +'Vous avez été invité à '+ ( typeChannelId == 3 ? 'discuter avec ' : 'rejoindre le groupe ' ) + channel
         +'</div><a data-idchannel="' + channelId + '">Consulter le channel</a>'
         +'</div><span class="text-muted small">'
         + formatDate(messageTime)
