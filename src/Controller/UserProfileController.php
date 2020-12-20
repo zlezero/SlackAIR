@@ -36,7 +36,8 @@ class UserProfileController extends AbstractController
                 "statut_color" => $this->getUser()->getStatut()->getStatusColor(),
                 "profession" => $this->getUser()->getProfession(),
                 "departement" => [
-                    "nom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getNom(): null,
+                    "id" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getId() : null,
+                    "nom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getNom() : null,
                     "chef" => [
                         "nom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getIdResponsable()->getNom() : null,
                         "prenom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getIdResponsable()->getPrenom() : null

@@ -10,6 +10,8 @@ $(function() {
 
     $('#user-profile-modal').on('show.bs.modal', function (e) {
 
+        $('#user_DepartementId option[value="' +  $('#user_DepartementId').data('iddepartement') + '"]').prop('selected', true);
+
         /**
          * @author ZONCHELLO Sébastien
          * Modifie la photo de profil d'un utilisateur

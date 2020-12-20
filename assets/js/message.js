@@ -127,7 +127,6 @@ $(function() {
     const socket = WS.connect(_WS_URI);
     var session_glob;
     var current_channel_id = -1;
-    var id_user = $('#id_current_user').data('id-current-user');;
     var id_user = $('#id_current_user').data('id-current-user');
 
     socket.on("socket/connect", function (session) {
