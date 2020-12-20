@@ -133,6 +133,7 @@ $(function() {
     var current_channel_id = -1;
     var id_user = $('#id_current_user').data('id-current-user');
     var channel_souscrit = {};
+    var already_subscribe_notif = false;
 
     socket.on("socket/connect", function (session) {
 
@@ -223,7 +224,7 @@ $(function() {
                 switch (payload.type) {
                     
                     case 'newMessage':
-                        
+
                         if (payload.message.channel == current_channel_id) {
                             addMessage(payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.messageId, payload.message.photo_de_profile, payload.message.media, payload.message.is_updated);
                             gestionMessage();
@@ -259,8 +260,6 @@ $(function() {
                         break;
     
                 }
-    
-                
     
             });
     
@@ -627,7 +626,7 @@ $(function() {
                  * @author CORREA Aminata
                  * Gestion affichage des infos du channel
                  */ 
-                 $("#channel-infos-modal").on("show.bs.modal", function(e){
+                 $("#channel-infos-modal").on("show.bs.modal", function(e) {
 
                     $.post({
                         url: '/api/channel/getInfos',
@@ -635,28 +634,33 @@ $(function() {
                         success: function (res) {
 
                             $("#channel-title-info").html(res.message.channel.nom);
-                            $("#update_channel_nom").attr('value', res.message.channel.nom);
+                            $("#update_channel_nom").val(res.message.channel.nom);
                             $("#channel-creation-info").html('<i class="far fa-clock pr-1"></i>Créé le ' + formatDate(res.message.channel.date_creation.date));
                             $("#channel-owner-info").html('<strong style="color: #000080">Propriétaire:</strong> ' + res.message.channel.proprietaire.pseudo);
                             
                             if (res.message.channel.type != 3 && res.message.channel.description != null) {
                                 $("#channel-description-info").html('<strong style="color: #000080">Description:</strong> ' + res.message.channel.description);
-                                $("#update_channel_description").attr('value', res.message.channel.description);
+                                $("#update_channel_description").val(res.message.channel.description);
                             } else {
                                 $("#channel-description-info").hide();
                             }
 
                             $("#channel-infos-loader").hide();
-                            if(res.message.channel.proprietaire.id != id_user){
+
+                            if(res.message.channel.proprietaire.id != id_user) {
                                 $('#edit-infos-tab').parent().hide();
+                            } else {
+                                $('#edit-infos-tab').parent().show();
                             }
+
+                            $('#channel-infos-tab').tab('show');
                             $("#channel-infos-modal-body").show();
 
                         }
                         
                     });
 
-                    $("#channel-infos-update-form").on('submit', function(m){
+                    $("#channel-infos-update-form").on('submit', function(m) {
 
                         m.preventDefault();
                         let form_data = $("#channel-infos-update-form").serializeArray();
@@ -688,14 +692,14 @@ $(function() {
                     
                 });
 
-                $("#channel-infos-modal").on('hidden.bs.modal', function(e){
-
+                $("#channel-infos-modal").on('hidden.bs.modal', function(e) {
                     $("#channel-title-info").html('');
-                    $("#update_channel_nom").attr('value','');
+                    $("#update_channel_nom").val('');
                     $("#channel-creation-info").html('');
                     $("#channel-owner-info").html('');
                     $("#channel-description-info").html('');
-                    $("#update_channel_description").attr('value','');
+                    $("#update_channel_description").val('');
+                    $('#edit-infos-tab').parent().hide();
                     $("#channel-infos-update-form").off('submit');
 
                 });
@@ -731,7 +735,7 @@ $(function() {
     function subscribeToUserEvent(userId) {
 
         session_glob.subscribe("user/" + userId, function (uri, payload) {
-            
+        
             let data = JSON.parse(payload.data);
             console.log("Message reçu (Statut) : ", data);
             
@@ -756,22 +760,27 @@ $(function() {
      */ 
     function subscribeToNotif(userId) {
 
-        session_glob.subscribe("notif/" + userId, function (uri, payload) {
-            
-            let data = JSON.parse(payload.data);
-            console.log("Notification reçue : ", data);
+        if (!already_subscribe_notif) {
 
-            switch (data.typeEvent) {
-                case "notifGrp":
-                    addGrpNotification(data.data.notif.typeGroupeId, data.data.notif.groupeId, data.data.notif.groupe, data.data.notif.dateNotif, data.data.notif.propGrp);
-                    break;
-                case "notifAdmin":
-                    addAdminNotification(data.data.notif.groupeId, data.data.notif.groupe, data.data.notif.dateNotif);
-                    break;
-            }
+            session_glob.subscribe("notif/" + userId, function (uri, payload) {
             
+                let data = JSON.parse(payload.data);
+                console.log("Notification reçue : ", data);
+    
+                switch (data.typeEvent) {
+                    case "notifGrp":
+                        addGrpNotification(data.data.notif.typeGroupeId, data.data.notif.groupeId, data.data.notif.groupe, data.data.notif.dateNotif, data.data.notif.propGrp);
+                        break;
+                    case "notifAdmin":
+                        addAdminNotification(data.data.notif.groupeId, data.data.notif.groupe, data.data.notif.dateNotif);
+                        break;
+                }
+    
+            });
 
-        });
+            already_subscribe_notif = true;
+
+        }
 
     }
 
