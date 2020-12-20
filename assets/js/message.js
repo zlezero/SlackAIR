@@ -1152,13 +1152,12 @@ $(function() {
         } else{
             iconHTML = '<div><span class="fa-stack fa-2x"><i class="fa fa-circle fa-stack-2x icon-background"></i><i class="fas fa-comments fa-stack-1x"></i></span></div>';
         }
-        
-        
+
         let messageHTML = 
         '<div class="dropdown-item btn notification" data-idchannel="' + channel + '" id="notif' + channel + '"><div class="d-flex">'
         + iconHTML + '<div class="message-content"><div class="message-title">'
         +'<strong>'+$(".channel[data-idchannel='" + channel + "']").text()+'</strong>'
-        +'</div><div class="message-detail">' + $("#notif" + channel).length<1 ? 'Nouveau message' : 'Nouveaux messages' + '</div>'
+        +'</div><div class="message-detail">' + ( $("#notif" + channel).length < 1 ? 'Nouveau message' : 'Nouveaux messages') + '</div>'
         +'<a data-idchannel="' + channel + '">Consulter la discussion</a>'
         +'</div><span class="text-muted small">' + formatDate(messageTime) + '</span></div></div>';
 
