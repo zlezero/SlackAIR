@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
+
 class UserProfileController extends AbstractController
 {
      /**
@@ -38,10 +39,6 @@ class UserProfileController extends AbstractController
                 "departement" => [
                     "id" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getId() : null,
                     "nom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getNom() : null,
-                    "chef" => [
-                        "nom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getIdResponsable()->getNom() : null,
-                        "prenom" => $this->getUser()->getDepartementId() ? $this->getUser()->getDepartementId()->getIdResponsable()->getPrenom() : null
-                    ]
                 ]
                     ],
             "form" =>  $form->createView(),

@@ -75,9 +75,6 @@ $(function() {
                         $("#profile-user-age").text(data["user"]["age"]);
                         $("#profile-user-profession").text(data["user"]["profession"]);
                         $("#profile-user-department").text(data["user"]["departement"]["nom"]);
-                        if (data.user.departement.chef.prenom) {
-                            $("#profile-user-department-chef").text(data["user"]["departement"]["chef"]["prenom"] + " " + data["user"]["departement"]["chef"]["nom"]);
-                        }
                         modals.openSuccessModal(data.message);
                     } else {
                         modals.openErrorModal("Une erreur est survenue lors de la mise à jour du profil : " + data.message);

@@ -30,12 +30,6 @@ class Departement
     private $Nom;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $IdResponsable;
-
-    /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="DepartementId")
      */
     private $Personnel;
@@ -58,18 +52,6 @@ class Departement
     public function setNom(string $Nom): self
     {
         $this->Nom = $Nom;
-
-        return $this;
-    }
-
-    public function getIdResponsable(): ?User
-    {
-        return $this->IdResponsable;
-    }
-
-    public function setIdResponsable(User $IdResponsable): self
-    {
-        $this->IdResponsable = $IdResponsable;
 
         return $this;
     }
@@ -108,8 +90,7 @@ class Departement
     public function getFormattedDepartement() {
         return [
             "id" => $this->getId(),
-            "nom" => $this->getNom(),
-            "chef" => $this->getIdResponsable()->getFormattedUser()
+            "nom" => $this->getNom()
         ];
     }
 }
