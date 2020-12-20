@@ -61,7 +61,10 @@ $(function() {
 
     function stopWriting(idUser) {
 
-        clearTimeout(isWriting[idUser].func);
+        if (isWriting[idUser].func) {
+            clearTimeout(isWriting[idUser].func);
+        }
+
         delete isWriting[idUser];
 
         $('*[data-userid="' + idUser + '"] span').remove();
@@ -78,6 +81,7 @@ $(function() {
         let statutUser = $('*[data-userid="' + idUser + '"]').data('userstatut');
 
         $('*[data-userid="' + idUser + '"] i').hide();
+        $('*[data-userid="' + idUser + '"] span').remove();
 
         for (let i = 0; i < 3; i++) {
             $('*[data-userid="' + idUser + '"]').prepend('<span class="dot ' + statutUser + '-background"></span>')
@@ -128,6 +132,7 @@ $(function() {
     var session_glob;
     var current_channel_id = -1;
     var id_user = $('#id_current_user').data('id-current-user');
+    var channel_souscrit = {};
 
     socket.on("socket/connect", function (session) {
 
@@ -209,95 +214,101 @@ $(function() {
      */ 
     window.subscribeToChannel = function subscribeToChannel(idChannel) {
 
-        session_glob.subscribe("message/channel/" + idChannel, function (uri, payload) {
+        if (!(idChannel in channel_souscrit)) {
 
-            console.log("Message reçu : ", payload);
-
-            switch (payload.type) {
+            session_glob.subscribe("message/channel/" + idChannel, function (uri, payload) {
+    
+                console.log("Message reçu : ", payload);
                 
-                case 'newMessage':
+                switch (payload.type) {
                     
-                    if (payload.message.channel == current_channel_id) {
-                        addMessage(payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.messageId, payload.message.photo_de_profile, payload.message.media, payload.message.is_updated);
-                        gestionMessage();
-                    } else {
-                        addMsgNotification(payload.message.channel, payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.photo_de_profile, payload.grpType);
-                    }
-
-                    break;
-
-                case 'messageSupprime':
-                    $('p[data-idmessage=' + payload.message.id + ']').closest('.col-12').remove();
-                    break;
-
-                case 'messageModifie':
-                    $('p[data-idmessage=' + payload.message.id + ']').text(payload.message.texte).append('<small> (modifié)</small>');
-                    break;
-
-                case 'userLeave':
-                    
-                    $('[data-userid="' + payload.user.id + '"').remove();
-                    
-                    if (payload.channel.type == 3) {
-                        $('[data-useriddm="' + payload.user.id + '"').remove();
-                        if (payload.channel.id == current_channel_id) {
-                            window.location.reload();
+                    case 'newMessage':
+                        
+                        if (payload.message.channel == current_channel_id) {
+                            addMessage(payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.messageId, payload.message.photo_de_profile, payload.message.media, payload.message.is_updated);
+                            gestionMessage();
+                        } else {
+                            addMsgNotification(payload.message.channel, payload.message.pseudo, payload.message.message, payload.message.messageTime, payload.message.photo_de_profile, payload.grpType);
                         }
-                    }
+    
+                        break;
+    
+                    case 'messageSupprime':
+                        $('p[data-idmessage=' + payload.message.id + ']').closest('.col-12').remove();
+                        break;
+    
+                    case 'messageModifie':
+                        $('p[data-idmessage=' + payload.message.id + ']').text(payload.message.texte).append('<small> (modifié)</small>');
+                        break;
+    
+                    case 'userLeave':
+                        
+                        $('[data-userid="' + payload.user.id + '"').remove();
+                        
+                        if (payload.channel.type == 3) {
+                            $('[data-useriddm="' + payload.user.id + '"').remove();
+                            if (payload.channel.id == current_channel_id) {
+                                window.location.reload();
+                            }
+                        }
+    
+                        if ($('[data-useriddm="' + payload.user.id + '"').length == 0) {
+                            unsubscribeToUserEvent(payload.user.id);
+                        }
+    
+                        break;
+    
+                }
+    
+                
+    
+            });
+    
+            session_glob.subscribe("channelEvent/" + idChannel, function(uri, payload) {
+    
+                console.log("(Channel event) Message reçu", payload);
+    
+                switch (payload.data.event.type) {
+    
+                    case 'startWriting':
+                        
+                        if (payload.data.channelType == 3 && payload.data.event.valeur != id_user) {
+                            startWritingDM(payload.data.event.valeur);
+                        }
+    
+                        if (payload.data.channel == current_channel_id && payload.data.event.valeur != id_user) {
+                            startWriting(payload.data.event.valeur, payload.data.event.pseudo);
+                        }
+    
+                        break;
+    
+                    case 'stopWriting':
+    
+                        if (payload.data.channelType == 3 && payload.data.event.valeur != id_user) {
+                            stopWritingDM(payload.data.event.valeur);
+                        }
+    
+                        if (payload.data.channel == current_channel_id && payload.data.event.valeur != id_user && payload.data.event.valeur in isWriting) {
+                            stopWriting(payload.data.event.valeur, payload.data.channelType == 3);
+                        }
+    
+                        break;
+    
+                    case 'channelTitleUpdate':
+                        updateChannelTitle(payload.data.channel, payload.data.event.valeur);
+                        break;
+    
+                    case 'channelDescriptionUpdate':
+                        updateChannelDescription(payload.data.channel, payload.data.event.valeur);
+                        break;
+    
+                }
+    
+            });
+    
+            channel_souscrit[idChannel] = true;
 
-                    if ($('[data-useriddm="' + payload.user.id + '"').length == 0) {
-                        unsubscribeToUserEvent(payload.user.id);
-                    }
-
-                    break;
-
-            }
-
-            
-
-        });
-
-        session_glob.subscribe("channelEvent/" + idChannel, function(uri, payload) {
-
-            console.log("(Channel event) Message reçu", payload);
-
-            switch (payload.data.event.type) {
-
-                case 'startWriting':
-                    
-                    if (payload.data.channelType == 3 && payload.data.event.valeur != id_user) {
-                        startWritingDM(payload.data.event.valeur);
-                    }
-
-                    if (payload.data.channel == current_channel_id && payload.data.event.valeur != id_user) {
-                        startWriting(payload.data.event.valeur, payload.data.event.pseudo);
-                    }
-
-                    break;
-
-                case 'stopWriting':
-
-                    if (payload.data.channelType == 3 && payload.data.event.valeur != id_user) {
-                        stopWritingDM(payload.data.event.valeur);
-                    }
-
-                    if (payload.data.channel == current_channel_id && payload.data.event.valeur != id_user && payload.data.event.valeur in isWriting) {
-                        stopWriting(payload.data.event.valeur, payload.data.channelType == 3);
-                    }
-
-                    break;
-
-                case 'channelTitleUpdate':
-                    updateChannelTitle(payload.data.channel, payload.data.event.valeur);
-                    break;
-
-                case 'channelDescriptionUpdate':
-                    updateChannelDescription(payload.data.channel, payload.data.event.valeur);
-                    break;
-
-            }
-
-        });
+        }
 
     }
 
@@ -346,7 +357,7 @@ $(function() {
             event: {type: 'stopWriting'},
             channel: current_channel_id,
         }
-
+        
         if ($("#message").val() != "" && current_channel_id != -1 && !$('#message').val().includes('<script>')) {
             session_glob.publish("message/channel/" + current_channel_id, {data: JSON.stringify(data)});
             session_glob.publish("channelEvent/" + current_channel_id, {data: JSON.stringify(dataStopWriting)});
@@ -750,7 +761,7 @@ $(function() {
             let data = JSON.parse(payload.data);
             console.log("Notification reçue : ", data);
 
-            switch (data.typeEvent){
+            switch (data.typeEvent) {
                 case "notifGrp":
                     addGrpNotification(data.data.notif.typeGroupeId, data.data.notif.groupeId, data.data.notif.groupe, data.data.notif.dateNotif, data.data.notif.propGrp);
                     break;
@@ -1109,7 +1120,7 @@ $(function() {
 
         $(".channel[data-idchannel='" + channid + "']").trigger("click");
 
-        if($("#" + id).parent().hasClass("messages")) {
+        if($("#" + id).parent().hasClass("container-messages")) {
             
             $.post({
                 url: '/api/notification/readNotifMsg',
@@ -1142,17 +1153,20 @@ $(function() {
     function addMsgNotification(channel, pseudo, message, messageTime, pdp, grpTypeId) {
 
         let iconHTML = '';
+        let titreChannel = '';
 
-        if(grpTypeId == 3){
+        if(grpTypeId == 3) {
+            titreChannel = $(".channel[data-idchanneldm='" + channel + "']")[0].innerText;
             iconHTML = `<div class="notifications__item__avatar"><img src="${pdp}" /></div>`;
-        } else{
+        } else {
+            titreChannel = $(".channel[data-idchannel='" + channel + "']")[0].innerText;
             iconHTML = '<div><span class="fa-stack fa-2x"><i class="fa fa-circle fa-stack-2x icon-background"></i><i class="fas fa-comments fa-stack-1x"></i></span></div>';
         }
 
         let messageHTML = 
         '<div class="dropdown-item btn notification" data-idchannel="' + channel + '" id="notif' + channel + '"><div class="d-flex">'
         + iconHTML + '<div class="message-content"><div class="message-title">'
-        +'<strong>'+$(".channel[data-idchannel='" + channel + "']").text()+'</strong>'
+        +'<strong>'+ titreChannel + '</strong>'
         +'</div><div class="message-detail">' + ( $("#notif" + channel).length < 1 ? 'Nouveau message' : 'Nouveaux messages') + '</div>'
         +'<a data-idchannel="' + channel + '">Consulter la discussion</a>'
         +'</div><span class="text-muted small">' + formatDate(messageTime) + '</span></div></div>';
@@ -1163,7 +1177,7 @@ $(function() {
             $("#notif"+ channel).remove();
         }
 
-        $("#notif-msg-ddlist").after(messageHTML);
+        $(".container-messages").after(messageHTML);
 
         $("#notif" + channel).on("click", (e) => {
 
@@ -1211,7 +1225,7 @@ $(function() {
 
         let notifHTML = 
         '<div class="dropdown-item btn notification" data-idchannel="' + channelId + '" id="notif' + channelId + '"><div class="d-flex">'
-        + iconHTML +'<div class="message-content"><div class="message-title"><strong>'+$(".channel[data-idchannel='" + channelId + "']").text()+'</strong>'
+        + iconHTML +'<div class="message-content"><div class="message-title"><strong>'+ channel +'</strong>'
         +'</div><div class="message-detail">'
         +'Vous avez été invité à '+ ( typeChannelId == 3 ? 'discuter avec ' : 'rejoindre le groupe ' ) + channel
         +'</div><a data-idchannel="' + channelId + '">Consulter le channel</a>'
@@ -1219,7 +1233,7 @@ $(function() {
         + formatDate(messageTime)
         +'</span></div></div>';
 
-        $("#notif-ddlist").after(notifHTML);
+        $(".container-groupes").after(notifHTML);
 
         increaseNotifNb("notif-count");
 
@@ -1268,7 +1282,7 @@ $(function() {
         + formatDate(messageTime)
         +'</span></div></div>';
 
-        $("#notif-ddlist").after(notifHTML);
+        $(".container-groupes").after(notifHTML);
 
         increaseNotifNb("notif-count");
 

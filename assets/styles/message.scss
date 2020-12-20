@@ -366,7 +366,19 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
   background: black !important;
 }
 
-#listeMembres p, .is-typing-wrapper p, a {
+#collapse-message-private a, #collapse-favoris a {
+  .dot {
+    padding-right: 8px;
+  }
+}
+
+.is-typing-wrapper p {
+  .dot {
+    margin-right: 0px !important;
+  }
+}
+
+#listeMembres p, .is-typing-wrapper p, #collapse-message-private a, #collapse-favoris a {
   .dot {
     display: inline-block;
     width: 8px;
@@ -374,7 +386,6 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
     border-radius: 50%;
     margin-right: 2px;
     animation: wave 1.3s linear infinite;
-    
     &:nth-child(2) {
       animation-delay: -1.1s;
     }
@@ -509,13 +520,13 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
   border-bottom:2px solid #000080;
 }
 
-#edit-channel-public label, #channel-infos-modal label {
+#create-channel-public label, #channel-infos-modal label {
   font-weight: 600;
   font-size: 14px;
   color: black;
 }
 
-#edit-channel, #edit-channel-public{
+#edit-channel, #create-channel-public{
   margin-top:2%;
 }
 

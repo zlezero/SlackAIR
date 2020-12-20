@@ -40,7 +40,7 @@
                             Notifications
                         </div>
                         <div class="dropdown-divider"  id="notif-ddlist" ></div>
-                        <div class="notification-container">
+                        <div class="notification-container container-groupes">
                         {% for notif in notifications.groupes %}
                             <div class="dropdown-item btn notification" data-idchannel="{{notif.groupe.id}}" id="notif{{notif.groupe.id}}">
                                 <div class="d-flex">
@@ -99,7 +99,7 @@
                         </div>
                         <div class="dropdown-divider" id="notif-msg-ddlist">
                         </div>
-                        <div class="notification-container">
+                        <div class="notification-container container-messages">
                         {% for notif in notifications.messages %}
                             <div class="dropdown-item btn notification" data-idchannel="{{notif.groupe.id}}" id="notif{{notif.groupe.id}}">
                                 <div class="d-flex">

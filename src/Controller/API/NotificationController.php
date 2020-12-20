@@ -71,14 +71,19 @@ class NotificationController extends AbstractController
     {
 
         $groupeId = $request->get("groupeId");
+
         if ($groupeId && is_numeric($groupeId) && $this->entityManager->getRepository(Notification::class)->IsNotRead($groupeId,$this->getUser()->getId())) {
-            $notificationsrepo=$this->entityManager->getRepository(Notification::class);
+
+            $notificationsrepo = $this->entityManager->getRepository(Notification::class);
+
             $notification = $notificationsrepo->getNotification($groupeId,$this->getUser()->getId());
             $notification->setNbMsg(0);
             $notification->setEstLue(true);
             $notification->setTypeNotification($this->entityManager->getRepository(TypeNotification::class)->find(2));
+
             $this->entityManager->persist($notification);
             $this->entityManager->flush();
+
             return new JsonResponse(["statut" => "ok",
                                      "nbNotifs" => $notificationsrepo->countGrpNotRead($this->getUser()->getId())[0][1]]);
 
