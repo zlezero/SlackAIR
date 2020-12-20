@@ -20,4 +20,4 @@ Pour passer en prod :
   - Changer APP_ENV=dev en APP_ENV=prod dans le .env
 
 Importer des utilisateurs :
-  - php bin/console run:import-csv <CheminVersCSV>
+  - php bin/console run:import-csv \<CheminVersCSV>
