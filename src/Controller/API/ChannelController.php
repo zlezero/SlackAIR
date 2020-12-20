@@ -70,6 +70,13 @@ class ChannelController extends AbstractController
                                 ];
             }
 
+            $em = $this->getDoctrine()->getManager();
+            $user =$em->getRepository(User::class)->find($this->getUser()->getId());
+            $user->setDernierGroupe($this->getDoctrine()->getManager()->getRepository(Groupe::class)->find($channelId));
+            
+            $em->persist($user);
+            $em->flush();
+
             return new JsonResponse(["statut" => "ok",
                                      "message" => ["messages" => $messageObj]]);
 
@@ -289,10 +296,8 @@ class ChannelController extends AbstractController
                     $em->flush();
                     
                     // Envoyer une notif au nouvel admin
-                    $notification=new Notification();
-                    $notification->setUtilisateur($newAdmin);
+                    $notification = $em->getRepository(Notification::class)->getNotification($channelId, $newAdminInvitation->getUserId()->getId());
                     $notification->setTypeNotification($em->getRepository(TypeNotification::class)->find(3));
-                    $notification->setGroupe($channel);
                     $notification->setEstLue(false);
                     $notification->setNbMsg(0);
                     $notification->setDateNotification(new Datetime());

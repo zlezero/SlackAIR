@@ -62,24 +62,26 @@ class NotificationRepository extends ServiceEntityRepository
     function addNotification(int $idUtilisateur, int $idChannel) {
 
         $entityManager = $this->getEntityManager();
+        
         $entityManager->createQuery('UPDATE App\Entity\Notification i
                                         SET i.NbMsg = i.NbMsg + 1, i.DateNotification = :newDat
-                                        WHERE i.Utilisateur != :idUtilisateur AND i.Groupe = :idChannel AND i.typeNotification = 2 AND i.NbMsg <= 9 AND i.EstLue =false')
+                                        WHERE i.Utilisateur != :idUtilisateur AND i.Groupe = :idChannel AND i.typeNotification = 2 AND i.NbMsg <= 9 AND i.EstLue = false and i.Utilisateur not in (select u.id from App\Entity\User u where u.DernierGroupe= :idChannel)')
                         ->setParameter('idUtilisateur', $idUtilisateur)
                         ->setParameter('idChannel', $idChannel)
                         ->setParameter('newDat', new DateTime())
                         ->getResult();
+
         $entityManager->createQuery('UPDATE App\Entity\Notification i
                                         SET i.DateNotification = :newDat
-                                        WHERE i.Utilisateur != :idUtilisateur AND i.Groupe = :idChannel AND i.typeNotification = 2 AND i.NbMsg > 9 AND i.EstLue =false')
+                                        WHERE i.Utilisateur != :idUtilisateur AND i.Groupe = :idChannel AND i.typeNotification = 2 AND i.NbMsg > 9 AND i.EstLue = false and i.Utilisateur not in (select u.id from App\Entity\User u where u.DernierGroupe= :idChannel)')
                         ->setParameter('idUtilisateur', $idUtilisateur)
                         ->setParameter('idChannel', $idChannel)
                         ->setParameter('newDat', new DateTime())
                         ->getResult();
-                        
+
         $entityManager->createQuery('UPDATE App\Entity\Notification i
                                     SET i.NbMsg = 1, i.DateNotification = :newDat,i.EstLue=false
-                                    WHERE i.Utilisateur != :idUtilisateur AND i.Groupe = :idChannel AND i.EstLue =true')
+                                    WHERE i.Utilisateur != :idUtilisateur AND i.Groupe = :idChannel AND i.EstLue = true and i.Utilisateur not in (select u.id from App\Entity\User u where u.DernierGroupe= :idChannel)')
                     ->setParameter('idUtilisateur', $idUtilisateur)
                     ->setParameter('idChannel', $idChannel)
                     ->setParameter('newDat', new DateTime())
